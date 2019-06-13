@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:setup/core/services/bluetooth_scan.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/setup_theme.dart';
@@ -19,6 +20,7 @@ void main() {
       providers: <SingleChildCloneableWidget>[
         ChangeNotifierProvider.value(value: locator<SharedPrefs>()),
         ChangeNotifierProvider.value(value: locator<BottomNavModel>()),
+        ChangeNotifierProvider.value(value: locator<BluetoothScanService>()),
       ],
       child: MyApp(),
     ),

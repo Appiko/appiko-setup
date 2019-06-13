@@ -36,6 +36,10 @@ class SetupTheme with ChangeNotifier {
     toggleableActiveColor: _oneColor,
     backgroundColor: _oneColor.withAlpha(100),
     accentColor: _oneColor,
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.white,
+      foregroundColor: _black,
+    ),
     appBarTheme: AppBarTheme(
       iconTheme: IconThemeData(color: Colors.white),
       color: Colors.transparent,

@@ -46,7 +46,7 @@ class MoreView extends StatelessWidget {
             child: ListView.separated(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              separatorBuilder: (context, int) => new CustomDivider(),
+              separatorBuilder: (context, int) => CustomDivider(),
               itemBuilder: (context, int index) => ListTile(
                     title: Text(moreList.keys.toList()[index]),
                     onTap: () {

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/setup_theme.dart';
+import 'package:setup/ui/views/device_settings_view.dart';
 import 'package:setup/ui/views/more_view.dart';
 import 'package:setup/ui/views/profiles_view.dart';
 import 'package:setup/ui/views/scan_view.dart';
@@ -13,14 +16,22 @@ import 'package:setup/ui/widgets/bottom_nav.dart';
 import 'package:setup/core/view_models/bottom_nav_model.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 
-void main() {
-  setupLocator();
+Future main() async {
+  setupLocator(); // For inital class instances
+
+  // Preferred Orientation - Potrait
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
   runApp(
     MultiProvider(
       providers: <SingleChildCloneableWidget>[
         ChangeNotifierProvider.value(value: locator<SharedPrefs>()),
         ChangeNotifierProvider.value(value: locator<BottomNavModel>()),
         ChangeNotifierProvider.value(value: locator<BluetoothScanService>()),
+        ChangeNotifierProvider.value(
+            value: locator<BluetoothConnectionService>()),
       ],
       child: MyApp(),
     ),
@@ -36,7 +47,10 @@ class MyApp extends StatelessWidget {
       theme: Provider.of<SharedPrefs>(context).darkTheme
           ? locator<SetupTheme>().appikoDarkTheme
           : locator<SetupTheme>().appikoDefualtTheme,
-      home: MyHomePage(),
+      routes: {
+        '/': (_) => MyHomePage(),
+        '/device-settings': (_) => DeviceSettingsView(),
+      },
     );
   }
 }

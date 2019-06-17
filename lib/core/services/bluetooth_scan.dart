@@ -23,6 +23,7 @@ class BluetoothScanService extends ChangeNotifier {
     }, onDone: () {
       stopScan();
     });
+    notifyListeners();
   }
 
   stopScan() {

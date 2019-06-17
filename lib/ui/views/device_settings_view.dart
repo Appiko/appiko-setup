@@ -2,37 +2,111 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 
-class DeviceSettingsView extends StatelessWidget {
+class DeviceSettingsView extends StatefulWidget {
+  @override
+  _DeviceSettingsViewState createState() => _DeviceSettingsViewState();
+}
+
+class _DeviceSettingsViewState extends State<DeviceSettingsView>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  ScrollController _scrollViewController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: 3);
+    _scrollViewController = ScrollController(initialScrollOffset: 64.0);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _scrollViewController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
         body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          controller: _scrollViewController,
+          headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                expandedHeight: 200.0,
-                floating: false,
-                elevation: 0,
-                pinned: true,
+                backgroundColor: Theme.of(context).primaryColor,
+                iconTheme: IconThemeData(color: Colors.white),
+                title: Text(
+                  Provider.of<BluetoothConnectionService>(context).device.name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white,
+                    fontSize: 26,
+                  ),
+                ),
                 flexibleSpace: FlexibleSpaceBar(
-                  background: Container(),
-                  title: Text(
-                    Provider.of<BluetoothConnectionService>(context)
-                        .device
-                        .name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22.0,
+                  background: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Info",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
+                ),
+                pinned: true,
+                expandedHeight: 300,
+                forceElevated: boxIsScrolled,
+                bottom: TabBar(
+                  tabs: <Widget>[
+                    Tab(text: "Motion"),
+                    Tab(text: "Timer"),
+                    Tab(text: "Radio"),
+                  ],
+                  controller: _tabController,
+                ),
+              )
+            ];
+          },
+          body: Padding(
+            padding: const EdgeInsets.only(top: 0),
+            child: TabBarView(
+              children: <Widget>[
+                Container(
+                  child: Center(
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(38.0),
+                        child: Text("A"),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ];
-          },
-          body: Center(
-            child: Text(
-                "Connected? ${Provider.of<BluetoothConnectionService>(context).state}"),
+                Container(
+                  child: Center(
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(38.0),
+                        child: Text("B"),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Center(
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(38.0),
+                        child: Text("C"),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              controller: _tabController,
+            ),
           ),
         ),
       ),

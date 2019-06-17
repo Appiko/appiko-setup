@@ -26,6 +26,7 @@ dependencies:
   webview_flutter: ^0.3.9+1 #Webview for Appiko store
   shared_preferences: ^0.5.3+1 # for saving small key value pairs
   flutter_blue: ^0.5.0 # bluetooth operations
+  outline_material_icons: ^0.1.0 #Material Icons
 
 dev_dependencies:
   flutter_test:

@@ -64,7 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final Map<String, dynamic> views = {
     "Sense Devices": ScanView(),
     "Profiles": ProfilesView(),
-    "Test Devices": Container(),
     "Shop": ShopView(),
     "More": MoreView(),
   };
@@ -74,7 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
     BottomNavModel bottomNavModel = Provider.of<BottomNavModel>(context);
 
     return Scaffold(
-      appBar: bottomNavModel.index != 3 // Ignoring Appbar for Shop
+      appBar: bottomNavModel.index !=
+              views.keys.toList().indexOf("Shop") // Ignoring Appbar for Shop
           ? CustomAppBar(title: views.keys.toList()[bottomNavModel.index])
           : PreferredSize(
               child: Container(),

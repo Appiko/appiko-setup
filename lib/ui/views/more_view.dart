@@ -20,7 +20,7 @@ class MoreView extends StatelessWidget {
       child: Column(
         children: <Widget>[
           ListTile(
-            title: Text("Dark theme"),
+            title: Text("Dark mode"),
             trailing: Switch.adaptive(
               onChanged: (bool value) {
                 Provider.of<SharedPrefs>(context).setDarkTheme(value);
@@ -52,6 +52,7 @@ class MoreView extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
+                        //TODO: Make indivisual pages and add it to routes in main.dart
                         MaterialPageRoute(
                           builder: (context) => Scaffold(
                                 appBar: CustomAppBar(

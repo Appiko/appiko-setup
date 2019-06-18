@@ -1,16 +1,21 @@
-# setup
+# Setup
 
 Appiko setup app
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### 1️⃣ `Install Flutter`
 
-A few resources to get you started if this is your first Flutter project:
+Install flutter from [here](https://flutter.dev/docs/get-started/install)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### 2️⃣ `Clone the repo`
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+### 3️⃣ `Open the project in VS Code / Android Studio`
+
+### 4️⃣ `Install and debug`
+
+Install and debug using
+`flutter run -d device-name`
+
+For help getting started with Flutter, see the online
+[online documentation](https://flutter.dev/docs).

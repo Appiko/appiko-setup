@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 
@@ -16,7 +17,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 3);
-    _scrollViewController = ScrollController(initialScrollOffset: 64.0);
+    _scrollViewController = ScrollController(initialScrollOffset: 0);
   }
 
   @override
@@ -46,19 +47,97 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                   ),
                 ),
                 flexibleSpace: FlexibleSpaceBar(
-                  background: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  background: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      Text(
-                        "Info",
-                        style: TextStyle(color: Colors.white),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "SenseBe",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 22,
+                            ),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                "Rechargeable AA",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Icon(
+                                Icons.battery_std,
+                                color: Colors.white,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "0.0.3",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                                IconButton(
+                                  splashColor: Theme.of(context).accentColor,
+                                  icon: Icon(
+                                    Icons.update,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
+                            height: 42,
+                          ),
+                          Text(
+                            "Firmware Version",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       )
                     ],
                   ),
                 ),
                 pinned: true,
-                expandedHeight: 300,
+                expandedHeight: 240,
                 forceElevated: boxIsScrolled,
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(OMIcons.edit),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.info_outline),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/device-info');
+                    },
+                  ),
+                ],
                 bottom: TabBar(
                   tabs: <Widget>[
                     Tab(text: "Motion"),

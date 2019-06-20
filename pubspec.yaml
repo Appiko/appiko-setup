@@ -25,8 +25,9 @@ dependencies:
   provider: ^3.0.0  # Provider - State Management
   webview_flutter: ^0.3.9+1 #Webview for Appiko store
   shared_preferences: ^0.5.3+1 # for saving small key value pairs
-  flutter_blue: ^0.5.0 # bluetooth operations
+  flutter_blue: ^0.6.0 # bluetooth operations
   outline_material_icons: ^0.1.0 #Material Icons
+  android_intent: ^0.3.0+2 # For prompting the user to turn on bluetooth
 
 dev_dependencies:
   flutter_test:

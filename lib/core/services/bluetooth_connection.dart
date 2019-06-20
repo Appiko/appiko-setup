@@ -15,27 +15,20 @@ class BluetoothConnectionService extends ChangeNotifier {
   bool get isConnecting => _isConnecting;
   get state => _state;
 
-  connect(BluetoothDevice device) {
-    _device = null;
+  connect(BluetoothDevice device) async {
     _device = device;
-    _deviceConnection =
-        _flutterBlue.connect(device).listen((BluetoothDeviceState s) {
+    await _device.connect();
+    _device.state.listen((s) {
       if (s == BluetoothDeviceState.connected) {
         _isConnected = true;
       }
-
       _isConnecting = false;
-      notifyListeners();
-    });
-    _x = _device.onStateChanged().listen((s) {
-      _state = s;
       notifyListeners();
     });
   }
 
   disconnect() {
-    _x.cancel();
-    _deviceConnection.cancel();
+    _device.disconnect();
     _isConnected = false;
     notifyListeners();
   }

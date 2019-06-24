@@ -80,8 +80,8 @@ class _ScanViewState extends State<ScanView> {
               ? FloatingActionButton.extended(
                   icon: Icon(Icons.adjust),
                   label: Text("SCAN"),
-                  onPressed:
-                      Provider.of<BluetoothScanService>(context).startScan,
+                  onPressed: () => Provider.of<BluetoothScanService>(context)
+                      .startScan(context: context),
                 )
               : FloatingActionButton.extended(
                   icon: Icon(Icons.stop),

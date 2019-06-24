@@ -3,14 +3,12 @@ import 'dart:io';
 import 'package:android_intent/android_intent.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter/widgets.dart';
+import 'package:setup/core/services/permissions.dart';
 import 'package:system_setting/system_setting.dart';
 
 class BluetoothScanService extends ChangeNotifier {
   FlutterBlue _flutterBlue = FlutterBlue.instance;
   Duration _scanTimeoutDuration = Duration(seconds: 15);
-
-  var _scanSubscription;
-  var _bluetoothStateSubscription;
 
   Map<DeviceIdentifier, ScanResult> scanResults = {};
   bool isScanning = false;
@@ -22,16 +20,24 @@ class BluetoothScanService extends ChangeNotifier {
     bluetoothStateListner();
   }
 
-  startScan() async {
-    if (!isBluetoothOn) {
-      await turnOnBluetooth();
+  startScan({@required BuildContext context}) async {
+    bool hasLocationAccess = await PermissionsService().hasLocationAccess();
+    if (hasLocationAccess) {
+      _scan();
     }
-    if (isBluetoothOn) {
+    if (!hasLocationAccess) {
+      await PermissionsService().requestLoctionAccess(context: context);
+      _scan();
+    }
+  }
+
+  _scan() async {
+    if (isBluetoothOn && await PermissionsService().hasLocationAccess()) {
       stopScan(); //Stop previously running scan
       isScanning = true;
       scanResults.clear();
       notifyListeners();
-      _scanSubscription = _flutterBlue.scan(timeout: _scanTimeoutDuration)
+      _flutterBlue.scan(timeout: _scanTimeoutDuration)
         ..listen(
           (ScanResult s) {
             if (s.advertisementData.localName != "") {
@@ -47,14 +53,13 @@ class BluetoothScanService extends ChangeNotifier {
   }
 
   stopScan() {
-    /// TODO: cancel [_bluetoothStateSubscroption]
     _flutterBlue.stopScan();
     isScanning = false;
     notifyListeners();
   }
 
   void bluetoothStateListner() {
-    _bluetoothStateSubscription = _flutterBlue.state
+    _flutterBlue.state
       ..listen(
         (bluetoothState) {
           isBluetoothOn = bluetoothState == BluetoothState.on;

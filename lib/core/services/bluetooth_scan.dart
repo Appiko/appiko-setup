@@ -14,8 +14,6 @@ class BluetoothScanService extends ChangeNotifier {
   bool isScanning = false;
   bool isBluetoothOn = true;
 
-  bool isBluetoothAvailable = false;
-
   BluetoothScanService() {
     bluetoothStateListner();
   }
@@ -62,8 +60,8 @@ class BluetoothScanService extends ChangeNotifier {
     _flutterBlue.state
       ..listen(
         (bluetoothState) {
-          isBluetoothOn = bluetoothState == BluetoothState.on;
           print(bluetoothState);
+          isBluetoothOn = (bluetoothState == BluetoothState.on);
           notifyListeners();
         },
       );

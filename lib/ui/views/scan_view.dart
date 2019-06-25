@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
-import 'package:setup/ui/views/device_settings_view.dart';
+import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
 class ScanView extends StatefulWidget {
@@ -17,8 +16,6 @@ class _ScanViewState extends State<ScanView> {
     bool _isScanning = Provider.of<BluetoothScanService>(context).isScanning;
     List _scanResults =
         Provider.of<BluetoothScanService>(context).scanResults.values.toList();
-    bool _isConnected =
-        Provider.of<BluetoothConnectionService>(context).isConnected;
     bool _isBluetoothOn =
         Provider.of<BluetoothScanService>(context).isBluetoothOn;
 
@@ -43,10 +40,9 @@ class _ScanViewState extends State<ScanView> {
                               _scanResults[index].advertisementData.localName),
                           trailing: Text(_scanResults[index].rssi.toString()),
                           onTap: () {
-                            Provider.of<BluetoothConnectionService>(context)
+                            locator<BluetoothScanService>().stopScan();
+                            locator<BluetoothConnectionService>()
                                 .connect(_scanResults[index].device);
-                            Provider.of<BluetoothScanService>(context)
-                                .stopScan();
                             Navigator.pushNamed(context, '/device-settings');
                           });
                     },

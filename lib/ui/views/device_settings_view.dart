@@ -65,9 +65,8 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                   iconTheme: IconThemeData(color: Colors.white),
                   title: Text(
                     Provider.of<BluetoothConnectionService>(context)
-                            .device
-                            ?.name ??
-                        "loading...",
+                        .device
+                        .name,
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Colors.white,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/core/view_models/bottom_nav_model.dart';
 
 class BottomNav extends StatefulWidget {

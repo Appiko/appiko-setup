@@ -8,7 +8,7 @@ class BottomNavModel extends ChangeNotifier {
   void handleTap(int value) {
     if (value != _index) {
       _index = value;
-      print("Setting index to $_index");
+      print("Chaning bottom nav index to $_index");
       notifyListeners();
     }
   }

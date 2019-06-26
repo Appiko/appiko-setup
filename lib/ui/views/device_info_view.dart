@@ -3,7 +3,7 @@ import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
 class DeviceInfoView extends StatelessWidget {
-  Map<String, String> deviceInfo = {
+  final Map<String, String> deviceInfo = {
     "Name": "SenseBe #5",
     "Battery Type": "Rechargable AA",
     "Battery Voltage": "2.3V",

@@ -14,6 +14,20 @@ class SetupTheme with ChangeNotifier {
 
   // Default Theme
   ThemeData appikoDefualtTheme = ThemeData(
+    textTheme: TextTheme(
+      body1: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      body2: TextStyle(
+        fontSize: 14,
+        color: _black,
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(),
+    ),
     brightness: Brightness.light,
     primaryColor: _black,
     accentColor: _oneColor,
@@ -21,6 +35,7 @@ class SetupTheme with ChangeNotifier {
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: _black,
     ),
+    cursorColor: _oneColor,
     scaffoldBackgroundColor: _backgroundLight,
     appBarTheme: AppBarTheme(
       iconTheme: IconThemeData(color: _black),
@@ -34,11 +49,26 @@ class SetupTheme with ChangeNotifier {
   ThemeData appikoDarkTheme = ThemeData(
     brightness: Brightness.dark,
     toggleableActiveColor: _oneColor,
-    backgroundColor: _oneColor.withAlpha(100),
+    backgroundColor: _black.withAlpha(100),
     accentColor: _oneColor,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: Colors.white,
       foregroundColor: _black,
+    ),
+    cursorColor: _oneColor,
+    textTheme: TextTheme(
+      body1: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      body2: TextStyle(
+        fontSize: 14,
+        color: Colors.white,
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(),
     ),
     appBarTheme: AppBarTheme(
       iconTheme: IconThemeData(color: Colors.white),

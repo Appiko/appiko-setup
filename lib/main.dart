@@ -6,6 +6,7 @@ import 'package:setup/core/services/bluetooth_scan.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/setup_theme.dart';
+import 'package:setup/ui/views/create_profile_view.dart';
 import 'package:setup/ui/views/device_info_view.dart';
 import 'package:setup/ui/views/device_settings_view.dart';
 import 'package:setup/ui/views/more_view.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         '/': (_) => MyHomePage(),
         '/device-settings': (_) => DeviceSettingsView(),
         '/device-info': (_) => DeviceInfoView(),
+        '/profiles/new': (_) => CreateProfileView(),
       },
     );
   }

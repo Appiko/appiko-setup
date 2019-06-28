@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
+import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/core/view_models/bottom_nav_model.dart';
 import 'package:setup/ui/setup_theme.dart';
@@ -13,4 +14,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => BottomNavModel());
   locator.registerLazySingleton(() => BluetoothScanService());
   locator.registerLazySingleton(() => BluetoothConnectionService());
+  locator.registerLazySingleton(() => ProfilesService());
 }

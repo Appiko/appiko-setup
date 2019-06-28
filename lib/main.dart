@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
+import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/setup_theme.dart';
@@ -34,6 +35,7 @@ Future main() async {
         ChangeNotifierProvider.value(value: locator<BluetoothScanService>()),
         ChangeNotifierProvider.value(
             value: locator<BluetoothConnectionService>()),
+        ChangeNotifierProvider.value(value: locator<ProfilesService>()),
       ],
       child: MyApp(),
     ),
@@ -44,8 +46,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    print("Rebuilding app");
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: Provider.of<SharedPrefs>(context).darkTheme
           ? locator<SetupTheme>().appikoDarkTheme
           : locator<SetupTheme>().appikoDefualtTheme,

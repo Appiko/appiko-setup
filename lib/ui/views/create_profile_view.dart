@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:setup/core/services/profiles.dart';
+import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 
@@ -72,10 +74,11 @@ class _CreateProfileViewState extends State<CreateProfileView> {
       bottomNavigationBar: PageNavigationBar(
         showPrevious: false,
         showNext: true,
-        onNext: () {
+        onNext: () async {
+          await locator<ProfilesService>().addProfile(
+              profileName: _profileNameController.text,
+              deviceType: _selectedDevice);
           print("next");
-          print(
-              "//TODO: create profile with ${_profileNameController.text} for $_selectedDevice type");
         },
       ),
     );

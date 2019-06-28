@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPrefs extends ChangeNotifier {
+class SharedPrefs with ChangeNotifier {
   SharedPreferences _prefs;
 
   bool get darkTheme {

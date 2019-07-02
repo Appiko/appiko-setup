@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:setup/core/services/platform_services.dart';
+
 
 class PermissionsService {
   Map<PermissionGroup, PermissionStatus> permissions = {};
@@ -11,12 +13,20 @@ class PermissionsService {
     return (locationStatus == PermissionStatus.granted);
   }
 
+  Future<bool> isLocationOn() async {
+    ServiceStatus locationService = await PermissionHandler()
+        .checkServiceStatus(PermissionGroup.locationWhenInUse);
+    if (locationService != ServiceStatus.enabled) {
+      print('making platform call');
+      await PlatformServies().requestLocationService();
+    }
+    return (await PermissionHandler()
+            .checkServiceStatus(PermissionGroup.locationWhenInUse) ==
+        ServiceStatus.enabled);
+  }
+
   Future<dynamic> requestLoctionAccess({@required BuildContext context}) async {
-    // if (await _showInfoDialog(context)) {
     return _showInfoDialog(context);
-    // } else {
-    // return false;
-    // }
   }
 
   _showInfoDialog(BuildContext context) {
@@ -51,6 +61,7 @@ class PermissionsService {
                       await PermissionHandler().requestPermissions(
                           [PermissionGroup.locationWhenInUse]),
                     );
+                    PlatformServies().requestLocationService();
                     Navigator.of(context).pop();
                   }),
             ],

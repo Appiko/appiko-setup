@@ -20,11 +20,16 @@ class BluetoothScanService with ChangeNotifier {
 
   startScan({@required BuildContext context}) async {
     bool hasLocationAccess = await PermissionsService().hasLocationAccess();
-    if (hasLocationAccess) {
-      _scan();
+    if (Platform.isAndroid) {
+      if (hasLocationAccess) {
+        _scan();
+      }
+      if (!hasLocationAccess) {
+        await PermissionsService().requestLoctionAccess(context: context);
+        _scan();
+      }
     }
-    if (!hasLocationAccess) {
-      await PermissionsService().requestLoctionAccess(context: context);
+    if (Platform.isIOS) {
       _scan();
     }
   }
@@ -73,6 +78,20 @@ class BluetoothScanService with ChangeNotifier {
     if (Platform.isAndroid) {
       const intent = AndroidIntent(
         action: 'android.bluetooth.adapter.action.REQUEST_ENABLE',
+      );
+      await intent.launch();
+    }
+    if (Platform.isIOS) {
+      SystemSetting.goto(SettingTarget.BLUETOOTH);
+    }
+  }
+
+  Future turnOnLocation() async {
+    scanResults.clear();
+    stopScan();
+    if (Platform.isAndroid) {
+      const intent = AndroidIntent(
+        action: 'REQUEST_CHECK_SETTINGS',
       );
       await intent.launch();
     }

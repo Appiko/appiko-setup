@@ -15,6 +15,8 @@ import 'package:setup/ui/views/profiles_view.dart';
 import 'package:setup/ui/views/scan_view.dart';
 import 'package:setup/ui/views/shop_view.dart';
 import 'package:setup/ui/widgets/bottom_nav.dart';
+import 'package:setup/ui/sense_pi/device_settings_view.dart' as pi;
+import 'package:setup/ui/sense_be/device_settings_view.dart' as be;
 
 import 'package:setup/core/view_models/bottom_nav_model.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
@@ -56,6 +58,8 @@ class MyApp extends StatelessWidget {
         '/device-settings': (_) => DeviceSettingsView(),
         '/device-info': (_) => DeviceInfoView(),
         '/profiles/new': (_) => CreateProfileView(),
+        '/devices/sense-pi': (_) => pi.DeviceSettingsView(),
+        '/devices/sense-be': (_) => be.DeviceSettingsView(),
       },
     );
   }

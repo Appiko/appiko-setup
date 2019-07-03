@@ -52,7 +52,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: Provider.of<SharedPrefs>(context).darkTheme
           ? locator<SetupTheme>().appikoDarkTheme
-          : locator<SetupTheme>().appikoDefualtTheme,
+          : locator<SetupTheme>().appikoLightTheme,
+      darkTheme: locator<SetupTheme>().appikoDarkTheme,
       routes: {
         '/': (_) => MyHomePage(),
         '/device-settings': (_) => DeviceSettingsView(),

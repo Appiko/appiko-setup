@@ -31,6 +31,7 @@ dependencies:
   system_setting: ^0.1.3 #For opening up the settings page
   permission_handler: '^3.1.0' #Handle location permissions on android
   path_provider: ^1.1.0 #Get filesystem path
+  share_extend: ^1.0.9 #Share profiles
 
 
 dev_dependencies:

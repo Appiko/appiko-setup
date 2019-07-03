@@ -31,10 +31,10 @@ class ProfilesView extends StatelessWidget {
                         style: Theme.of(context).textTheme.caption,
                       ),
                       trailing: IconButton(
-                          icon: Icon(OMIcons.delete),
+                          icon: Icon(OMIcons.share),
                           onPressed: () {
                             locator<ProfilesService>()
-                                .deleteProfile(profiles[index].filePath);
+                                .shareProfile(profiles[index].filePath);
                           }),
                       onTap: () {},
                     );

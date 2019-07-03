@@ -22,8 +22,14 @@ class ProfilesView extends StatelessWidget {
                 itemBuilder: (_, index) {
                   if (index < profiles.length) {
                     return ListTile(
-                      title: Text(profiles[index].fileName),
-                      subtitle: Text(profiles[index].deviceType),
+                      title: Text(
+                        profiles[index].fileName,
+                        style: Theme.of(context).textTheme.body1,
+                      ),
+                      subtitle: Text(
+                        profiles[index].deviceType,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
                       trailing: IconButton(
                           icon: Icon(OMIcons.delete),
                           onPressed: () {

@@ -15,13 +15,15 @@ class _BottomNavState extends State<BottomNav> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Theme.of(context).accentColor,
+      unselectedItemColor: Theme.of(context).primaryColor,
+      elevation: 16.0,
       currentIndex: bottomNavModel.index,
       onTap: (value) => bottomNavModel.handleTap(value),
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(OMIcons.bluetooth),
           activeIcon: Icon(OMIcons.bluetoothSearching),
-          title: Text("SCAN"),
+          title: Text("Scan"),
         ),
         BottomNavigationBarItem(
           icon: Icon(OMIcons.collectionsBookmark),

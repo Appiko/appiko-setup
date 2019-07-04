@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class PageNavigationBar extends StatelessWidget {
+  // Fuction to call when previous is clicked
   final VoidCallback onPrevious;
+  // Function to call when next is clicked
   final VoidCallback onNext;
+  // Show PREVIOUS button
   final bool showPrevious;
+  //show NEXT button
   final bool showNext;
 
   PageNavigationBar({
@@ -41,7 +45,7 @@ class PageNavigationBar extends StatelessWidget {
                   ),
                   label: Text(
                     "PREVIOUS",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.button,
                   ),
                   onPressed: onPrevious,
                 ),
@@ -53,7 +57,7 @@ class PageNavigationBar extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         "NEXT",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.button,
                       ),
                       const SizedBox(width: 8.0),
                       Icon(

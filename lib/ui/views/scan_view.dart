@@ -95,7 +95,6 @@ class _ScanViewState extends State<ScanView> {
 }
 
 String _getRoute({ScanResult device}) {
-  print("asd ${Devices.devices[device.advertisementData.localName]} asd");
   switch (Devices.devices[device.advertisementData.localName]) {
     case Device.SENSE_PI:
       return "/devices/sense-pi";

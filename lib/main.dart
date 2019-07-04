@@ -15,8 +15,8 @@ import 'package:setup/ui/views/profiles_view.dart';
 import 'package:setup/ui/views/scan_view.dart';
 import 'package:setup/ui/views/shop_view.dart';
 import 'package:setup/ui/widgets/bottom_nav.dart';
-import 'package:setup/ui/sense_pi/device_settings_view.dart' as pi;
-import 'package:setup/ui/sense_be/device_settings_view.dart' as be;
+import 'package:setup/ui/devices/sense_pi/1.0/device_settings_view.dart' as pi;
+import 'package:setup/ui/devices/sense_be/1.0/device_settings_view.dart' as be;
 
 import 'package:setup/core/view_models/bottom_nav_model.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';

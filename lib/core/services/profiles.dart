@@ -37,7 +37,7 @@ class ProfilesService with ChangeNotifier {
 
   _generateFilePath(String profileName, String deviceType) async {
     final path = await _localPath;
-    return "$path/profiles/$profileName$deviceType​${DateTime.now().millisecondsSinceEpoch}";
+    return "$path/profiles/$profileName​$deviceType​${DateTime.now().millisecondsSinceEpoch}";
   }
 
   addProfile({@required profileName, @required deviceType}) async {

@@ -30,13 +30,27 @@ class ProfilesView extends StatelessWidget {
                         profiles[index].deviceType,
                         style: Theme.of(context).textTheme.caption,
                       ),
-                      trailing: IconButton(
-                          icon: Icon(OMIcons.share),
-                          onPressed: () {
-                            locator<ProfilesService>()
-                                .shareProfile(profiles[index].filePath);
-                          }),
-                      onTap: () {},
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          IconButton(
+                              icon: Icon(OMIcons.share),
+                              onPressed: () {
+                                locator<ProfilesService>()
+                                    .shareProfile(profiles[index].filePath);
+                              }),
+                          IconButton(
+                              icon: Icon(OMIcons.delete),
+                              onPressed: () {
+                                locator<ProfilesService>()
+                                    .deleteProfile(profiles[index].filePath);
+                              }),
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, '/devices/sense-pi/profile-summary');
+                      },
                     );
                   }
                   if (index == profiles.length) {

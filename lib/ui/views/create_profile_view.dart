@@ -79,6 +79,7 @@ class _CreateProfileViewState extends State<CreateProfileView> {
               profileName: _profileNameController.text,
               deviceType: _selectedDevice);
           print("next");
+          Navigator.pushNamed(context, '/devices/sense-pi/profile-summary');
         },
       ),
     );

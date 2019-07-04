@@ -6,6 +6,7 @@ import 'package:setup/core/services/bluetooth_scan.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
+import 'package:setup/ui/devices/sense_be/1.0/profiles/profile_summary_view.dart';
 import 'package:setup/ui/setup_theme.dart';
 import 'package:setup/ui/views/create_profile_view.dart';
 import 'package:setup/ui/views/device_info_view.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         '/profiles/new': (_) => CreateProfileView(),
         '/devices/sense-pi': (_) => pi.DeviceSettingsView(),
         '/devices/sense-be': (_) => be.DeviceSettingsView(),
+        '/devices/sense-pi/profile-summary': (_) => ProfileSummaryView(),
       },
     );
   }

@@ -44,7 +44,7 @@ class ProfilesService with ChangeNotifier {
     // seprated by a Zero width space character U+200B `​`​
     final path = await _localPath;
     Directory("$path/profiles").createSync();
-    File profileFile = File(_generateFilePath(profileName, deviceType));
+    File profileFile = File(await _generateFilePath(profileName, deviceType));
     profileFile.writeAsStringSync("123");
     notifyListeners();
     getProfiles();

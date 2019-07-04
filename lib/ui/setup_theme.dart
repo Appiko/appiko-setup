@@ -121,7 +121,7 @@ class SetupTheme with ChangeNotifier {
       ),
       caption: base.caption.copyWith(
         fontWeight: FontWeight.w400,
-        fontSize: 14.0,
+        fontSize: 12.0,
       ),
     );
   }

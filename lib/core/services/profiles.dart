@@ -35,12 +35,16 @@ class ProfilesService with ChangeNotifier {
     return directory.path;
   }
 
+  _generateFilePath(String profileName, String deviceType) async {
+    final path = await _localPath;
+    return "$path/profiles/$profileName$deviceType​${DateTime.now().millisecondsSinceEpoch}";
+  }
+
   addProfile({@required profileName, @required deviceType}) async {
-    // Zero width space character U+200B `​`​
+    // seprated by a Zero width space character U+200B `​`​
     final path = await _localPath;
     Directory("$path/profiles").createSync();
-    File profileFile = File(
-        "$path/profiles/$profileName​$deviceType​${DateTime.now().millisecondsSinceEpoch}");
+    File profileFile = File(_generateFilePath(profileName, deviceType));
     profileFile.writeAsStringSync("123");
     notifyListeners();
     getProfiles();
@@ -51,6 +55,11 @@ class ProfilesService with ChangeNotifier {
     file.delete();
     notifyListeners();
     getProfiles();
+  }
+
+  renameProfile(ProfileFile profile) {
+    File file = File(profile.filePath);
+    file.rename(_generateFilePath(profile.fileName, profile.deviceType));
   }
 
   shareProfile(String filePath) async {

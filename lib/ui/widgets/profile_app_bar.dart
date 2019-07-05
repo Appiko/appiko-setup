@@ -19,8 +19,6 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
-
     return AppBar(
         backgroundColor: black,
         actionsIconTheme: IconThemeData(color: Colors.white),

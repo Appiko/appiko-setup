@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:setup/ui/widgets/bottom_action_bar.dart';
 import 'package:setup/ui/widgets/profile_app_bar.dart';
 
 class ProfileSummaryView extends StatelessWidget {
@@ -18,6 +19,9 @@ class ProfileSummaryView extends StatelessWidget {
               Center(child: Text("b")),
               Center(child: Text("c")),
             ],
+          ),
+          bottomNavigationBar: BottomActionBar(
+            actionLabel: "Save",
           ),
         ),
       ),

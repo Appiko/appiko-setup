@@ -48,7 +48,7 @@ class BottomActionBar extends StatelessWidget {
               children: <Widget>[
                 FloatingActionButton.extended(
                   label: Text(
-                    "${actionLabel.toUpperCase().padLeft((((8 - actionLabel.length) / 2) + actionLabel.length).floor()).padRight(8)}",
+                    "${actionLabel.toUpperCase().padLeft((4 + (actionLabel.length / 2)).floor()).padRight(8)}",
                     style: TextStyle(),
                   ),
                   onPressed: onActionPressed,

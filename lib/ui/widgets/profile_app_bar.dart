@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
-import 'package:provider/provider.dart';
-import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/ui/widgets/custom_tab_bar.dart';
 import 'package:setup/ui/widgets/popup_menu_item_button.dart';
 
@@ -63,7 +61,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                 PopupMenuItem(
                   child: PopupMenuItemButton(
                     onPressed: () {},
-                    label: "Delete",
+                    label: "Share",
                     icon: Icon(OMIcons.delete),
                   ),
                 ),

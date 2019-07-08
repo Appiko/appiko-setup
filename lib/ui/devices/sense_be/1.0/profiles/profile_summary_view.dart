@@ -22,6 +22,9 @@ class ProfileSummaryView extends StatelessWidget {
           ),
           bottomNavigationBar: BottomActionBar(
             actionLabel: "Save",
+            onClosePressed: () {
+              Navigator.pop(context);
+            },
           ),
         ),
       ),

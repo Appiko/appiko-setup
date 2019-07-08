@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-//  TODO: Implement onPress
 class BottomActionBar extends StatelessWidget {
   final String actionLabel;
   final bool showProfileButton;
@@ -34,7 +33,10 @@ class BottomActionBar extends StatelessWidget {
                       highlightColor: Colors.transparent,
                       child: Row(
                         children: [
-                          Text("Profiles"),
+                          Text(
+                            "Profiles",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           Icon(Icons.keyboard_arrow_up),
                         ],
                       ),
@@ -54,7 +56,10 @@ class BottomActionBar extends StatelessWidget {
                 FlatButton(
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
-                  child: Text("CLOSE"),
+                  child: Text(
+                    "CLOSE",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   onPressed: onClosePressed,
                 )
               ],

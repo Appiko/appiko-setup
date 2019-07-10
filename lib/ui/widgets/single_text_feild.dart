@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 ///    SingleTextField(
 ///      title: "Hello",
 ///      description: "This is a description",
-///      textFiledForm: TextField(
+///      textField: TextField(
 ///        decoration: InputDecoration(
 ///          labelText: "seconds",
 ///          helperText: "Cannot be more than 100s",
@@ -13,18 +13,18 @@ import 'package:flutter/material.dart';
 ///        keyboardType: TextInputType.number,
 ///      ),
 ///    );
-///    ```
+/// ```
 
 class SingleTextField extends StatelessWidget {
   final String title;
   final String description;
-  final Widget textFiledForm;
+  final TextField textField;
 
   SingleTextField({
     Key key,
     @required this.title,
     @required this.description,
-    @required this.textFiledForm,
+    @required this.textField,
   }) : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class SingleTextField extends StatelessWidget {
             style: Theme.of(context).textTheme.body2,
           ),
           SizedBox(height: 10),
-          textFiledForm,
+          textField,
         ],
       ),
     );

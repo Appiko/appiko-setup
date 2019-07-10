@@ -71,7 +71,7 @@ class _CameraTriggerRadioOptionsState extends State<CameraTriggerRadioOptions> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Expanded(
+        Flexible(
           child: ListView.builder(
             itemCount: options.length,
             itemBuilder: (_, int index) => RadioListTile(
@@ -86,7 +86,7 @@ class _CameraTriggerRadioOptionsState extends State<CameraTriggerRadioOptions> {
                 ),
           ),
         ),
-        Expanded(
+        Flexible(
           child: Padding(
             padding: const EdgeInsets.only(left: 24, right: 24),
             child: Text(options

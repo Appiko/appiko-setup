@@ -30,8 +30,8 @@ class DualTextField extends StatefulWidget {
 
   DualTextField({
     Key key,
-    this.title,
-    this.description,
+    @required this.title,
+    @required this.description,
     this.firstFieldLabel,
     this.secondFieldLabel,
     @required this.firstFieldMax,

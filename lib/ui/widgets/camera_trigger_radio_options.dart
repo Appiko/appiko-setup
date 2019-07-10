@@ -24,7 +24,8 @@ enum CameraAction {
 class CameraTriggerRadioOptions extends StatefulWidget {
   CameraAction selectedAction;
 
-  CameraTriggerRadioOptions({Key key, this.selectedAction}) : super(key: key);
+  CameraTriggerRadioOptions({Key key, @required this.selectedAction})
+      : super(key: key);
 
   @override
   _CameraTriggerRadioOptionsState createState() =>

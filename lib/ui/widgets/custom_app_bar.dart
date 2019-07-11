@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
 
+///
+/// Example
+///
+///
+/// ```dart
+///     Scaffold(
+///       backgroundColor: Colors.white,
+///       appBar: CustomAppBar(
+///         title: "Camera Trigger",
+///         downArrow: true,
+///         onDownArrowPressed: () {
+///           Navigator.pop(context);
+///         },
+///       ),
+///     );
+/// ```
+///
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-
-  const CustomAppBar({Key key, @required this.title}) : super(key: key);
+  final bool downArrow;
+  final VoidCallback onDownArrowPressed;
+  const CustomAppBar(
+      {Key key, @required this.title, this.downArrow, this.onDownArrowPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +35,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           fit: BoxFit.fitWidth,
           child: Text(title),
         ),
+        leading: downArrow != null
+            ? IconButton(
+                icon: Icon(Icons.keyboard_arrow_down),
+                onPressed: onDownArrowPressed,
+              )
+            : null,
       ),
     );
   }

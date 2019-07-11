@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// Example
+///
+/// ```dart
+/// PageNavigationBar(
+///             showNext: true,
+///             showPrevious: false,
+///             onNext: () {
+///               Navigator.pushNamed(context, '/sense-be/motion-setting');
+///             },
+///           );
+/// ```
+///
+
 class PageNavigationBar extends StatelessWidget {
   // Fuction to call when previous is clicked
   final VoidCallback onPrevious;
@@ -9,6 +22,9 @@ class PageNavigationBar extends StatelessWidget {
   final bool showPrevious;
   //show NEXT button
   final bool showNext;
+  // next and previous button labels
+  final String nextLabel;
+  final String previousLabel;
 
   PageNavigationBar({
     Key key,
@@ -16,6 +32,8 @@ class PageNavigationBar extends StatelessWidget {
     this.onNext,
     @required this.showPrevious,
     @required this.showNext,
+    this.nextLabel,
+    this.previousLabel,
   }) : super(key: key);
 
   @override
@@ -44,8 +62,11 @@ class PageNavigationBar extends StatelessWidget {
                     size: 16,
                   ),
                   label: Text(
-                    "PREVIOUS",
-                    style: Theme.of(context).textTheme.button,
+                    previousLabel ?? "PREVIOUS",
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
                   onPressed: onPrevious,
                 ),
@@ -56,8 +77,11 @@ class PageNavigationBar extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        "NEXT",
-                        style: Theme.of(context).textTheme.button,
+                        nextLabel ?? "NEXT",
+                        style: Theme.of(context)
+                            .textTheme
+                            .button
+                            .copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 8.0),
                       Icon(

@@ -36,6 +36,7 @@ class CustomSwitchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: EdgeInsets.all(0),
       title: Text(
         title,
         style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),

@@ -29,7 +29,8 @@ class SingleTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Padding(
+      padding: EdgeInsets.only(top: 24, bottom: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -41,7 +42,7 @@ class SingleTextField extends StatelessWidget {
             description,
             style: Theme.of(context).textTheme.body2,
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 30),
           textField,
         ],
       ),

@@ -8,7 +8,7 @@ class CameraTriggerOption {
   CameraTriggerOption({
     @required this.label,
     @required this.action,
-    @required this.description,
+    this.description,
   });
 }
 
@@ -36,35 +36,35 @@ class _CameraTriggerRadioOptionsState extends State<CameraTriggerRadioOptions> {
   List<CameraTriggerOption> options = [
     CameraTriggerOption(
       label: "Single Picture",
-      description: "Desc...",
       action: CameraAction.SINGLE_PICTURE,
     ),
     CameraTriggerOption(
       label: "Long Press",
-      description: "Long press Desc...",
+      description:
+          "On Motion event, send a Trigger Pulse of a specified long duration to the camera. This is useful when the camera is set in bulb mode, especially for night photgraphy with flash(es) to illuminate the foreground. Also, this mode is useful when the camera is set in burst mode to take multiple pictures as quick as possible.",
       action: CameraAction.LONG_PRESS,
     ),
     CameraTriggerOption(
       label: "Multiple Pictures",
-      description: "multiple pictures Desc...",
+      description:
+          """At every Motion event, two or more pictures are taken by sending the required number of Trigger Pulses at pre-defined time intervals.""",
       action: CameraAction.MULTIPLE_PICTURES,
     ),
     CameraTriggerOption(
       label: "Video",
       description:
           """Record video by asserting the camera’s shutter button to start and also to stop the recording. The stopping of the video can also be extended if motion is detected at the end of the video. 
-
 Warning: As pulses sent to the camera to start and stop the video are identical, it is essential to ensure that the camera starts recording when there is a Motion Event from the sensor. If needed turn the video recording off manually before allowing the sensor to trigger a new recording.""",
       action: CameraAction.VIDEO,
     ),
     CameraTriggerOption(
       label: "Half Press",
-      description: "Half Press Desc...",
+      description:
+          "Sends a Half-Press Pulse to the camera, which usually wakes it up and/or activates the autofocus if the camera is set in this mode. Note that this can also be used to start video recording on Canon Cameras with Magic Lantern firmware installed (see the chapter on Video Recording in the User’s Manual). ",
       action: CameraAction.HALF_PRESS,
     ),
     CameraTriggerOption(
       label: "No Action",
-      description: "No Desc...",
       action: CameraAction.NONE,
     ),
   ];
@@ -94,9 +94,10 @@ Warning: As pulses sent to the camera to start and stop the video are identical,
             padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
             child: Text(
                 options
-                    .firstWhere((e) => e.action == widget.selectedAction)
-                    .description
-                    .trim(),
+                        .firstWhere((e) => e.action == widget.selectedAction)
+                        .description
+                        ?.trim() ??
+                    "",
                 style:
                     Theme.of(context).textTheme.caption.copyWith(fontSize: 13)),
           ),

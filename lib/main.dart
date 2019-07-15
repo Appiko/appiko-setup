@@ -21,6 +21,7 @@ import 'package:setup/ui/devices/sense_be/1.0/device_settings_view.dart' as be;
 
 import 'package:setup/core/view_models/bottom_nav_model.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
+import 'package:setup/ui/widgets/setting_timepicker_screen.dart';
 
 Future main() async {
   setupLocator(); // For inital class instances
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
         '/devices/sense-pi': (_) => pi.DeviceSettingsView(),
         '/devices/sense-be': (_) => be.DeviceSettingsView(),
         '/devices/sense-pi/profile-summary': (_) => ProfileSummaryView(),
+        '/new-setting': (_) => SettingTimepickerScreen(),
       },
     );
   }

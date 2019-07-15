@@ -38,20 +38,23 @@ class CustomSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          title,
-          style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
-        ),
-        Text(
-          description,
-          style: Theme.of(context).textTheme.body2,
-        ),
-        SizedBox(height: 10),
-        slider
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 24, bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+          ),
+          Text(
+            description,
+            style: Theme.of(context).textTheme.body2,
+          ),
+          SizedBox(height: 20),
+          slider
+        ],
+      ),
     );
   }
 }

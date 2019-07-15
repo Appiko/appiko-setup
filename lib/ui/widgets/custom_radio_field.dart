@@ -52,7 +52,11 @@ class CustomRadioField extends StatelessWidget {
           style: Theme.of(context).textTheme.body2,
         ),
         SizedBox(height: 10),
-        Flexible(child: radioList),
+        Container(
+          //TODO: Hide ripples
+          child: radioList,
+          height: 120,
+        ),
       ],
     );
   }

@@ -40,6 +40,7 @@ class SetupTheme with ChangeNotifier {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(),
       ),
+      textSelectionHandleColor: oneColor,
       hintColor: black,
       iconTheme: IconThemeData(color: black),
       appBarTheme: AppBarTheme(
@@ -88,6 +89,7 @@ class SetupTheme with ChangeNotifier {
           ),
         ),
       ),
+      textSelectionHandleColor: oneColor,
       iconTheme: IconThemeData(color: Colors.white),
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(color: Colors.white),

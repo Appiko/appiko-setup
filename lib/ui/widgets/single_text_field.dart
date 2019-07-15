@@ -23,7 +23,7 @@ class SingleTextField extends StatelessWidget {
   SingleTextField({
     Key key,
     @required this.title,
-    @required this.description,
+    this.description,
     @required this.textField,
   }) : super(key: key);
 
@@ -38,11 +38,13 @@ class SingleTextField extends StatelessWidget {
             title,
             style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
           ),
-          Text(
-            description,
-            style: Theme.of(context).textTheme.body2,
-          ),
-          SizedBox(height: 30),
+          description != null
+              ? Text(
+                  description,
+                  style: Theme.of(context).textTheme.body2,
+                )
+              : Container(),
+          SizedBox(height: 20),
           textField,
         ],
       ),

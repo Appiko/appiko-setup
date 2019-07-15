@@ -31,7 +31,7 @@ class DualTextField extends StatefulWidget {
   DualTextField({
     Key key,
     @required this.title,
-    @required this.description,
+    this.description,
     this.firstFieldLabel,
     this.secondFieldLabel,
     @required this.firstFieldMax,
@@ -72,10 +72,12 @@ class _DualTextFieldState extends State<DualTextField> {
             widget.title,
             style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
           ),
-          Text(
-            widget.description,
-            style: Theme.of(context).textTheme.body2,
-          ),
+          widget.description != null
+              ? Text(
+                  widget.description,
+                  style: Theme.of(context).textTheme.body2,
+                )
+              : Container(),
           SizedBox(height: 20),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,

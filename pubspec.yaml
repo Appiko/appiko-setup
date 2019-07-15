@@ -32,7 +32,6 @@ dependencies:
   permission_handler: '^3.1.0' #Handle location permissions on android
   path_provider: ^1.1.0 #Get filesystem path
   share_extend: ^1.0.9 #Share profiles
-  flutter_time_picker_spinner: ^1.0.5 #Time picker
   
 
 

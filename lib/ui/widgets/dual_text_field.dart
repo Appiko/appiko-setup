@@ -53,31 +53,35 @@ class _DualTextFieldState extends State<DualTextField> {
 
   @override
   void initState() {
-    t1Controller.text = widget.firstFieldValue.toString() ?? "";
-    t2Controller.text = widget.secondFieldValue.toString() ?? "";
+    // TODO: Fix default values
+    t1Controller.text =
+        widget.firstFieldValue?.toString()?.padLeft(2, "0") ?? "00";
+    t2Controller.text =
+        widget.secondFieldValue?.toString()?.padLeft(2, "0") ?? "00";
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          widget.title,
-          style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
-        ),
-        Text(
-          widget.description,
-          style: Theme.of(context).textTheme.body2,
-        ),
-        SizedBox(height: 10),
-        Flexible(
-          flex: 1,
-          child: Row(
+    return Padding(
+      padding: const EdgeInsets.only(top: 24, bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            widget.title,
+            style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+          ),
+          Text(
+            widget.description,
+            style: Theme.of(context).textTheme.body2,
+          ),
+          SizedBox(height: 20),
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Flexible(
+                flex: 1,
                 child: TextField(
                   controller: t1Controller,
                   onChanged: (s) {
@@ -86,7 +90,7 @@ class _DualTextFieldState extends State<DualTextField> {
                   decoration: InputDecoration(
                     labelText: widget.firstFieldLabel ?? "hours",
                     helperText:
-                        "Cannot be more than ${widget.firstFieldMax}:${widget.secondFieldMax} \nBetween ${widget.firstFieldMin}:${widget.secondFieldMin} and ${widget.secondFieldMin}:${widget.secondFieldMax}",
+                        "Cannot be more than ${widget.firstFieldMax}:${widget.secondFieldMax.toString().padLeft(2, '0')}",
                     helperStyle: TextStyle(),
                   ),
                   keyboardType: TextInputType.number,
@@ -106,8 +110,8 @@ class _DualTextFieldState extends State<DualTextField> {
               )
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

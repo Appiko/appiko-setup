@@ -41,7 +41,6 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                     return "Enter a profile name";
                   }
                 },
-                autofocus: true,
               ),
               SizedBox(height: 40.0),
               Text(
@@ -75,11 +74,12 @@ class _CreateProfileViewState extends State<CreateProfileView> {
         showPrevious: false,
         showNext: true,
         onNext: () async {
-          await locator<ProfilesService>().addProfile(
-              profileName: _profileNameController.text,
-              deviceType: _selectedDevice);
-          print("next");
-          Navigator.pushNamed(context, '/devices/sense-pi/profile-summary');
+          if (_newProfileForm.currentState.validate()) {
+            await locator<ProfilesService>().addProfile(
+                profileName: _profileNameController.text,
+                deviceType: _selectedDevice);
+            Navigator.pushNamed(context, '/devices/sense-pi/profile-summary');
+          }
         },
       ),
     );

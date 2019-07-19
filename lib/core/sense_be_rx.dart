@@ -525,16 +525,17 @@ unpack(List<int> intData) {
     switch (triggerType) {
       case Trigger.MOTION_ONLY:
         // Sensor Setting
-        structure.settings[i].sensorSetting = MotionSetting()
+        structure.settings[i].sensorSetting = MotionSetting(
           // skiping isEnable which is 1 by default
-          ..numberOfTriggers = data.getUint8(offset += 2)
-          ..sensitivity = data.getUint16(offset += 1, Endian.little)
-          ..downtime = data.getUint16(offset += 2, Endian.little);
+          numberOfTriggers: data.getUint8(offset += 2),
+          sensitivity: data.getUint16(offset += 1, Endian.little),
+          downtime: data.getUint16(offset += 2, Endian.little),
+        );
         offset += 1;
         break;
       case Trigger.TIMER_ONLY:
         structure.settings[i].sensorSetting =
-            TimerSetting(data.getUint32(offset += 1, Endian.little));
+            TimerSetting(interval: data.getUint32(offset += 1, Endian.little));
         offset += 5;
         break;
       default:
@@ -583,9 +584,10 @@ unpack(List<int> intData) {
             motionTime == OperationTime.TIME_OF_DAY) ||
         (triggerType == Trigger.TIMER_ONLY &&
             timerTime == OperationTime.TIME_OF_DAY)) {
-      structure.settings[i].time = TimeOfDay()
-        ..startTime = data.getInt32(offset += 1, Endian.little)
-        ..endTime = data.getUint32(offset += 4, Endian.little);
+      structure.settings[i].time = TimeOfDay(
+        startTime: data.getInt32(offset += 1, Endian.little),
+        endTime: data.getUint32(offset += 4, Endian.little),
+      );
     }
     if ((triggerType == Trigger.MOTION_ONLY &&
             (motionTime == OperationTime.AMBIENT ||

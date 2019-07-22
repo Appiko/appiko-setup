@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:setup/ui/devices/sense_be/1.0/settings/setting_timepicker_screen.dart';
 import 'package:setup/ui/devices/sense_be/1.0/settings/timer_settings_view.dart';
 import 'package:setup/ui/widgets/bottom_action_bar.dart';
 import 'package:setup/ui/widgets/profile_app_bar.dart';
 import 'package:setup/ui/widgets/setting_summary_card.dart';
-import 'package:setup/ui/widgets/setting_timepicker_screen.dart';
 
 class ProfileSummaryView extends StatelessWidget {
   @override

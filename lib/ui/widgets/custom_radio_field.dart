@@ -34,8 +34,8 @@ class CustomRadioField extends StatelessWidget {
   const CustomRadioField({
     Key key,
     @required this.title,
-    @required this.description,
     @required this.radioList,
+    this.description,
   }) : super(key: key);
 
   @override
@@ -47,16 +47,14 @@ class CustomRadioField extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
         ),
-        Text(
-          description,
-          style: Theme.of(context).textTheme.body2,
-        ),
+        (description != null)
+            ? Text(
+                description,
+                style: Theme.of(context).textTheme.body2,
+              )
+            : Container(height: 0),
         SizedBox(height: 10),
-        Container(
-          //TODO: Hide ripples
-          child: radioList,
-          height: 120,
-        ),
+        radioList,
       ],
     );
   }

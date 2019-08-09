@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 ///          "Does your camera start recording video on full press or a half press?",
 ///      radioList: ListView(
 ///        children: <Widget>[
+///          shrinkWrap: true, //IMPORTANT if things dont fit
 ///          RadioListTile(
 ///            title: Text("Full Press"),
 ///            value: 0,
@@ -40,22 +41,25 @@ class CustomRadioField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          title,
-          style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
-        ),
-        (description != null)
-            ? Text(
-                description,
-                style: Theme.of(context).textTheme.body2,
-              )
-            : Container(height: 0),
-        SizedBox(height: 10),
-        radioList,
-      ],
+    return Padding(
+      padding: EdgeInsets.only(top: 12, bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+          ),
+          (description != null)
+              ? Text(
+                  description,
+                  style: Theme.of(context).textTheme.body2,
+                )
+              : Container(height: 0),
+          SizedBox(height: 10),
+          radioList,
+        ],
+      ),
     );
   }
 }

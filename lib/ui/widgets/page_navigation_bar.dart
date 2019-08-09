@@ -14,15 +14,19 @@ import 'package:flutter/material.dart';
 ///
 
 class PageNavigationBar extends StatelessWidget {
-  // Fuction to call when previous is clicked
+  /// Fuction to call when previous is clicked
   final VoidCallback onPrevious;
-  // Function to call when next is clicked
+
+  /// Function to call when next is clicked
   final VoidCallback onNext;
-  // Show PREVIOUS button
+
+  /// Show PREVIOUS button
   final bool showPrevious;
-  //show NEXT button
+
+  /// show NEXT button
   final bool showNext;
-  // next and previous button labels
+
+  /// next and previous button labels
   final String nextLabel;
   final String previousLabel;
 
@@ -63,10 +67,12 @@ class PageNavigationBar extends StatelessWidget {
                   ),
                   label: Text(
                     previousLabel ?? "PREVIOUS",
-                    style: Theme.of(context)
-                        .textTheme
-                        .button
-                        .copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.button.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: (onPrevious != null)
+                              ? Colors.black
+                              : Theme.of(context).disabledColor,
+                        ),
                   ),
                   onPressed: onPrevious,
                 ),
@@ -78,10 +84,12 @@ class PageNavigationBar extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         nextLabel ?? "NEXT",
-                        style: Theme.of(context)
-                            .textTheme
-                            .button
-                            .copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.button.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: (onNext != null)
+                                  ? Colors.black
+                                  : Theme.of(context).disabledColor,
+                            ),
                       ),
                       const SizedBox(width: 8.0),
                       Icon(

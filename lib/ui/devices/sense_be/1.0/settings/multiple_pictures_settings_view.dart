@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:setup/core/models/camera.dart';
+import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/shared_prefs.dart';
+import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/advanced_option_tile.dart';
-import 'package:setup/ui/widgets/advanced_option_wrapper.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
-import 'package:setup/ui/widgets/custom_switch_field.dart';
+import 'package:setup/ui/widgets/half_press.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
+import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 
 class MultiplePicturesSettingsView extends StatefulWidget {
+  Setting setting;
+
+  MultiplePicturesSettingsView({Key key, this.setting}) : super(key: key);
+
   @override
   _MultiplePicturesSettingsViewState createState() =>
       _MultiplePicturesSettingsViewState();
@@ -15,16 +25,54 @@ class MultiplePicturesSettingsView extends StatefulWidget {
 
 class _MultiplePicturesSettingsViewState
     extends State<MultiplePicturesSettingsView> {
-  bool advancedOption = false;
-  bool halfPress = false;
+  bool localAdvancedOption = locator<SharedPrefs>().advancedOptions;
+  TextEditingController triggerPulseDurationController =
+      TextEditingController();
+  TextEditingController halfPressPulseDurationController =
+      TextEditingController();
+  TextEditingController pictureIntervalController =
+      TextEditingController(text: "1");
+  TextEditingController numberOfPicturesController =
+      TextEditingController(text: "2");
+
+  var _multiplePicturesFormKey = GlobalKey<FormState>();
+
+  bool firstBuild = true;
+
   @override
   Widget build(BuildContext context) {
+    if (firstBuild &&
+        widget.setting?.cameraSetting?.runtimeType == MultiplePicturesSetting) {
+      numberOfPicturesController.text =
+          (widget.setting.cameraSetting as MultiplePicturesSetting)
+              .numberOfPictures
+              .toString();
+      pictureIntervalController.text =
+          ((widget.setting.cameraSetting as MultiplePicturesSetting)
+                      .pictureInterval /
+                  10)
+              .toString();
+      triggerPulseDurationController.text =
+          (widget.setting.cameraSetting.triggerPulseDuration / 10).toString();
+      halfPressPulseDurationController.text =
+          (widget.setting.cameraSetting.preFocusPulseDuration / 10).toString();
+      localAdvancedOption = Provider.of<SenseBeRxService>(context)
+          .metaStructure
+          .advancedOptionsEnabled[widget.setting.index];
+      firstBuild = false;
+    }
+    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
     return Scaffold(
+      backgroundColor:
+          isDark ? Theme.of(context).backgroundColor : Colors.white,
       appBar: CustomAppBar(
         title: "Multiple Pictures",
         downArrow: true,
         onDownArrowPressed: () {
-          Navigator.pop(context);
+          Provider.of<SenseBeRxService>(context).closeFlow();
+          String popUntilName = Provider.of<SenseBeRxService>(context)
+              .getCameraSettingDownArrowPageName();
+          Navigator.popUntil(context, ModalRoute.withName(popUntilName));
         },
       ),
       body: GestureDetector(
@@ -35,77 +83,101 @@ class _MultiplePicturesSettingsViewState
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: Column(
-              children: <Widget>[
-                AdvancedOptionTile(
-                  onChanged: (val) {
-                    setState(() {
-                      advancedOption = val;
-                    });
-                  },
-                  value: advancedOption,
-                ),
-                CustomDivider(),
-                SingleTextField(
-                  title: "Number of pictures",
-                  textField: TextField(
-                    decoration: InputDecoration(
-                      helperText: "2 to 32 pictures",
-                      labelText: "pictures",
+            child: Form(
+              key: _multiplePicturesFormKey,
+              child: Column(
+                children: <Widget>[
+                  Builder(
+                    builder: (context) => AdvancedOptionTile(
+                      value: localAdvancedOption,
+                      onChanged: (bool value) {
+                        setState(() {
+                          // if advanced option turnedoff
+                          if (!value) {
+                            triggerPulseDurationController.text =
+                                (locator<Setting>()
+                                            .cameraSetting
+                                            .triggerPulseDuration /
+                                        10)
+                                    .toString();
+                            halfPressPulseDurationController.text =
+                                (locator<Setting>()
+                                            .cameraSetting
+                                            .preFocusPulseDuration /
+                                        10)
+                                    .toString();
+                            Scaffold.of(context).showSnackBar(
+                                locator<SenseBeRxService>()
+                                    .advancedSettingOffSnackbar);
+                          }
+                          locator<SenseBeRxService>().setAdvancedOptions(value);
+
+                          localAdvancedOption = value;
+                        });
+                      },
                     ),
-                    keyboardType: TextInputType.number,
                   ),
-                ),
-                SingleTextField(
-                  title: "Time interval between pictures",
-                  textField: TextField(
-                    decoration: InputDecoration(
-                      helperText: "0.5s to 1000.0s",
-                      labelText: "seconds",
-                    ),
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                  ),
-                ),
-                AdvancedOptionWrapper(
-                  advancedOptionController: advancedOption,
-                  child: SingleTextField(
-                    title: "Trigger pulse duration*",
-                    description: "Duration of trigger pulse for each picture",
-                    textField: TextField(
+                  CustomDivider(),
+                  SingleTextField(
+                    title: "Number of pictures",
+                    textField: TextFormField(
                       decoration: InputDecoration(
-                          labelText: "seconds", helperText: "0.2 to 25.0s"),
+                        helperText: "2 to 32 pictures",
+                        labelText: "pictures",
+                      ),
+                      controller: numberOfPicturesController,
+                      keyboardType: TextInputType.number,
+                      validator: (str) {
+                        int n = int.tryParse(str);
+                        if (n == null) {
+                          return "Cannot be empty";
+                        }
+                        if (n < 2 || n > 32) {
+                          return "Not in valid range";
+                        }
+                        return null;
+                      },
+                      maxLength: 2,
+                      autovalidate: true,
+                    ),
+                  ),
+                  SingleTextField(
+                    title: "Time interval between pictures",
+                    textField: TextFormField(
+                      decoration: InputDecoration(
+                        helperText: "0.5s to 1000.0s",
+                        labelText: "seconds",
+                      ),
+                      controller: pictureIntervalController,
                       keyboardType:
                           TextInputType.numberWithOptions(decimal: true),
+                      validator: (str) {
+                        double interval = double.tryParse(str);
+                        if (interval == null) {
+                          return "Cannot be empty";
+                        }
+                        if (interval < 0.5 || interval > 1000) {
+                          return "Not in valid range";
+                        }
+                        return null;
+                      },
+                      maxLength: 4,
+                      autovalidate: true,
                     ),
                   ),
-                ),
-                CustomSwitchField(
-                  title: "Half press",
-                  description: "Half press (focus) before trigger event?",
-                  materialSwitch: Switch.adaptive(
-                    onChanged: (val) {
-                      setState(() {
-                        halfPress = val;
-                      });
-                    },
-                    value: halfPress,
+                  TriggerPulseDuration(
+                    localAdvancedOption: localAdvancedOption,
+                    triggerPulseDurationController:
+                        triggerPulseDurationController,
                   ),
-                ),
-                AdvancedOptionWrapper(
-                  advancedOptionController: advancedOption && halfPress,
-                  child: SingleTextField(
-                    title: "Half press pulse duration*",
-                    description: "Duration of half press before trigger event",
-                    textField: TextField(
-                      decoration: InputDecoration(
-                          labelText: "seconds", helperText: "0.2s to 25.0s"),
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                    ),
+                  HalfPress(
+                    halfPressPulseDurationController:
+                        halfPressPulseDurationController,
+                    localAdvancedOption: localAdvancedOption,
                   ),
-                )
-              ],
+                  SizedBox(height: 60)
+                ],
+              ),
             ),
           ),
         ),
@@ -114,10 +186,26 @@ class _MultiplePicturesSettingsViewState
         showNext: true,
         showPrevious: true,
         onNext: () {
-          Navigator.pop(context);
+          if (_multiplePicturesFormKey.currentState.validate()) {
+            Provider.of<SenseBeRxService>(context).setMultiplePicture(
+              triggerPulseDuration:
+                  double.tryParse(triggerPulseDurationController.text),
+              halfPressDuration:
+                  double.tryParse(halfPressPulseDurationController.text),
+              picuteInterval: double.tryParse(pictureIntervalController.text),
+              numberOfPictures: int.tryParse(numberOfPicturesController.text),
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    Provider.of<SenseBeRxService>(context).getSensorView(),
+              ),
+            );
+          }
         },
         onPrevious: () {
-          Navigator.pop(context);
+          Navigator.popAndPushNamed(context, "/camera-trigger-options");
         },
       ),
     );

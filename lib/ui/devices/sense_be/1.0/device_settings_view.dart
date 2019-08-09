@@ -223,5 +223,6 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
         },
       );
     }
+    return null;
   }
 }

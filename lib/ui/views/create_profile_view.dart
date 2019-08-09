@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:setup/core/services/profiles.dart';
+import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
@@ -12,12 +13,12 @@ class CreateProfileView extends StatefulWidget {
 
 class _CreateProfileViewState extends State<CreateProfileView> {
   final _newProfileForm = GlobalKey<FormState>();
-  final _deviceTypes = ["SensePi", "SenseBe"];
+  final _deviceTypes = ["SensePi", "SenseBeRx", "SenseBeTx"];
   final TextEditingController _profileNameController = TextEditingController();
-  String _selectedDevice = "SenseBe";
-
+  String _selectedDevice;
   @override
   Widget build(BuildContext context) {
+    _selectedDevice = _deviceTypes[1];
     return Scaffold(
       appBar: CustomAppBar(title: "Create Profile"),
       body: Padding(
@@ -32,14 +33,13 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                 style: Theme.of(context).textTheme.body1,
               ),
               SizedBox(height: 8.0),
-              Text("Lorem ipsum", style: Theme.of(context).textTheme.body2),
-              SizedBox(height: 8.0),
               TextFormField(
                 controller: _profileNameController,
                 validator: (value) {
                   if (value.isEmpty) {
                     return "Enter a profile name";
                   }
+                  return null;
                 },
               ),
               SizedBox(height: 40.0),
@@ -47,8 +47,6 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                 "Device Type",
                 style: Theme.of(context).textTheme.body1,
               ),
-              SizedBox(height: 8.0),
-              Text("Lorem ipsum", style: Theme.of(context).textTheme.body2),
               SizedBox(height: 8.0),
               DropdownButtonFormField(
                 decoration: InputDecoration(),
@@ -74,11 +72,16 @@ class _CreateProfileViewState extends State<CreateProfileView> {
         showPrevious: false,
         showNext: true,
         onNext: () async {
+          locator<SenseBeRxService>().reset();
           if (_newProfileForm.currentState.validate()) {
-            await locator<ProfilesService>().addProfile(
-                profileName: _profileNameController.text,
-                deviceType: _selectedDevice);
-            Navigator.pushNamed(context, '/devices/sense-pi/profile-summary');
+            ProfileFile profileFile = ProfileFile(
+              filePath: await locator<ProfilesService>().addProfile(
+                  profileName: _profileNameController.text,
+                  deviceType: _selectedDevice),
+            );
+            locator<ProfilesService>().setActiveProfile(profileFile);
+            Navigator.pushNamed(
+                context, '/devices/sense-be-rx/profile-summary');
           }
         },
       ),

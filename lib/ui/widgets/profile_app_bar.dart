@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:provider/provider.dart';
+import 'package:setup/core/services/profiles.dart';
 import 'package:setup/ui/widgets/custom_tab_bar.dart';
-import 'package:setup/ui/widgets/popup_menu_item_button.dart';
+import 'package:setup/ui/widgets/single_text_field.dart';
 
 import '../colors.dart';
 
 class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final title;
-  final subtitle;
+  ProfileFile profileFile;
+  final TabController tabController;
 
-  const ProfileAppBar({
+  final VoidCallback onDeletePressed;
+
+  final TextEditingController fileNameController = TextEditingController();
+  ProfileAppBar({
     Key key,
-    @required this.title,
-    this.subtitle,
-  }) : super(key: key);
+    @required this.profileFile,
+    @required this.tabController,
+    this.onDeletePressed,
+  }) : super(key: key) {
+    fileNameController.text = profileFile.fileName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +34,18 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              title,
+              profileFile.fileName,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
               ),
             ),
-            if (subtitle != null)
+            if (profileFile.deviceType != null)
               Visibility(
                 visible: true,
                 child: Text(
-                  subtitle,
+                  profileFile.deviceType,
                   style: Theme.of(context)
                       .textTheme
                       .caption
@@ -50,33 +58,115 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
           // Edit Button
           IconButton(
             icon: Icon(OMIcons.edit),
-            onPressed: () {},
-          ),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            SingleTextField(
+                              title: "Profile Name",
+                              textField: TextFormField(
+                                controller: fileNameController,
+                                autofocus: true,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                FlatButton(
+                                  padding: EdgeInsets.all(0),
+                                  child: Text(
+                                    "CLOSE",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).disabledColor,
+                                    ),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                FlatButton(
+                                  padding: EdgeInsets.all(0),
+                                  child: Text(
+                                    "DONE",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    this.profileFile.fileName =
+                                        fileNameController.text;
 
-          //  More Options
-          PopupMenuButton(
-            icon: Icon(Icons.more_vert),
-            itemBuilder: (_) {
-              return [
-                PopupMenuItem(
-                  child: PopupMenuItemButton(
-                    onPressed: () {},
-                    label: "Share",
-                    icon: Icon(OMIcons.delete),
-                  ),
-                ),
-                PopupMenuItem(
-                  child: PopupMenuItemButton(
-                    onPressed: () {},
-                    label: "Delete",
-                    icon: Icon(OMIcons.delete),
-                  ),
-                ),
-              ];
+                                    Provider.of<ProfilesService>(context)
+                                        .renameProfile(profileFile);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )));
             },
           ),
+
+          onDeletePressed != null
+              ? IconButton(
+                  icon: Icon(OMIcons.delete),
+                  onPressed: () => showDialog(
+                      builder: (context) => AlertDialog(
+                            title: Text("Delete Profile?"),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text(
+                                  "CANCEL",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                              FlatButton(
+                                child: Text(
+                                  "DELETE",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: onDeletePressed,
+                              ),
+                            ],
+                          ),
+                      context: context),
+                )
+              : Container(),
+          //  More Options
+          // PopupMenuButton(
+          //   icon: Icon(Icons.more_vert),
+          //   itemBuilder: (_) {
+          //     return [
+          //       PopupMenuItem(
+          //         child: PopupMenuItemButton(
+          //           onPressed: () {},
+          //           label: "Share",
+          //           icon: Icon(OMIcons.delete),
+          //         ),
+          //       ),
+          // PopupMenuItem(
+          //   child: PopupMenuItemButton(
+          //     onPressed: () {},
+          //     label: "Delete",
+          //     icon: Icon(OMIcons.delete),
+          // ),
+          // ),
+          // ];
+          //   },
+          // ),
         ],
-        bottom: CustomTabBar());
+        bottom: CustomTabBar(tabController: tabController));
   }
 
   @override

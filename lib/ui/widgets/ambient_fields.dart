@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:setup/core/models/time.dart';
+import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/ui/widgets/custom_radio_field.dart';
-
-enum AmbientLight {
-  DAY_ONLY,
-  NIGHT_ONLY,
-  DAY_AND_TWILIGHT,
-  NIGHT_AND_TWILIGHT,
-}
 
 class AmbientFields extends StatefulWidget {
   @override
@@ -14,17 +10,26 @@ class AmbientFields extends StatefulWidget {
 }
 
 class _AmbientFieldsState extends State<AmbientFields> {
-  AmbientLight selectedLightMode = AmbientLight.DAY_ONLY;
   @override
   Widget build(BuildContext context) {
+    AmbientLight selectedLightMode =
+        Provider.of<AmbientFieldsModel>(context).ambientLight;
+
+    List<AmbientLight> disabledFields =
+        Provider.of<AmbientFieldsModel>(context).disabledFields;
+
     return Column(
       children: <Widget>[
         SizedBox(height: 24),
         CustomRadioField(
           title: "Ambient Light Options",
           radioList: ListView(
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             children: AmbientLight.values.map((light) {
+              if (light == AmbientLight.ALL_TIME) {
+                return Container();
+              }
               return RadioListTile(
                 value: light,
                 title: Text(light
@@ -32,11 +37,11 @@ class _AmbientFieldsState extends State<AmbientFields> {
                     .split('.')[1]
                     .replaceAllMapped('_', (_) => ' ')),
                 groupValue: selectedLightMode,
-                onChanged: (val) {
-                  setState(() {
-                    selectedLightMode = val;
-                  });
-                },
+                onChanged: disabledFields.contains(light)
+                    ? null
+                    : (val) {
+                        Provider.of<AmbientFieldsModel>(context).change(val);
+                      },
               );
             }).toList(),
           ),

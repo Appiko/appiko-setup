@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AdvancedOptionTile extends StatefulWidget {
-  bool value;
+  final bool value;
   final ValueChanged<bool> onChanged;
 
-  AdvancedOptionTile({Key key, this.value, this.onChanged}) : super(key: key);
+  const AdvancedOptionTile({
+    Key key,
+    @required this.value,
+    @required this.onChanged,
+  }) : super(key: key);
 
   @override
   _AdvancedOptionTileState createState() => _AdvancedOptionTileState();
@@ -22,13 +26,9 @@ class _AdvancedOptionTileState extends State<AdvancedOptionTile> {
             ),
       ),
       trailing: Switch.adaptive(
-          value: widget.value,
-          onChanged: (value) {
-            widget.onChanged(value);
-            setState(() {
-              widget.value = value;
-            });
-          }),
+        value: widget.value,
+        onChanged: widget.onChanged,
+      ),
     );
   }
 }

@@ -52,7 +52,13 @@ class CustomSlider extends StatelessWidget {
             style: Theme.of(context).textTheme.body2,
           ),
           SizedBox(height: 20),
-          slider
+          Row(
+            children: <Widget>[
+              Flexible(flex: 1, child: Text("MIN")),
+              Flexible(flex: 8, child: slider),
+              Flexible(flex: 1, child: Text("MAX")),
+            ],
+          ),
         ],
       ),
     );

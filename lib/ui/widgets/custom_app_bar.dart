@@ -21,9 +21,17 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool downArrow;
+  final String subtitle;
   final VoidCallback onDownArrowPressed;
+  final List<Widget> actions;
+
   const CustomAppBar(
-      {Key key, @required this.title, this.downArrow, this.onDownArrowPressed})
+      {Key key,
+      @required this.title,
+      this.downArrow,
+      this.onDownArrowPressed,
+      this.subtitle,
+      this.actions})
       : super(key: key);
 
   @override
@@ -33,8 +41,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         title: FittedBox(
           fit: BoxFit.fitWidth,
-          child: Text(title),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(title),
+              subtitle != null
+                  ? Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.subtitle,
+                    )
+                  : Container()
+            ],
+          ),
         ),
+        actions: actions,
         leading: downArrow != null
             ? IconButton(
                 icon: Icon(Icons.keyboard_arrow_down),

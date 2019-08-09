@@ -25,26 +25,32 @@ class CustomSwitchField extends StatelessWidget {
   final String title;
   final String description;
   final Switch materialSwitch;
+  final EdgeInsetsGeometry padding;
 
   const CustomSwitchField({
     Key key,
     @required this.title,
-    @required this.description,
+    this.description,
     @required this.materialSwitch,
+    this.padding,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.all(0),
+      dense: true,
+      contentPadding: padding ?? EdgeInsets.only(top: 12, bottom: 12),
       title: Text(
         title,
         style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+        textAlign: TextAlign.left,
       ),
-      subtitle: Text(
-        description,
-        style: Theme.of(context).textTheme.body2,
-      ),
+      subtitle: description != null
+          ? Text(
+              description,
+              style: Theme.of(context).textTheme.body2,
+            )
+          : null,
       trailing: materialSwitch,
     );
   }

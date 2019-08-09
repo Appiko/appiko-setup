@@ -31,12 +31,12 @@ class ProfilesView extends StatelessWidget {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          IconButton(
-                              icon: Icon(OMIcons.share),
-                              onPressed: () {
-                                locator<ProfilesService>()
-                                    .shareProfile(profiles[index].filePath);
-                              }),
+                          // IconButton(
+                          //     icon: Icon(OMIcons.share),
+                          //     onPressed: () {
+                          //       locator<ProfilesService>()
+                          //           .shareProfile(profiles[index].filePath);
+                          //     }),
                           IconButton(
                               icon: Icon(OMIcons.delete),
                               onPressed: () {
@@ -46,14 +46,22 @@ class ProfilesView extends StatelessWidget {
                         ],
                       ),
                       onTap: () {
+                        locator<ProfilesService>().createStructure(
+                            profiles[index].filePath,
+                            profiles[index].deviceType);
+                        locator<ProfilesService>()
+                            .setActiveProfile(profiles[index]);
                         Navigator.pushNamed(
-                            context, '/devices/sense-pi/profile-summary');
+                          context,
+                          '/devices/sense-be-rx/profile-summary',
+                        );
                       },
                     );
                   }
                   if (index == profiles.length) {
                     return ListTile(title: SizedBox(height: 80.0));
                   }
+                  return null;
                 },
                 itemCount: profiles.length + 1,
               ),

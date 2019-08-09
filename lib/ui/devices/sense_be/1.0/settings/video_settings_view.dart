@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:setup/core/models/camera.dart';
+import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/shared_prefs.dart';
+import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/advanced_option_tile.dart';
 import 'package:setup/ui/widgets/advanced_option_wrapper.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
@@ -6,119 +12,296 @@ import 'package:setup/ui/widgets/custom_divider.dart';
 import 'package:setup/ui/widgets/custom_radio_field.dart';
 import 'package:setup/ui/widgets/custom_switch_field.dart';
 import 'package:setup/ui/widgets/dual_text_field.dart';
+import 'package:setup/ui/widgets/half_press.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
+import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 
 class VideoSettingsView extends StatefulWidget {
+  Setting setting;
+
+  VideoSettingsView({Key key, this.setting}) : super(key: key);
+
   @override
   _VideoSettingsViewState createState() => _VideoSettingsViewState();
 }
 
 class _VideoSettingsViewState extends State<VideoSettingsView> {
-  bool advancedOption = false;
-  bool halfPress = false;
+  bool localAdvancedOption = locator<SharedPrefs>().advancedOptions;
+  // TODO: Can pass default values from here!
+  TextEditingController t1Controller = TextEditingController();
+  TextEditingController t2Controller = TextEditingController();
+  TextEditingController triggerPulseDurationController =
+      TextEditingController();
+  TextEditingController halfPressPulseDurationController =
+      TextEditingController();
+  TextEditingController extentionTimeController =
+      TextEditingController(text: "0");
+  // TODO: Discuss should this be a slider?
+  TextEditingController numberOfExtentionsController =
+      TextEditingController(text: "0");
+  bool isVideoOnFullPress = false;
+  var _videoFormKey = GlobalKey<FormState>();
+
+  bool extendVideos = false;
+
+  bool firstBuild = true;
+
   @override
   Widget build(BuildContext context) {
+    if (firstBuild &&
+        widget.setting?.cameraSetting?.runtimeType == VideoSetting) {
+      t1Controller.text =
+          ((widget.setting.cameraSetting as VideoSetting).videoDuration ~/ 600)
+              .toString()
+              .padLeft(2, "0");
+      t2Controller.text =
+          ((widget.setting.cameraSetting as VideoSetting).videoDuration %
+                  100 ~/
+                  10)
+              .toString()
+              .padLeft(2, "0");
+      isVideoOnFullPress = widget.setting.cameraSetting.videoWithFullPress;
+
+      isVideoOnFullPress =
+          (widget.setting.cameraSetting as VideoSetting).videoWithFullPress;
+      extendVideos =
+          (widget.setting.cameraSetting as VideoSetting).numberOfExtensions == 0
+              ? false
+              : true;
+      if (extendVideos) {
+        numberOfExtentionsController.text =
+            (widget.setting.cameraSetting as VideoSetting)
+                .numberOfExtensions
+                .toString();
+        extentionTimeController.text =
+            ((widget.setting.cameraSetting as VideoSetting).extensionTime ~/ 10)
+                .toString();
+      }
+      triggerPulseDurationController.text =
+          (widget.setting.cameraSetting.triggerPulseDuration / 10).toString();
+
+      halfPressPulseDurationController.text =
+          (widget.setting.cameraSetting.preFocusPulseDuration / 10).toString();
+      localAdvancedOption = Provider.of<SenseBeRxService>(context)
+          .metaStructure
+          .advancedOptionsEnabled[widget.setting.index];
+      firstBuild = false;
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: "Video",
         downArrow: true,
         onDownArrowPressed: () {
-          Navigator.pop(context);
+          Provider.of<SenseBeRxService>(context).closeFlow();
+          String popUntilName = Provider.of<SenseBeRxService>(context)
+              .getCameraSettingDownArrowPageName();
+          Navigator.popUntil(context, ModalRoute.withName(popUntilName));
         },
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: Column(
-              children: <Widget>[
-                AdvancedOptionTile(
-                  onChanged: (val) {
-                    setState(() {
-                      advancedOption = val;
-                    });
-                  },
-                  value: advancedOption,
-                ),
-                CustomDivider(),
-                DualTextField(
-                  title: "Video duration",
-                  firstFieldMax: 12,
-                  firstFieldMin: 00,
-                  secondFieldMax: 00,
-                  secondFieldMin: 00,
-                  firstFieldLabel: "minutes",
-                  secondFieldLabel: "seconds",
-                  firstFieldValue: 01,
-                  secondFieldValue: 00,
-                ),
-                CustomRadioField(
-                  title: "Video recording starts on",
-                  description:
-                      "Does your camera start recording video on full press or a half press?",
-                  radioList: ListView(
-                    padding: EdgeInsets.all(0),
-                    children: <Widget>[
-                      RadioListTile(
-                        title: Text("Full Press"),
-                        value: 0,
-                        groupValue: 0,
-                        onChanged: (int value) {},
-                      ),
-                      RadioListTile(
-                        title: Text("Half Press"),
-                        value: 1,
-                        groupValue: 0,
-                        onChanged: (int value) {},
-                      ),
-                    ],
-                  ),
-                ),
-                AdvancedOptionWrapper(
-                  advancedOptionController: advancedOption,
-                  child: SingleTextField(
-                    title: "Trigger pulse duration*",
-                    description: "Duration of trigger pulse for each picture",
-                    textField: TextField(
-                      decoration: InputDecoration(
-                          labelText: "seconds", helperText: "0.2 to 25.0s"),
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+            child: Form(
+              key: _videoFormKey,
+              child: Column(
+                children: <Widget>[
+                  Builder(
+                    builder: (context) => AdvancedOptionTile(
+                      value: localAdvancedOption,
+                      onChanged: (bool value) {
+                        setState(() {
+                          // if advanced option turnedoff
+                          if (!value) {
+                            triggerPulseDurationController.text =
+                                (locator<Setting>()
+                                            .cameraSetting
+                                            .triggerPulseDuration /
+                                        10)
+                                    .toString();
+                            halfPressPulseDurationController.text =
+                                (locator<Setting>()
+                                            .cameraSetting
+                                            .preFocusPulseDuration /
+                                        10)
+                                    .toString();
+                            Scaffold.of(context).showSnackBar(
+                                locator<SenseBeRxService>()
+                                    .advancedSettingOffSnackbar);
+                          }
+                          extendVideos = extendVideos;
+                          locator<SenseBeRxService>().setAdvancedOptions(value);
+                          localAdvancedOption = value;
+                        });
+                      },
                     ),
                   ),
-                ),
-                CustomSwitchField(
-                  title: "Half press",
-                  description: "Half press (focus) before trigger event?",
-                  materialSwitch: Switch.adaptive(
-                    onChanged: (val) {
-                      setState(() {
-                        halfPress = val;
-                      });
-                    },
-                    value: halfPress,
+                  CustomDivider(),
+                  DualTextField(
+                    t1Controller: t1Controller,
+                    t2Controller: t2Controller,
+                    title: "Video duration",
+                    firstFieldMax: 11,
+                    firstFieldMin: 00,
+                    secondFieldMax: 59,
+                    secondFieldMin: 01,
+                    firstFieldLabel: "minutes",
+                    secondFieldLabel: "seconds",
                   ),
-                ),
-                AdvancedOptionWrapper(
-                    advancedOptionController: advancedOption && halfPress,
-                    child: SingleTextField(
-                      title: "Half press pulse duration*",
-                      description:
-                          "Duration of half press before trigger event",
-                      textField: TextField(
-                        decoration: InputDecoration(
-                            labelText: "seconds", helperText: "0.2s to 25.0s"),
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                      ),
-                    ))
-              ],
+                  CustomRadioField(
+                    title: "Video recording starts on",
+                    description:
+                        "Does your camera start recording video on full press or a half press?",
+                    radioList: ListView(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      padding: EdgeInsets.all(0),
+                      children: <Widget>[
+                        RadioListTile(
+                          title: Text("Full Press"),
+                          value: true,
+                          groupValue: isVideoOnFullPress,
+                          onChanged: (bool value) {
+                            setState(() {
+                              isVideoOnFullPress = value;
+                            });
+                          },
+                        ),
+                        RadioListTile(
+                          title: Text("Half Press"),
+                          value: false,
+                          groupValue: isVideoOnFullPress,
+                          onChanged: (bool value) {
+                            setState(() {
+                              isVideoOnFullPress = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Provider.of<SenseBeRxService>(context)
+                              .activeTriggerType
+                              .index ==
+                          0
+                      ? Column(
+                          children: <Widget>[
+                            CustomSwitchField(
+                              title: "Extend videos",
+                              description:
+                                  "Extend video recording in case of motion",
+                              materialSwitch: Switch.adaptive(
+                                value: extendVideos,
+                                onChanged: (val) {
+                                  setState(() {
+                                    extendVideos = val;
+                                  });
+                                  if (val) {
+                                    extentionTimeController.text = '10';
+                                    numberOfExtentionsController.text = '1';
+                                  } else {
+                                    extentionTimeController.text = '0';
+                                    numberOfExtentionsController.text = '0';
+                                  }
+                                },
+                              ),
+                            ),
+
+                            /// Here we are using the advanced option wrapper to hide the extention fields
+                            AdvancedOptionWrapper(
+                              advancedOptionController: extendVideos,
+                              child: SingleTextField(
+                                title: "Extention Time",
+                                description:
+                                    "Extends the video if the sensor detects movement after the downtime",
+                                textField: TextFormField(
+                                  decoration: InputDecoration(
+                                    helperText: "1 to 250 seconds",
+                                    labelText: "seconds",
+                                  ),
+                                  controller: extentionTimeController,
+                                  keyboardType: TextInputType.number,
+                                  buildCounter: (_,
+                                          {int currentLength,
+                                          int maxLength,
+                                          bool isFocused}) =>
+                                      null,
+                                  validator: (str) {
+                                    int n = int.tryParse(str);
+                                    if (n == null) {
+                                      return "Cannot be empty";
+                                    }
+                                    if (n < 1 || n > 250) {
+                                      return "Not in valid range";
+                                    }
+                                    return null;
+                                  },
+                                  maxLength: 3,
+                                  autovalidate: true,
+                                ),
+                              ),
+                            ),
+                            AdvancedOptionWrapper(
+                                advancedOptionController: extendVideos,
+                                child: SingleTextField(
+                                  title: "Number of extentions",
+                                  description:
+                                      "Maximum number of times to extend videos",
+                                  textField: TextFormField(
+                                    decoration: InputDecoration(
+                                      helperText: "1 to 5 extentions",
+                                      labelText: "extentions",
+                                    ),
+                                    controller: numberOfExtentionsController,
+                                    buildCounter: (_,
+                                            {int currentLength,
+                                            int maxLength,
+                                            bool isFocused}) =>
+                                        null,
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                            decimal: false),
+                                    validator: (str) {
+                                      if (str.isEmpty ||
+                                          (str.contains(".") &&
+                                              str.length == 1)) {
+                                        return "Cannot be empty";
+                                      }
+                                      int n = double.tryParse(str).floor();
+                                      if (n == null) {
+                                        return "Cannot be empty";
+                                      }
+                                      if (n < 1 || n > 5) {
+                                        return "Not in valid range";
+                                      }
+                                      return null;
+                                    },
+                                    maxLength: 1,
+                                    autovalidate: true,
+                                  ),
+                                )),
+                          ],
+                        )
+                      : Container(),
+                  TriggerPulseDuration(
+                    triggerPulseDurationController:
+                        triggerPulseDurationController,
+                    localAdvancedOption: localAdvancedOption,
+                  ),
+                  // HalfPress(
+                  //   halfPressPulseDurationController:
+                  //       halfPressPulseDurationController,
+                  //   localAdvancedOption: localAdvancedOption,
+                  // ),
+                  SizedBox(height: 60),
+                ],
+              ),
             ),
           ),
         ),
@@ -127,10 +310,34 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
         showNext: true,
         showPrevious: true,
         onNext: () {
-          Navigator.pop(context);
+          if (_videoFormKey.currentState.validate()) {
+            Provider.of<SenseBeRxService>(context).setVideo(
+              triggerPulseDuration:
+                  double.tryParse(triggerPulseDurationController.text),
+              halfPressDuration:
+                  double.tryParse(halfPressPulseDurationController.text),
+              videoDuration: Duration(
+                minutes: double.tryParse(t1Controller.text).floor(),
+                seconds: double.tryParse(t2Controller.text).floor(),
+              ),
+              extendVideos: extendVideos,
+              numberOfExtentions:
+                  double.tryParse(numberOfExtentionsController.text).floor(),
+              extentionTime:
+                  double.tryParse(extentionTimeController.text).floor(),
+              isVideoOnFullPress: isVideoOnFullPress,
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    Provider.of<SenseBeRxService>(context).getSensorView(),
+              ),
+            );
+          }
         },
         onPrevious: () {
-          Navigator.pop(context);
+          Navigator.popAndPushNamed(context, "/camera-trigger-options");
         },
       ),
     );

@@ -1,12 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/locators.dart';
 import 'package:share_extend/share_extend.dart';
 
 class ProfileFile {
-  final String filePath;
+  String filePath;
   String fileName;
   String deviceType;
 
@@ -21,6 +25,7 @@ class ProfileFile {
 
 class ProfilesService with ChangeNotifier {
   List<ProfileFile> profiles = [];
+  ProfileFile activeProfile;
 
   ProfilesService() {
     fetchProfiles();
@@ -37,6 +42,7 @@ class ProfilesService with ChangeNotifier {
 
   _generateFilePath(String profileName, String deviceType) async {
     final path = await _localPath;
+    getProfiles();
     return "$path/profiles/$profileName​$deviceType​${DateTime.now().millisecondsSinceEpoch}";
   }
 
@@ -44,10 +50,14 @@ class ProfilesService with ChangeNotifier {
     // seprated by a Zero width space character U+200B `​`​
     final path = await _localPath;
     Directory("$path/profiles").createSync();
-    File profileFile = File(await _generateFilePath(profileName, deviceType));
-    profileFile.writeAsStringSync("123");
+    File file = File(await _generateFilePath(profileName, deviceType));
+    var packedData = pack(SenseBeRx());
+    file.writeAsBytesSync(packedData);
+    var metaString = "META\n" + jsonEncode(MetaStructure());
+    file.writeAsStringSync(metaString, mode: FileMode.append);
     notifyListeners();
     getProfiles();
+    return file.path;
   }
 
   deleteProfile(String filePath) {
@@ -57,14 +67,21 @@ class ProfilesService with ChangeNotifier {
     getProfiles();
   }
 
-  renameProfile(ProfileFile profile) {
+  renameProfile(ProfileFile profile) async {
     File file = File(profile.filePath);
-    file.rename(_generateFilePath(profile.fileName, profile.deviceType));
+    String newFilePath =
+        await _generateFilePath(profile.fileName, profile.deviceType);
+    file.rename(newFilePath);
+    getProfiles();
+    profile = ProfileFile(filePath: newFilePath);
+    setActiveProfile(profile);
+    notifyListeners();
+    print("Renamed to ${profile.filePath}");
   }
 
-  shareProfile(String filePath) async {
-    ShareExtend.share(filePath, "file");
-  }
+  // shareProfile(String filePath) async {
+  //   ShareExtend.share(filePath, "file");
+  // }
 
   getProfiles() async {
     final dir = Directory("${await _localPath}/profiles");
@@ -77,5 +94,41 @@ class ProfilesService with ChangeNotifier {
       });
       notifyListeners();
     }
+  }
+
+  updateProfile(String profilePath) {
+    // seprated by a Zero width space character U+200B `​`​
+    File profileFile = File(profilePath);
+    var packedData = pack(locator<SenseBeRxService>().structure);
+    var test = BytesBuilder();
+    test.add(packedData.toList());
+    profileFile.writeAsBytesSync(test.toBytes());
+
+    var metaString =
+        "META\n" + jsonEncode(locator<SenseBeRxService>().metaStructure);
+    profileFile.writeAsStringSync(metaString, mode: FileMode.append);
+
+    notifyListeners();
+  }
+
+  void createStructure(String filePath, String deviceType) {
+    File profileFile = File(filePath);
+    var data = profileFile.readAsBytesSync();
+    locator<SenseBeRxService>().structure = null;
+    locator<SenseBeRxService>().structure = unpack(data);
+
+    List<int> metaData = profileFile.readAsBytesSync();
+    var metaString = Utf8Codec(allowMalformed: true).decode(metaData);
+    metaString = metaString.split("META\n")[1];
+    Map userMap = jsonDecode(metaString);
+    MetaStructure meta = MetaStructure.fromJson(userMap);
+    print(meta.toString());
+
+    locator<SenseBeRxService>().metaStructure = meta;
+  }
+
+  void setActiveProfile(ProfileFile profile) {
+    activeProfile = profile;
+    notifyListeners();
   }
 }

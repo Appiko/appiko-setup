@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 class SingleTextField extends StatelessWidget {
   final String title;
   final String description;
-  final TextField textField;
+  final TextFormField textField;
 
   SingleTextField({
     Key key,
@@ -30,7 +30,7 @@ class SingleTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 24, bottom: 24),
+      padding: EdgeInsets.only(top: 12, bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

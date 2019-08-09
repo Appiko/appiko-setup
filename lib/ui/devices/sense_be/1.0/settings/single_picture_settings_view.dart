@@ -1,83 +1,147 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:setup/core/models/camera.dart';
+import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/shared_prefs.dart';
+import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/advanced_option_tile.dart';
-import 'package:setup/ui/widgets/advanced_option_wrapper.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
-import 'package:setup/ui/widgets/custom_switch_field.dart';
+import 'package:setup/ui/widgets/custom_divider.dart';
+import 'package:setup/ui/widgets/half_press.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
-import 'package:setup/ui/widgets/single_text_field.dart';
+import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 
-class SinglePictureSettingsViewe extends StatefulWidget {
+class SinglePictureSettingsView extends StatefulWidget {
+  Setting setting;
+
+  SinglePictureSettingsView({Key key, this.setting}) : super(key: key);
+
   @override
-  _SinglePictureSettingsVieweState createState() =>
-      _SinglePictureSettingsVieweState();
+  _SinglePictureSettingsViewState createState() =>
+      _SinglePictureSettingsViewState();
 }
 
-class _SinglePictureSettingsVieweState
-    extends State<SinglePictureSettingsViewe> {
-  var x = false;
-  bool advancedOption = false;
+class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
+  CameraSetting setting = CameraSetting();
 
+  TextEditingController triggerPulseDurationController =
+      TextEditingController();
+  TextEditingController halfPressPulseDurationController =
+      TextEditingController();
+
+  var _formKey = GlobalKey<FormState>();
+
+  bool localAdvancedOption = locator<SharedPrefs>().advancedOptions;
+
+  /// Consider widget setting(if passed) only for fistbuild
+  bool firstBuild = true;
   @override
   Widget build(BuildContext context) {
+    if (firstBuild &&
+        widget.setting?.cameraSetting?.runtimeType == CameraSetting) {
+      triggerPulseDurationController.text =
+          (widget.setting.cameraSetting.triggerPulseDuration / 10).toString();
+      halfPressPulseDurationController.text =
+          (widget.setting.cameraSetting.preFocusPulseDuration / 10).toString();
+      localAdvancedOption = Provider.of<SenseBeRxService>(context)
+          .metaStructure
+          .advancedOptionsEnabled[widget.setting.index];
+      firstBuild = false;
+    }
+    bool darkTheme = Provider.of<SharedPrefs>(context).darkTheme;
     return Scaffold(
+      backgroundColor:
+          !darkTheme ? Colors.white : Theme.of(context).canvasColor,
       appBar: CustomAppBar(
         title: "Single Picture",
         downArrow: true,
-        onDownArrowPressed: () {},
+        onDownArrowPressed: () {
+          Provider.of<SenseBeRxService>(context).closeFlow();
+          String popUntilName = Provider.of<SenseBeRxService>(context)
+              .getCameraSettingDownArrowPageName();
+          Navigator.popUntil(context, ModalRoute.withName(popUntilName));
+        },
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-        child: Column(
-          children: <Widget>[
-            AdvancedOptionTile(
-              value: advancedOption,
-              onChanged: (bool value) {
-                setState(() {
-                  advancedOption = value;
-                });
-              },
-            ),
-            AdvancedOptionWrapper(
-              advancedOptionController: advancedOption,
-              child: SingleTextField(
-                title: "Tirgger pulse duration*",
-                description: "Duration of trigger pulse for the picture",
-                textField: TextField(
-                  decoration: InputDecoration(
-                    labelText: "seconds",
-                    helperText: "0.2s to 25.0s",
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Builder(
+                    builder: (context) => AdvancedOptionTile(
+                      value: localAdvancedOption,
+                      onChanged: (bool value) {
+                        setState(() {
+                          // if advanced option turnedoff
+                          if (!value) {
+                            triggerPulseDurationController.text =
+                                (locator<Setting>()
+                                            .cameraSetting
+                                            .triggerPulseDuration /
+                                        10)
+                                    .toString();
+                            halfPressPulseDurationController.text =
+                                (locator<Setting>()
+                                            .cameraSetting
+                                            .preFocusPulseDuration /
+                                        10)
+                                    .toString();
+                            Scaffold.of(context).showSnackBar(
+                                locator<SenseBeRxService>()
+                                    .advancedSettingOffSnackbar);
+                          }
+                          locator<SenseBeRxService>().setAdvancedOptions(value);
+                          localAdvancedOption = value;
+                        });
+                      },
+                    ),
                   ),
-                  autofocus: true,
-                  keyboardType: TextInputType.numberWithOptions(
-                    decimal: true,
-                    signed: false,
-                  ),
-                ),
+                  CustomDivider(),
+                  TriggerPulseDuration(
+                      localAdvancedOption: localAdvancedOption,
+                      triggerPulseDurationController:
+                          triggerPulseDurationController),
+                  HalfPress(
+                      localAdvancedOption: localAdvancedOption,
+                      halfPressPulseDurationController:
+                          halfPressPulseDurationController),
+                  SizedBox(height: 60)
+                ],
               ),
             ),
-            CustomSwitchField(
-              title: "Half press",
-              description: "Do you want to half press (focus) before trigger?",
-              materialSwitch: Switch.adaptive(
-                onChanged: (val) {
-                  setState(() {
-                    x = val;
-                  });
-                },
-                value: x,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: PageNavigationBar(
         showPrevious: true,
         showNext: true,
         onPrevious: () {
-          Navigator.pop(context);
+          Navigator.popAndPushNamed(context, "/camera-trigger-options");
         },
         onNext: () {
-          Navigator.pop(context);
+          if (_formKey.currentState.validate()) {
+            Provider.of<SenseBeRxService>(context).setSinglePicture(
+              triggerPulseDuration:
+                  double.tryParse(triggerPulseDurationController.text),
+              halfPressDuration:
+                  double.tryParse(halfPressPulseDurationController.text),
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    Provider.of<SenseBeRxService>(context).getSensorView(),
+              ),
+            );
+          }
         },
       ),
     );

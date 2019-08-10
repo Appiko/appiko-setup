@@ -99,7 +99,7 @@ class Ambient extends Time {
       ambientLight = AmbientLight.NIGHT_ONLY;
     } else if (lowerThreshold == 0 && higherThreshold == 0xFFFFFFFF) {
       ambientLight = AmbientLight.ALL_TIME;
-    } else if (lowerThreshold == x1 && higherThreshold == 0xFFFFFF) {
+    } else if (lowerThreshold == x1 && higherThreshold == 0xFFFFFFFF) {
       ambientLight = AmbientLight.DAY_AND_TWILIGHT;
     } else if (lowerThreshold == 0 && higherThreshold == x3) {
       ambientLight = AmbientLight.NIGHT_AND_TWILIGHT;

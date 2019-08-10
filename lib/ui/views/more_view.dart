@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/shared_prefs.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/motion_settings_view.dart';
+import 'package:setup/ui/views/about_us_view.dart';
+import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
 class MoreView extends StatelessWidget {
   final Map moreList = {
-    // "About us": AboutUsView(),
-    "About us": MotionSettingsView(),
+    "About us": AboutUsView(),
+    // "About us": MotionSettingsView(),
     "Contact us": Container(),
     "Send feedback": Container(),
     "FAQ": Container(),
@@ -51,8 +52,8 @@ class MoreView extends StatelessWidget {
                   //TODO: Make indivisual pages and add it to routes in main.dart
                   MaterialPageRoute(
                     builder: (context) => Scaffold(
-                      // appBar:
-                      //     CustomAppBar(title: moreList.keys.toList()[index]),
+                      appBar:
+                          CustomAppBar(title: moreList.keys.toList()[index]),
                       body: moreList.values.toList()[index],
                     ),
                   ),

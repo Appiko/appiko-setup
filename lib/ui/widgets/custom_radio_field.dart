@@ -34,7 +34,7 @@ class CustomRadioField extends StatelessWidget {
 
   const CustomRadioField({
     Key key,
-    @required this.title,
+    this.title,
     @required this.radioList,
     this.description,
   }) : super(key: key);
@@ -46,17 +46,24 @@ class CustomRadioField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
-          ),
+          (title != null)
+              ? Text(
+                  title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .title
+                      .copyWith(fontSize: 24.0),
+                )
+              : Container(),
           (description != null)
               ? Text(
                   description,
                   style: Theme.of(context).textTheme.body2,
                 )
               : Container(height: 0),
-          SizedBox(height: 10),
+          (description != null && title != null)
+              ? SizedBox(height: 10)
+              : Container(),
           radioList,
         ],
       ),

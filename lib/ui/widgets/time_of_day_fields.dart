@@ -45,87 +45,85 @@ class _TimeOfDayFieldsState extends State<TimeOfDayFields> {
       firstBuild = false;
     }
     print("rebuilding");
-    return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 24),
-          Text(
-            "Start time",
-            style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.time,
-              minuteInterval: 5,
-              onDateTimeChanged: (DateTime value) {
-                setState(() {
-                  startTime = getTimeInSeconds(value);
-                });
-                errorMessage = Provider.of<SenseBeRxService>(context).timeCheck(
-                  pickerStartTime: startTime,
-                  pickerEndTime: endTime,
-                );
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 24),
+        Text(
+          "Start time",
+          style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+        ),
+        SizedBox(height: 20),
+        ConstrainedBox(
+          constraints: BoxConstraints(minHeight: 80, maxHeight: 150),
+          child: CupertinoDatePicker(
+            mode: CupertinoDatePickerMode.time,
+            minuteInterval: 5,
+            onDateTimeChanged: (DateTime value) {
+              setState(() {
+                startTime = getTimeInSeconds(value);
+              });
+              errorMessage = Provider.of<SenseBeRxService>(context).timeCheck(
+                pickerStartTime: startTime,
+                pickerEndTime: endTime,
+              );
 
-                if (errorMessage.isEmpty) {
-                  Provider.of<TimeOfDayFieldsModel>(context).timeOverlap =
-                      false;
-                  Provider.of<TimeOfDayFieldsModel>(context).startTime = value;
-                  Provider.of<TimeOfDayFieldsModel>(context).endTime =
-                      getDateTimefromSeconds(endTime);
-                } else {
-                  Provider.of<TimeOfDayFieldsModel>(context).timeOverlap = true;
-                }
-              },
-              use24hFormat: false,
-              initialDateTime: getDateTimefromSeconds(startTime),
-            ),
+              if (errorMessage.isEmpty) {
+                Provider.of<TimeOfDayFieldsModel>(context).timeOverlap = false;
+                Provider.of<TimeOfDayFieldsModel>(context).startTime = value;
+                Provider.of<TimeOfDayFieldsModel>(context).endTime =
+                    getDateTimefromSeconds(endTime);
+              } else {
+                Provider.of<TimeOfDayFieldsModel>(context).timeOverlap = true;
+              }
+            },
+            use24hFormat: false,
+            initialDateTime: getDateTimefromSeconds(startTime),
           ),
-          SizedBox(height: 24),
-          Text(
-            "End time",
-            style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.time,
-              minuteInterval: 5,
-              onDateTimeChanged: (DateTime value) {
-                setState(() {
-                  endTime = getTimeInSeconds(value);
-                });
-                errorMessage = Provider.of<SenseBeRxService>(context).timeCheck(
-                  pickerStartTime: startTime,
-                  pickerEndTime: endTime,
-                );
+        ),
+        SizedBox(height: 24),
+        Text(
+          "End time",
+          style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+        ),
+        SizedBox(height: 20),
+        ConstrainedBox(
+          constraints: BoxConstraints(minHeight: 80, maxHeight: 150),
+          child: CupertinoDatePicker(
+            mode: CupertinoDatePickerMode.time,
+            minuteInterval: 5,
+            onDateTimeChanged: (DateTime value) {
+              setState(() {
+                endTime = getTimeInSeconds(value);
+              });
+              errorMessage = Provider.of<SenseBeRxService>(context).timeCheck(
+                pickerStartTime: startTime,
+                pickerEndTime: endTime,
+              );
 
-                if (errorMessage.isEmpty) {
-                  Provider.of<TimeOfDayFieldsModel>(context).timeOverlap =
-                      false;
-                  Provider.of<TimeOfDayFieldsModel>(context).endTime = value;
-                  Provider.of<TimeOfDayFieldsModel>(context).startTime =
-                      getDateTimefromSeconds(startTime);
-                } else {
-                  Provider.of<TimeOfDayFieldsModel>(context).timeOverlap = true;
-                }
-              },
-              use24hFormat: false,
-              initialDateTime: getDateTimefromSeconds(endTime),
-            ),
+              if (errorMessage.isEmpty) {
+                Provider.of<TimeOfDayFieldsModel>(context).timeOverlap = false;
+                Provider.of<TimeOfDayFieldsModel>(context).endTime = value;
+                Provider.of<TimeOfDayFieldsModel>(context).startTime =
+                    getDateTimefromSeconds(startTime);
+              } else {
+                Provider.of<TimeOfDayFieldsModel>(context).timeOverlap = true;
+              }
+            },
+            use24hFormat: false,
+            initialDateTime: getDateTimefromSeconds(endTime),
           ),
-          SizedBox(height: 10),
-          errorMessage.isNotEmpty
-              ? Text(
-                  errorMessage,
-                  style: TextStyle(color: Theme.of(context).errorColor),
-                )
-              : Text(""),
-          SizedBox(height: 10),
-        ],
-      ),
+        ),
+        SizedBox(height: 10),
+        errorMessage.isNotEmpty
+            ? Text(
+                errorMessage,
+                style: TextStyle(color: Theme.of(context).errorColor),
+              )
+            : Text(""),
+        SizedBox(height: 10),
+      ],
     );
   }
 }

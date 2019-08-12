@@ -53,65 +53,67 @@ class _SettingTimepickerScreenState extends State<SettingTimepickerScreen> {
       child: Scaffold(
         backgroundColor: isDark ? null : Colors.white,
         appBar: CustomAppBar(title: "Time"),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 24, right: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CustomRadioField(
-                title: "",
-                description: !(selectedOperationTime == OperationTime.NONE ||
-                        selectedOperationTime == null)
-                    ? "Only \"${selectedOperationTime.toString().toLowerCase().split('.')[1].replaceAllMapped('_', (_) => ' ').split(' ').join(" ").toUpperCase()}\" is enabled as it was selected previously"
-                    : "",
-                radioList: ListView(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  children: OperationTime.values.map((operationTime) {
-                    if (operationTime == OperationTime.NONE) {
-                      return Container();
-                    }
-                    return RadioListTile(
-                      value: operationTime,
-                      title: Text(operationTime
-                          .toString()
-                          .toLowerCase()
-                          .split('.')[1]
-                          .replaceAllMapped('_', (_) => ' ')
-                          .split(' ')
-                          .map((word) =>
-                              "${word.replaceFirst(RegExp(r'.', dotAll: true), word[0].toUpperCase())}")
-                          .join(' ')),
-                      groupValue:
-                          (selectedOperationTime == OperationTime.NONE ||
-                                  selectedOperationTime == null)
-                              ? localSelectedOperationTime
-                              : selectedOperationTime,
-                      onChanged: ((operationTime != selectedOperationTime) &&
-                              !(selectedOperationTime == OperationTime.NONE ||
-                                  selectedOperationTime == null))
-                          // false
-                          ? null
-                          : (val) {
-                              setState(() {
-                                localSelectedOperationTime = val;
-                              });
-                            },
-                    );
-                  }).toList(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24, right: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                CustomRadioField(
+                  description: !(selectedOperationTime == OperationTime.NONE ||
+                          selectedOperationTime == null)
+                      ? "Only \"${selectedOperationTime.toString().toLowerCase().split('.')[1].replaceAllMapped('_', (_) => ' ').split(' ').join(" ").toUpperCase()}\" is enabled as it was selected previously"
+                      : "",
+                  radioList: ListView(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    children: OperationTime.values.map((operationTime) {
+                      if (operationTime == OperationTime.NONE) {
+                        return Container();
+                      }
+                      return RadioListTile(
+                        value: operationTime,
+                        title: Text(operationTime
+                            .toString()
+                            .toLowerCase()
+                            .split('.')[1]
+                            .replaceAllMapped('_', (_) => ' ')
+                            .split(' ')
+                            .map((word) =>
+                                "${word.replaceFirst(RegExp(r'.', dotAll: true), word[0].toUpperCase())}")
+                            .join(' ')),
+                        groupValue:
+                            (selectedOperationTime == OperationTime.NONE ||
+                                    selectedOperationTime == null)
+                                ? localSelectedOperationTime
+                                : selectedOperationTime,
+                        onChanged: ((operationTime != selectedOperationTime) &&
+                                !(selectedOperationTime == OperationTime.NONE ||
+                                    selectedOperationTime == null))
+                            // false
+                            ? null
+                            : (val) {
+                                setState(() {
+                                  localSelectedOperationTime = val;
+                                });
+                              },
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
-              if (selectedOperationTime == OperationTime.TIME_OF_DAY ||
-                  ((selectedOperationTime == null ||
-                          selectedOperationTime == OperationTime.NONE) &&
-                      localSelectedOperationTime == OperationTime.TIME_OF_DAY))
-                TimeOfDayFields(),
-              if (selectedOperationTime == OperationTime.AMBIENT ||
-                  ((selectedOperationTime == null ||
-                          selectedOperationTime == OperationTime.NONE) &&
-                      localSelectedOperationTime == OperationTime.AMBIENT))
-                AmbientFields(),
-            ],
+                if (selectedOperationTime == OperationTime.TIME_OF_DAY ||
+                    ((selectedOperationTime == null ||
+                            selectedOperationTime == OperationTime.NONE) &&
+                        localSelectedOperationTime ==
+                            OperationTime.TIME_OF_DAY))
+                  TimeOfDayFields(),
+                if (selectedOperationTime == OperationTime.AMBIENT ||
+                    ((selectedOperationTime == null ||
+                            selectedOperationTime == OperationTime.NONE) &&
+                        localSelectedOperationTime == OperationTime.AMBIENT))
+                  AmbientFields(),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: PageNavigationBar(

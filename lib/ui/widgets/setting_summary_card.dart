@@ -244,7 +244,7 @@ class SettingSummaryCard extends StatelessWidget {
                         child: Card(
                           elevation: 2,
                           child: Padding(
-                            padding: const EdgeInsets.all(12.0),
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[

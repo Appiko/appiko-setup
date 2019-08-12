@@ -377,7 +377,7 @@ class _ChangeTimeBottomSheetState extends State<ChangeTimeBottomSheet> {
             padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, left: 8),
             child: Text(
               widget.isStartTime ? "Start Time" : "End Time",
-              style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+              style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0),
             ),
           ),
         ),
@@ -518,6 +518,7 @@ class MotionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      dense: true,
       title: Column(
         children: <Widget>[
           Row(
@@ -560,6 +561,7 @@ class TimerRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      dense: true,
       title: Column(
         children: <Widget>[
           Row(
@@ -593,7 +595,7 @@ class TriggerInfoText extends StatelessWidget {
           flex: 18,
           child: Text(
             value,
-            style: Theme.of(context).textTheme.title.copyWith(fontSize: 24),
+            style: Theme.of(context).textTheme.title.copyWith(fontSize: 20),
           ),
         ),
         Flexible(

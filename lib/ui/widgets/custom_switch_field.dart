@@ -42,7 +42,7 @@ class CustomSwitchField extends StatelessWidget {
       contentPadding: padding ?? EdgeInsets.only(top: 12, bottom: 12),
       title: Text(
         title,
-        style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+        style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0),
         textAlign: TextAlign.left,
       ),
       subtitle: description != null

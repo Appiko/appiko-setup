@@ -52,7 +52,7 @@ class _TimeOfDayFieldsState extends State<TimeOfDayFields> {
         SizedBox(height: 24),
         Text(
           "Start time",
-          style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+          style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0),
         ),
         SizedBox(height: 20),
         ConstrainedBox(
@@ -85,7 +85,7 @@ class _TimeOfDayFieldsState extends State<TimeOfDayFields> {
         SizedBox(height: 24),
         Text(
           "End time",
-          style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+          style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0),
         ),
         SizedBox(height: 20),
         ConstrainedBox(

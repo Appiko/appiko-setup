@@ -74,7 +74,7 @@ class _DualTextFieldState extends State<DualTextField> {
         children: <Widget>[
           Text(
             widget.title,
-            style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+            style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0),
           ),
           widget.description != null
               ? Text(

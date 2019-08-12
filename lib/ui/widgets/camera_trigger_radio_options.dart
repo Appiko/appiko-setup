@@ -86,6 +86,7 @@ class _CameraTriggerRadioOptionsState extends State<CameraTriggerRadioOptions> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: options.length,
             itemBuilder: (_, int index) => RadioListTile(
+              // dense: true,
               groupValue: selectedAction,
               value: options[index].action,
               title: Text(options[index].label),
@@ -98,7 +99,7 @@ class _CameraTriggerRadioOptionsState extends State<CameraTriggerRadioOptions> {
         ),
         Flexible(
           child: Padding(
-            padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
+            padding: const EdgeInsets.only(left: 24, right: 24),
             child: Text(
                 Provider.of<SenseBeRxService>(context)
                             .activeTriggerType

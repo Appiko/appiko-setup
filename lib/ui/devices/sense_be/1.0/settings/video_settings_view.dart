@@ -9,6 +9,7 @@ import 'package:setup/ui/widgets/advanced_option_tile.dart';
 import 'package:setup/ui/widgets/advanced_option_wrapper.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
+import 'package:setup/ui/widgets/custom_dropdown_button.dart';
 import 'package:setup/ui/widgets/custom_radio_field.dart';
 import 'package:setup/ui/widgets/custom_switch_field.dart';
 import 'package:setup/ui/widgets/dual_text_field.dart';
@@ -133,6 +134,7 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                                             .preFocusPulseDuration /
                                         10)
                                     .toString();
+                            isVideoOnFullPress = true;
                             Scaffold.of(context).showSnackBar(
                                 locator<SenseBeRxService>()
                                     .advancedSettingOffSnackbar);
@@ -156,38 +158,61 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                     firstFieldLabel: "minutes",
                     secondFieldLabel: "seconds",
                   ),
-                  CustomRadioField(
-                    title: "Video recording starts on",
-                    description:
-                        "Does your camera start recording video on full press or a half press?",
-                    radioList: ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      padding: EdgeInsets.all(0),
-                      children: <Widget>[
-                        RadioListTile(
-                          title: Text("Full Press"),
-                          value: true,
-                          groupValue: isVideoOnFullPress,
-                          onChanged: (bool value) {
-                            setState(() {
-                              isVideoOnFullPress = value;
-                            });
-                          },
-                        ),
-                        RadioListTile(
-                          title: Text("Half Press"),
-                          value: false,
-                          groupValue: isVideoOnFullPress,
-                          onChanged: (bool value) {
-                            setState(() {
-                              isVideoOnFullPress = value;
-                            });
-                          },
-                        ),
-                      ],
+                  AdvancedOptionWrapper(
+                    advancedOptionController: localAdvancedOption,
+                    child: CustomDropdownButton(
+                      isColumn: true,
+                      title: "Video on",
+                      description:
+                          "Start or stop recording video on full press or half press?",
+                      // radioList: ListView(
+                      //   physics: NeverScrollableScrollPhysics(),
+                      //   shrinkWrap: true,
+                      //   padding: EdgeInsets.all(0),
+                      //   children: <Widget>[
+                      //     RadioListTile(
+                      //       title: Text("Full Press"),
+                      //       value: true,
+                      //       groupValue: isVideoOnFullPress,
+                      //       onChanged: (bool value) {
+                      //         setState(() {
+                      //           isVideoOnFullPress = value;
+                      //         });
+                      //       },
+                      //     ),
+                      //     RadioListTile(
+                      //       title: Text("Half Press"),
+                      //       value: false,
+                      //       groupValue: isVideoOnFullPress,
+                      //       onChanged: (bool value) {
+                      //         setState(() {
+                      //           isVideoOnFullPress = value;
+                      //         });
+                      //       },
+                      dropdownButton: DropdownButton(
+                        isExpanded: true,
+                        value: isVideoOnFullPress,
+                        items: [
+                          DropdownMenuItem(
+                            child: Text("Full Press"),
+                            value: true,
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Half Press"),
+                            value: false,
+                          )
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            isVideoOnFullPress = value;
+                          });
+                        },
+                      ),
                     ),
                   ),
+                  // ],
+                  // ),
+                  // ),
                   Provider.of<SenseBeRxService>(context)
                               .activeTriggerType
                               .index ==

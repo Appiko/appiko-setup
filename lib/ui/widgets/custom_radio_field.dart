@@ -52,7 +52,7 @@ class CustomRadioField extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .title
-                      .copyWith(fontSize: 24.0),
+                      .copyWith(fontSize: 20.0),
                 )
               : Container(),
           (description != null)

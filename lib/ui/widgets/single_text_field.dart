@@ -39,7 +39,7 @@ class SingleTextField extends StatelessWidget {
         children: <Widget>[
           Text(
             title,
-            style: Theme.of(context).textTheme.title.copyWith(fontSize: 24.0),
+            style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0),
           ),
           description != null
               ? Text(

@@ -374,7 +374,7 @@ class MotionListCard extends StatelessWidget {
               padding: const EdgeInsets.only(top: 12, bottom: 12),
               child: Text(
                 "Sensor Settings",
-                style: Theme.of(context).textTheme.title.copyWith(fontSize: 24),
+                style: Theme.of(context).textTheme.title.copyWith(fontSize: 20),
               ),
             ),
             subtitle: Column(
@@ -431,7 +431,7 @@ class TimerListCard extends StatelessWidget {
               padding: const EdgeInsets.only(top: 12, bottom: 12),
               child: Text(
                 "Sensor Settings",
-                style: Theme.of(context).textTheme.title.copyWith(fontSize: 24),
+                style: Theme.of(context).textTheme.title.copyWith(fontSize: 20),
               ),
             ),
             subtitle: Column(
@@ -616,13 +616,12 @@ class CameraSettingsTitleRow extends StatelessWidget {
       children: <Widget>[
         Text(
           "Camera Settings ",
-          style: Theme.of(context).textTheme.title.copyWith(fontSize: 24),
+          style: Theme.of(context).textTheme.title.copyWith(fontSize: 20),
         ),
         Text(
           value,
-          style: Theme.of(context).textTheme.title.copyWith(
-                fontSize: 18,
-              ),
+          style: Theme.of(context).textTheme.title.copyWith(fontSize: 14),
+          softWrap: true,
         ),
       ],
     );

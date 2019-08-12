@@ -47,7 +47,7 @@ class SetupTheme with ChangeNotifier {
         elevation: 0,
         textTheme: TextTheme().copyWith(
           title: TextStyle(
-            fontSize: 34,
+            fontSize: 30,
             fontWeight: FontWeight.w700,
             color: black,
           ),
@@ -70,6 +70,7 @@ class SetupTheme with ChangeNotifier {
       // backgroundColor: oneColor.withAlpha(100),
       textSelectionColor: oneColor.withAlpha(100),
       errorColor: errorDark,
+
       accentColor: oneColor,
       toggleableActiveColor: oneColor,
       cursorColor: oneColor,
@@ -96,11 +97,12 @@ class SetupTheme with ChangeNotifier {
         elevation: 0,
         textTheme: TextTheme().copyWith(
           title: TextStyle(
-            fontSize: 34,
+            fontSize: 30,
             fontWeight: FontWeight.w700,
           ),
         ),
       ),
+
       textTheme: _buildTextTheme(base.textTheme),
       accentTextTheme: _buildTextTheme(base.accentTextTheme),
       primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
@@ -113,16 +115,16 @@ class SetupTheme with ChangeNotifier {
         fontWeight: FontWeight.w500,
       ),
       title: base.title.copyWith(
-        fontSize: 18.0,
-        fontWeight: FontWeight.w700,
+        fontSize: 16.0,
+        fontWeight: FontWeight.bold,
       ),
       body1: base.body1.copyWith(
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: FontWeight.normal,
       ),
       caption: base.caption.copyWith(
         fontWeight: FontWeight.w400,
-        fontSize: 12.0,
+        fontSize: 10.0,
       ),
     );
   }

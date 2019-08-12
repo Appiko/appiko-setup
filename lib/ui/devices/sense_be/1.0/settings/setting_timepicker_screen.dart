@@ -72,6 +72,7 @@ class _SettingTimepickerScreenState extends State<SettingTimepickerScreen> {
                         return Container();
                       }
                       return RadioListTile(
+                        dense: true,
                         value: operationTime,
                         title: Text(operationTime
                             .toString()

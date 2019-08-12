@@ -228,7 +228,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
                                 style: Theme.of(context)
                                     .textTheme
                                     .title
-                                    .copyWith(fontSize: 24),
+                                    .copyWith(fontSize: 20),
                               ),
                             ],
                           ),
@@ -277,7 +277,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
                                     style: Theme.of(context)
                                         .textTheme
                                         .title
-                                        .copyWith(fontSize: 24),
+                                        .copyWith(fontSize: 20),
                                   ),
                                   DropdownButton(
                                     value:
@@ -314,7 +314,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
                               SizedBox(height: 12),
                               Text(
                                 "This configures how frequent the beam pulses are expected. Set this based on the targeted animal speed. Faster mode decreases battery life.",
-                                softWrap: true,
+                                style: TextStyle(fontSize: 12),
                               ),
                               SizedBox(height: 8),
                             ],

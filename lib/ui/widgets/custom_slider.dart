@@ -54,9 +54,9 @@ class CustomSlider extends StatelessWidget {
           SizedBox(height: 20),
           Row(
             children: <Widget>[
-              Flexible(flex: 1, child: Text("MIN")),
-              Flexible(flex: 8, child: slider),
-              Flexible(flex: 1, child: Text("MAX")),
+              Text("MIN"),
+              Expanded(flex: 1, child: slider),
+              Text("MAX"),
             ],
           ),
         ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/camera.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/core/view_models/camera_trigger_radio_options_model.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/devices/sense_be/1.0/settings/half_press_settings_view.dart';
@@ -25,8 +26,9 @@ class CameraTriggerView extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? null : Colors.white,
       appBar: CustomAppBar(
         title: "Camera Trigger",
         downArrow: true,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_slider.dart';
 import 'package:setup/ui/widgets/custom_switch_field.dart';
@@ -44,8 +45,9 @@ class _MotionSettingsViewState extends State<MotionSettingsView> {
       isRadioEnabled = widget.setting.cameraSetting.enableRadio;
       firstBuild = false;
     }
+    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? null : Colors.white,
       appBar: CustomAppBar(
         title: "Motion",
         downArrow: true,

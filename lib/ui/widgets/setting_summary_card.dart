@@ -7,6 +7,7 @@ import 'package:setup/core/models/camera.dart';
 import 'package:setup/core/models/sense_be_rx.dart';
 import 'package:setup/core/models/time.dart' as time;
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/devices/sense_be/1.0/settings/setting_summary_page.dart';
@@ -170,18 +171,22 @@ class SettingSummaryCard extends StatelessWidget {
                               children: <Widget>[
                                 Container(
                                   child: CustomPaint(
-                                    painter: CirclePainter(),
+                                    painter: CirclePainter(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ),
                                 Expanded(
                                   child: Container(
-                                    color: Colors.black,
+                                    color: Theme.of(context).primaryColor,
                                     width: 3,
                                   ),
                                 ),
                                 Container(
                                   child: CustomPaint(
-                                    painter: CirclePainter(),
+                                    painter: CirclePainter(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -233,7 +238,11 @@ class SettingSummaryCard extends StatelessWidget {
                       width: double.infinity,
                       child: InkWell(
                         onTap: onTap,
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         child: Card(
+                          elevation: 2,
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Column(
@@ -299,8 +308,7 @@ class SettingSummaryCard extends StatelessWidget {
                     // color: Theme.of(context).primaryColor,
                     label: Text(
                       "OK".padLeft(4).padRight(6),
-                      style: Theme.of(context).textTheme.button.copyWith(
-                          fontWeight: FontWeight.bold, color: Colors.white),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     onPressed: () {
                       Provider.of<SenseBeRxService>(context)
@@ -352,11 +360,11 @@ class ChangeTimeBottomSheet extends StatefulWidget {
 
 class _ChangeTimeBottomSheetState extends State<ChangeTimeBottomSheet> {
   bool overlap = false;
-
   DateTime t;
-
   String errorMessage = "";
+
   _ChangeTimeBottomSheetState({@required this.t});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -427,15 +435,10 @@ class _ChangeTimeBottomSheetState extends State<ChangeTimeBottomSheet> {
           ),
         ),
         FloatingActionButton.extended(
-            backgroundColor: overlap
-                ? Theme.of(context).disabledColor
-                : Theme.of(context).primaryColor,
+            backgroundColor: overlap ? Theme.of(context).disabledColor : null,
             elevation: overlap ? 0 : 4,
             label: Text("OK".padLeft(4).padRight(6),
-                style: Theme.of(context).textTheme.button.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    )),
+                style: TextStyle(fontWeight: FontWeight.bold)),
             onPressed: overlap
                 ? null
                 : () {
@@ -475,20 +478,26 @@ class TimeButton extends StatelessWidget {
         child: Text(
           time,
           style: Theme.of(context).textTheme.caption.copyWith(
-                color: Colors.black,
+                color: Theme.of(context).primaryColor,
               ),
         ),
-        borderSide: BorderSide(color: Colors.black, width: 1),
+        borderSide: BorderSide(
+          width: 1,
+          color: Theme.of(context).primaryColor,
+        ),
       ),
     );
   }
 }
 
 class CirclePainter extends CustomPainter {
+  final Color color;
+
+  CirclePainter({this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
-    paint.color = Colors.black;
+    paint.color = color ?? Colors.black;
 
     // center of the canvas is (x,y) => (width/2, height/2)
     var center = Offset(size.width / 2, size.height / 2);

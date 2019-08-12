@@ -19,6 +19,8 @@ class _TimeOfDayFieldsState extends State<TimeOfDayFields> {
   String errorMessage = '';
 
   bool firstBuild = true;
+
+  @override
   void initState() {
     super.initState();
     if (SchedulerBinding.instance.schedulerPhase ==
@@ -56,7 +58,6 @@ class _TimeOfDayFieldsState extends State<TimeOfDayFields> {
           SizedBox(height: 20),
           Expanded(
             child: CupertinoDatePicker(
-              // child: CupertinoTimerPicker(
               mode: CupertinoDatePickerMode.time,
               minuteInterval: 5,
               onDateTimeChanged: (DateTime value) {

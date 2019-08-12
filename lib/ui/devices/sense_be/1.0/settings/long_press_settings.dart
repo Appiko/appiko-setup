@@ -37,6 +37,8 @@ class _LongPressSettingsViewState extends State<LongPressSettingsView> {
   var _longPressFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
+
     if (firstBuild &&
         widget.setting?.cameraSetting?.runtimeType == LongPressSetting) {
       t1Controller.text = ((widget.setting.cameraSetting as LongPressSetting)
@@ -60,7 +62,6 @@ class _LongPressSettingsViewState extends State<LongPressSettingsView> {
       firstBuild = false;
     }
 
-    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
     return Scaffold(
       appBar: CustomAppBar(
         title: "Long press",
@@ -72,8 +73,7 @@ class _LongPressSettingsViewState extends State<LongPressSettingsView> {
           Navigator.popUntil(context, ModalRoute.withName(popUntilName));
         },
       ),
-      backgroundColor:
-          isDark ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: isDark ? null : Colors.white,
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {

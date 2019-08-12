@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Genrates a appiko style Single text field.
+///
 /// Example
 /// ```dart
 ///    SingleTextField(
@@ -15,6 +17,7 @@ import 'package:flutter/material.dart';
 ///    );
 /// ```
 
+/// {@category Widget}
 class SingleTextField extends StatelessWidget {
   final String title;
   final String description;

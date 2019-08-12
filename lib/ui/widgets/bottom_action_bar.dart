@@ -50,7 +50,6 @@ class BottomActionBar extends StatelessWidget {
                   heroTag: null,
                   label: Text(
                     "${actionLabel.toUpperCase().padLeft((4 + (actionLabel.length / 2)).floor()).padRight(8)}",
-                    style: TextStyle(),
                   ),
                   onPressed: onActionPressed,
                 ),

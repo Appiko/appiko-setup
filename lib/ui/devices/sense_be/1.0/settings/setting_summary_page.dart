@@ -259,7 +259,9 @@ class TimeRow extends StatelessWidget {
                             (timeSetting as time.TimeOfDay).startTime))),
                 SizedBox(width: 10),
                 CustomPaint(
-                  painter: CirclePainter(),
+                  painter: CirclePainter(
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
                 Flexible(
                   child: Container(
@@ -269,7 +271,9 @@ class TimeRow extends StatelessWidget {
                   ),
                 ),
                 CustomPaint(
-                  painter: CirclePainter(),
+                  painter: CirclePainter(
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
                 SizedBox(width: 10),
                 TimeButton(
@@ -290,7 +294,9 @@ class TimeRow extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     CustomPaint(
-                      painter: CirclePainter(),
+                      painter: CirclePainter(
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                     Flexible(
                       child: Container(
@@ -320,7 +326,9 @@ class TimeRow extends StatelessWidget {
                       ),
                     ),
                     CustomPaint(
-                      painter: CirclePainter(),
+                      painter: CirclePainter(
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                   ],
                 )
@@ -487,6 +495,7 @@ class MultiplePicturesCard extends StatelessWidget {
                     Text("${setting.numberOfPictures}"),
                   ],
                 ),
+                SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

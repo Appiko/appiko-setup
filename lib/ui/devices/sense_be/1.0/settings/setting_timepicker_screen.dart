@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/core/view_models/time_of_day_fields_model.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/devices/sense_be/1.0/settings/camera_trriger_view.dart';
@@ -24,6 +25,8 @@ class _SettingTimepickerScreenState extends State<SettingTimepickerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
+
     /// TODO: #RENAME
     int operationTimeIndex =
         Provider.of<SenseBeRxService>(context).operationTimeIndex;
@@ -48,7 +51,7 @@ class _SettingTimepickerScreenState extends State<SettingTimepickerScreen> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? null : Colors.white,
         appBar: CustomAppBar(title: "Time"),
         body: Padding(
           padding: const EdgeInsets.only(left: 24, right: 24),

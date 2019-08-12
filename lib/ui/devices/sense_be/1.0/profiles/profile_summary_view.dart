@@ -348,7 +348,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
                               motionFABDisabledMessage.isEmpty) ||
                           (_tabController.index == 1 &&
                               timerFABDisabledMessage.isEmpty)
-                      ? Theme.of(context).primaryColor
+                      ? null
                       : Colors.grey,
                   child: Icon(Icons.add),
                   onPressed: (_tabController.index == 0 &&

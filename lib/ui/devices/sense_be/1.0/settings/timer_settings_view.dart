@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
-import 'package:setup/ui/widgets/custom_switch_field.dart';
 import 'package:setup/ui/widgets/dual_text_field.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 
@@ -29,6 +29,7 @@ class _TimerSettingsViewState extends State<TimerSettingsView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
     if (firstBuild &&
         widget.setting?.sensorSetting?.runtimeType == TimerSetting) {
       t1Controller.text =
@@ -43,7 +44,7 @@ class _TimerSettingsViewState extends State<TimerSettingsView> {
       firstBuild = false;
     }
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? null : Colors.white,
       appBar: CustomAppBar(
         title: "Timer",
         downArrow: true,

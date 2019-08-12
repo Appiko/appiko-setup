@@ -70,7 +70,7 @@ class PageNavigationBar extends StatelessWidget {
                     style: Theme.of(context).textTheme.button.copyWith(
                           fontWeight: FontWeight.bold,
                           color: (onPrevious != null)
-                              ? Colors.black
+                              ? null
                               : Theme.of(context).disabledColor,
                         ),
                   ),
@@ -87,7 +87,7 @@ class PageNavigationBar extends StatelessWidget {
                         style: Theme.of(context).textTheme.button.copyWith(
                               fontWeight: FontWeight.bold,
                               color: (onNext != null)
-                                  ? Colors.black
+                                  ? null
                                   : Theme.of(context).disabledColor,
                             ),
                       ),

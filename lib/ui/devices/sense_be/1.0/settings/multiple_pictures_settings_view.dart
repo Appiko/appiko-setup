@@ -63,8 +63,7 @@ class _MultiplePicturesSettingsViewState
     }
     bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
     return Scaffold(
-      backgroundColor:
-          isDark ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: isDark ? null : Colors.white,
       appBar: CustomAppBar(
         title: "Multiple Pictures",
         downArrow: true,

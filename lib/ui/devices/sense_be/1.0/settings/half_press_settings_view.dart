@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/half_press_field.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
@@ -21,8 +22,9 @@ class _HalfPressSettingsViewState extends State<HalfPressSettingsView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? null : Colors.white,
       appBar: CustomAppBar(
         title: "Half press",
         downArrow: true,

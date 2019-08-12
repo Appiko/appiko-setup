@@ -88,8 +88,10 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
           .advancedOptionsEnabled[widget.setting.index];
       firstBuild = false;
     }
+
+    bool isDark = Provider.of<SharedPrefs>(context).darkTheme;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? null : Colors.white,
       appBar: CustomAppBar(
         title: "Video",
         downArrow: true,

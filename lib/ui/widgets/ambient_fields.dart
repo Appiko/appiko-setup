@@ -32,10 +32,12 @@ class _AmbientFieldsState extends State<AmbientFields> {
               }
               return RadioListTile(
                 value: light,
-                title: Text(light
-                    .toString()
-                    .split('.')[1]
-                    .replaceAllMapped('_', (_) => ' ')),
+                title: Text(
+                  light
+                      .toString()
+                      .split('.')[1]
+                      .replaceAllMapped('_', (_) => ' '),
+                ),
                 groupValue: selectedLightMode,
                 onChanged: disabledFields.contains(light)
                     ? null

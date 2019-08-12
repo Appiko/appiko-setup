@@ -282,12 +282,11 @@ class SenseBeRxService extends ChangeNotifier {
     print(structure.settings[activeSettingIndex].cameraSetting);
   }
 
-  void setLongPress(
-      {double triggerPulseDuration,
-      double halfPressDuration,
-      Duration longPressDuration}) {
+  void setLongPress({
+    double halfPressDuration,
+    Duration longPressDuration,
+  }) {
     structure.settings[activeSettingIndex].cameraSetting = LongPressSetting()
-      ..triggerPulseDuration = (triggerPulseDuration * 10).toInt()
       ..preFocusPulseDuration = (halfPressDuration * 10).toInt()
       ..enablePreFocus = locator<HalfPressFieldsModel>().isHalfPressEnabled
       ..longPressDuration = longPressDuration.inMilliseconds ~/ 100;

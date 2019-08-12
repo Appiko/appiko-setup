@@ -136,7 +136,6 @@ class LongPressSetting extends CameraSetting {
       ..enableRadio = cameraSetting.enableRadio
       ..videoWithFullPress = cameraSetting.videoWithFullPress
       ..preFocusPulseDuration = cameraSetting.preFocusPulseDuration
-      ..triggerPulseDuration = cameraSetting.triggerPulseDuration
       ..longPressDuration = cameraSetting.longPressDuration;
   }
 
@@ -145,8 +144,7 @@ class LongPressSetting extends CameraSetting {
       ..enablePreFocus = cameraSetting.enablePreFocus
       ..enableRadio = cameraSetting.enableRadio
       ..videoWithFullPress = cameraSetting.videoWithFullPress
-      ..preFocusPulseDuration = cameraSetting.preFocusPulseDuration
-      ..triggerPulseDuration = cameraSetting.triggerPulseDuration;
+      ..preFocusPulseDuration = cameraSetting.preFocusPulseDuration;
   }
 
   @override

@@ -26,8 +26,7 @@ class _LongPressSettingsViewState extends State<LongPressSettingsView> {
   bool localAdvancedOption = locator<SharedPrefs>().advancedOptions;
   TextEditingController t1Controller = TextEditingController();
   TextEditingController t2Controller = TextEditingController();
-  TextEditingController triggerPulseDurationController =
-      TextEditingController();
+
   TextEditingController halfPressPulseDurationController =
       TextEditingController();
 
@@ -52,8 +51,7 @@ class _LongPressSettingsViewState extends State<LongPressSettingsView> {
               10)
           .toString()
           .padLeft(2, "0");
-      triggerPulseDurationController.text =
-          (widget.setting.cameraSetting.triggerPulseDuration / 10).toString();
+
       halfPressPulseDurationController.text =
           (widget.setting.cameraSetting.preFocusPulseDuration / 10).toString();
       localAdvancedOption = Provider.of<SenseBeRxService>(context)
@@ -93,12 +91,6 @@ class _LongPressSettingsViewState extends State<LongPressSettingsView> {
                         setState(() {
                           // if advanced option turnedoff
                           if (!value) {
-                            triggerPulseDurationController.text =
-                                (locator<Setting>()
-                                            .cameraSetting
-                                            .triggerPulseDuration /
-                                        10)
-                                    .toString();
                             halfPressPulseDurationController.text =
                                 (locator<Setting>()
                                             .cameraSetting
@@ -130,11 +122,6 @@ class _LongPressSettingsViewState extends State<LongPressSettingsView> {
                     firstFieldLabel: "minutes",
                     secondFieldLabel: "seconds",
                   ),
-                  TriggerPulseDuration(
-                    triggerPulseDurationController:
-                        triggerPulseDurationController,
-                    localAdvancedOption: localAdvancedOption,
-                  ),
                   HalfPress(
                     halfPressPulseDurationController:
                         halfPressPulseDurationController,
@@ -153,8 +140,6 @@ class _LongPressSettingsViewState extends State<LongPressSettingsView> {
         onNext: () {
           if (_longPressFormKey.currentState.validate()) {
             Provider.of<SenseBeRxService>(context).setLongPress(
-              triggerPulseDuration:
-                  double.tryParse(triggerPulseDurationController.text),
               halfPressDuration:
                   double.tryParse(halfPressPulseDurationController.text),
               longPressDuration: Duration(

@@ -35,10 +35,10 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
       TextEditingController();
   TextEditingController halfPressPulseDurationController =
       TextEditingController();
-  TextEditingController extentionTimeController =
+  TextEditingController extensionTimeController =
       TextEditingController(text: "0");
   // TODO: Discuss should this be a slider?
-  TextEditingController numberOfExtentionsController =
+  TextEditingController numberOfExtensionsController =
       TextEditingController(text: "0");
   bool isVideoOnFullPress = false;
   var _videoFormKey = GlobalKey<FormState>();
@@ -70,11 +70,11 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
               ? false
               : true;
       if (extendVideos) {
-        numberOfExtentionsController.text =
+        numberOfExtensionsController.text =
             (widget.setting.cameraSetting as VideoSetting)
                 .numberOfExtensions
                 .toString();
-        extentionTimeController.text =
+        extensionTimeController.text =
             ((widget.setting.cameraSetting as VideoSetting).extensionTime ~/ 10)
                 .toString();
       }
@@ -205,21 +205,21 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                                     extendVideos = val;
                                   });
                                   if (val) {
-                                    extentionTimeController.text = '10';
-                                    numberOfExtentionsController.text = '1';
+                                    extensionTimeController.text = '10';
+                                    numberOfExtensionsController.text = '1';
                                   } else {
-                                    extentionTimeController.text = '0';
-                                    numberOfExtentionsController.text = '0';
+                                    extensionTimeController.text = '0';
+                                    numberOfExtensionsController.text = '0';
                                   }
                                 },
                               ),
                             ),
 
-                            /// Here we are using the advanced option wrapper to hide the extention fields
+                            /// Here we are using the advanced option wrapper to hide the extension fields
                             AdvancedOptionWrapper(
                               advancedOptionController: extendVideos,
                               child: SingleTextField(
-                                title: "Extention Time",
+                                title: "Extension Time",
                                 description:
                                     "Extends the video if the sensor detects movement after the downtime",
                                 textField: TextFormField(
@@ -227,7 +227,7 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                                     helperText: "1 to 250 seconds",
                                     labelText: "seconds",
                                   ),
-                                  controller: extentionTimeController,
+                                  controller: extensionTimeController,
                                   keyboardType: TextInputType.number,
                                   buildCounter: (_,
                                           {int currentLength,
@@ -252,15 +252,15 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                             AdvancedOptionWrapper(
                                 advancedOptionController: extendVideos,
                                 child: SingleTextField(
-                                  title: "Number of extentions",
+                                  title: "Number of extensions",
                                   description:
                                       "Maximum number of times to extend videos",
                                   textField: TextFormField(
                                     decoration: InputDecoration(
-                                      helperText: "1 to 5 extentions",
-                                      labelText: "extentions",
+                                      helperText: "1 to 5 extensions",
+                                      labelText: "extensions",
                                     ),
-                                    controller: numberOfExtentionsController,
+                                    controller: numberOfExtensionsController,
                                     buildCounter: (_,
                                             {int currentLength,
                                             int maxLength,
@@ -323,10 +323,10 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                 seconds: double.tryParse(t2Controller.text).floor(),
               ),
               extendVideos: extendVideos,
-              numberOfExtentions:
-                  double.tryParse(numberOfExtentionsController.text).floor(),
-              extentionTime:
-                  double.tryParse(extentionTimeController.text).floor(),
+              numberOfExtensions:
+                  double.tryParse(numberOfExtensionsController.text).floor(),
+              extensionTime:
+                  double.tryParse(extensionTimeController.text).floor(),
               isVideoOnFullPress: isVideoOnFullPress,
             );
             Navigator.push(

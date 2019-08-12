@@ -21,7 +21,7 @@ class TriggerPulseDuration extends StatelessWidget {
     return AdvancedOptionWrapper(
       advancedOptionController: localAdvancedOption,
       child: SingleTextField(
-        title: "Tirgger pulse duration*",
+        title: "Trigger pulse duration*",
         description: "Duration of trigger pulse for the picture",
         textField: TextFormField(
           controller: triggerPulseDurationController,

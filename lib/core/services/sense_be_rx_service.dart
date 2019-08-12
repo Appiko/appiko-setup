@@ -334,9 +334,9 @@ class SenseBeRxService extends ChangeNotifier {
     double halfPressDuration,
     Duration videoDuration,
     bool isVideoOnFullPress,
-    int numberOfExtentions,
+    int numberOfExtensions,
     bool extendVideos,
-    int extentionTime,
+    int extensionTime,
   }) {
     structure.settings[activeSettingIndex].cameraSetting = VideoSetting()
       ..triggerPulseDuration = (triggerPulseDuration ?? 0 * 10).toInt()
@@ -344,8 +344,8 @@ class SenseBeRxService extends ChangeNotifier {
       ..enablePreFocus = false
       ..videoDuration = videoDuration.inMilliseconds ~/ 100
       ..videoWithFullPress = isVideoOnFullPress
-      ..extensionTime = extentionTime * 10
-      ..numberOfExtensions = numberOfExtentions;
+      ..extensionTime = extensionTime * 10
+      ..numberOfExtensions = numberOfExtensions;
 
     print(structure.settings[activeSettingIndex].cameraSetting);
   }

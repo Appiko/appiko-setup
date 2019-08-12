@@ -778,13 +778,12 @@ class LongPressRow extends StatelessWidget {
               ),
               SizedBox(height: 4),
               HalfPressRow(setting: longPressSetting),
+              SizedBox(height: 4),
               Provider.of<SenseBeRxService>(context)
-                      .metaStructure
-                      .advancedOptionsEnabled[index]
-                  ? longPressSetting.enablePreFocus
-                      ? HalfPressAndTriggerPulseDurationRow(
-                          setting: longPressSetting)
-                      : TriggerPulseDurationRow(setting: longPressSetting)
+                          .metaStructure
+                          .advancedOptionsEnabled[index] &&
+                      longPressSetting.enablePreFocus
+                  ? HalfPressTriggerTimeRow(setting: longPressSetting)
                   : Container()
             ],
           ),

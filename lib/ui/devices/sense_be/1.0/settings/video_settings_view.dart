@@ -317,6 +317,7 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                         )
                       : Container(),
                   TriggerPulseDuration(
+                    isVideo: true,
                     triggerPulseDurationController:
                         triggerPulseDurationController,
                     localAdvancedOption: localAdvancedOption,

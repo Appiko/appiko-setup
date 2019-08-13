@@ -3,10 +3,12 @@ import 'package:setup/ui/widgets/advanced_option_wrapper.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 
 class TriggerPulseDuration extends StatelessWidget {
+  final bool isVideo;
   TriggerPulseDuration({
     Key key,
     @required this.localAdvancedOption,
     @required this.triggerPulseDurationController,
+    this.isVideo = false,
   }) : super(key: key) {
     if (triggerPulseDurationController.text == "") {
       triggerPulseDurationController.text = "0.3";
@@ -22,7 +24,9 @@ class TriggerPulseDuration extends StatelessWidget {
       advancedOptionController: localAdvancedOption,
       child: SingleTextField(
         title: "Trigger pulse duration*",
-        description: "Duration of trigger pulse for the picture",
+        description: isVideo
+            ? "Duration of trigger pulse for the video"
+            : "Duration of trigger pulse for the picture",
         textField: TextFormField(
           controller: triggerPulseDurationController,
           decoration: InputDecoration(

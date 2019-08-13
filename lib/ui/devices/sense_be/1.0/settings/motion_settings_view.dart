@@ -116,7 +116,7 @@ class _MotionSettingsViewState extends State<MotionSettingsView> {
                     ),
                   ),
                   SingleTextField(
-                    title: "Number of triggers",
+                    title: "Max number of triggers",
                     description:
                         "Max number of trigger that can take place as long as a beam is cut",
                     textField: TextFormField(
@@ -163,7 +163,7 @@ class _MotionSettingsViewState extends State<MotionSettingsView> {
       bottomNavigationBar: PageNavigationBar(
         showNext: true,
         showPrevious: true,
-        nextLabel: "DONE",
+        nextLabel: "SAVE",
         onNext: () {
           if (_motionFormKey.currentState.validate()) {
             Provider.of<SenseBeRxService>(context).setMotion(

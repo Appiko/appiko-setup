@@ -86,7 +86,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     "CLOSE",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).disabledColor,
+                                      color: Theme.of(context).accentColor,
                                     ),
                                   ),
                                   onPressed: () => Navigator.pop(context),
@@ -94,7 +94,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 FlatButton(
                                   padding: EdgeInsets.all(0),
                                   child: Text(
-                                    "DONE",
+                                    "RENAME",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context).accentColor,
@@ -127,7 +127,10 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                               FlatButton(
                                 child: Text(
                                   "CANCEL",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColorLight,
+                                  ),
                                 ),
                                 onPressed: () => Navigator.pop(context),
                               ),

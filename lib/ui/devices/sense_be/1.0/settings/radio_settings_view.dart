@@ -110,7 +110,7 @@ class _RadioSettingsViewState extends State<RadioSettingsView> {
       bottomNavigationBar: PageNavigationBar(
         showPrevious: false,
         showNext: true,
-        nextLabel: "DONE",
+        nextLabel: "SAVE",
         onNext: () {
           locator<SenseBeRxService>().setRadioSettings(selectedSpeed);
           Navigator.pop(context);

@@ -90,7 +90,7 @@ class _TimerSettingsViewState extends State<TimerSettingsView> {
       bottomNavigationBar: PageNavigationBar(
         showNext: true,
         showPrevious: true,
-        nextLabel: "DONE",
+        nextLabel: "SAVE",
         onNext: () {
           if (_timerFormKey.currentState.validate()) {
             Provider.of<SenseBeRxService>(context).setTimer(

@@ -71,6 +71,7 @@ class _CreateProfileViewState extends State<CreateProfileView> {
       bottomNavigationBar: PageNavigationBar(
         showPrevious: false,
         showNext: true,
+        nextLabel: "CREATE",
         onNext: () async {
           locator<SenseBeRxService>().reset();
           if (_newProfileForm.currentState.validate()) {

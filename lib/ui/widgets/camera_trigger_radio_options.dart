@@ -38,9 +38,9 @@ class _CameraTriggerRadioOptionsState extends State<CameraTriggerRadioOptions> {
     CameraTriggerOption(
       label: "Long Press",
       motionDescription:
-          "On Motion event, send a Trigger Pulse of a specified long duration to the camera. This is useful when the camera is set in bulb mode, especially for night photgraphy with flash(es) to illuminate the foreground. Also, this mode is useful when the camera is set in burst mode to take multiple pictures as quick as possible.",
+          "On Motion event, send a Trigger Pulse of a specified long duration to the camera. This is useful when the camera is set in bulb mode, especially for night photgraphy with flash(es) to illuminate the foreground and long exposure to have a visible background such as the landscape or starry nights. Also, this mode is useful when the camera is set in burst mode to take multiple pictures as quick as possible.",
       timerDescription:
-          "On Timer event, send a Trigger Pulse of a specified long duration to the camera. This is useful when the camera is set in bulb mode, especially for night photgraphy with flash(es) to illuminate the foreground. Also, this mode is useful when the camera is set in burst mode to take multiple pictures as quick as possible.",
+          "On Timer event, send a Trigger Pulse of a specified long duration to the camera. This is useful when the camera is set in bulb mode, especially for night photgraphy with flash(es) to illuminate the foreground and long exposure to have a visible background such as the landscape or starry nights. Also, this mode is useful when the camera is set in burst mode to take multiple pictures as quick as possible.",
       action: CameraAction.LONG_PRESS,
     ),
     CameraTriggerOption(
@@ -54,7 +54,7 @@ class _CameraTriggerRadioOptionsState extends State<CameraTriggerRadioOptions> {
     CameraTriggerOption(
       label: "Video",
       motionDescription:
-          """Record video by asserting the camera’s shutter button to start and also to stop the recording. The stopping of the video can also be extended if motion is detected at the end of the video.\nWARNING: As pulses sent to the camera to start and stop the video are identical, it is essential to ensure that the camera starts recording when there is a Motion Event from the sensor. If needed turn the video recording off manually before allowing the sensor to trigger a new recording.""",
+          """Record video by asserting the camera's shutter button to start and also to stop the recording. The motion sensor will start sensing again after the configured Downtime (in motion settings) and there is an option to extend the end of the video if motion is detected.\nWARNING: As pulses sent to the camera to start and stop the video are identical, it is essential to ensure that the camera starts recording when there is a Motion Event from the sensor. If needed turn the video recording off manually before allowing the sensor to trigger a new recording.""",
       timerDescription:
           """Record video by asserting the camera’s shutter button to start and also to stop the recording.\nWARNING: As pulses sent to the camera to start and stop the video are identical, it is essential to ensure that the camera starts recording when there is a Timer Event from the sensor. If needed turn the video recording off manually before allowing the sensor to trigger a new recording.""",
       action: CameraAction.VIDEO,

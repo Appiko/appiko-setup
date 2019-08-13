@@ -408,7 +408,7 @@ class SenseBeRxService extends ChangeNotifier {
         ambientStateToSubtract;
     if (structure.timerAmbientState > 7) {
       throw Exception(
-          "Timer Ambient state more than 7: $structure.timerAmbientState");
+          "Timer Ambient state more than 7: ${structure.timerAmbientState}");
     }
 
     if ((structure.operationTime[operationTimeIndex] == null ||

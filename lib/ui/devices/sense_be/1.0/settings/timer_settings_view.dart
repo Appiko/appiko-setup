@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:setup/core/models/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
+import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/dual_text_field.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
@@ -49,10 +50,11 @@ class _TimerSettingsViewState extends State<TimerSettingsView> {
         title: "Timer",
         downArrow: true,
         onDownArrowPressed: () {
-          Provider.of<SenseBeRxService>(context).closeFlow();
-          String popUntilName = Provider.of<SenseBeRxService>(context)
-              .getCameraSettingDownArrowPageName();
-          Navigator.popUntil(context, ModalRoute.withName(popUntilName));
+          // Provider.of<SenseBeRxService>(context).closeFlow();
+          // String popUntilName = Provider.of<SenseBeRxService>(context)
+          //     .getCameraSettingDownArrowPageName();
+          // Navigator.popUntil(context, ModalRoute.withName(popUntilName));
+          locator<SenseBeRxService>().handleDownArrowPress(context);
         },
       ),
       body: GestureDetector(

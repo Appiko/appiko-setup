@@ -68,10 +68,11 @@ class _MultiplePicturesSettingsViewState
         title: "Multiple Pictures",
         downArrow: true,
         onDownArrowPressed: () {
-          Provider.of<SenseBeRxService>(context).closeFlow();
-          String popUntilName = Provider.of<SenseBeRxService>(context)
-              .getCameraSettingDownArrowPageName();
-          Navigator.popUntil(context, ModalRoute.withName(popUntilName));
+          // Provider.of<SenseBeRxService>(context).closeFlow();
+          // String popUntilName = Provider.of<SenseBeRxService>(context)
+          //     .getCameraSettingDownArrowPageName();
+          // Navigator.popUntil(context, ModalRoute.withName(popUntilName));
+          locator<SenseBeRxService>().handleDownArrowPress(context);
         },
       ),
       body: GestureDetector(

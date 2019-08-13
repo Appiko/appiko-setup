@@ -30,7 +30,7 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
   TextEditingController halfPressPulseDurationController =
       TextEditingController();
 
-  var _formKey = GlobalKey<FormState>();
+  var siglePictureFormKey = GlobalKey<FormState>();
 
   bool localAdvancedOption = locator<SharedPrefs>().advancedOptions;
 
@@ -57,10 +57,16 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
         title: "Single Picture",
         downArrow: true,
         onDownArrowPressed: () {
-          Provider.of<SenseBeRxService>(context).closeFlow();
-          String popUntilName = Provider.of<SenseBeRxService>(context)
-              .getCameraSettingDownArrowPageName();
-          Navigator.popUntil(context, ModalRoute.withName(popUntilName));
+          // Provider.of<SenseBeRxService>(context).closeFlow();
+          // String popUntilName = Provider.of<SenseBeRxService>(context)
+          //     .getCameraSettingDownArrowPageName();
+          // Navigator.popUntil(context, ModalRoute.withName(popUntilName));
+          locator<SenseBeRxService>().handleDownArrowPress(context);
+          // siglePictureFormKey.currentState.validate()
+          //     ? print("dsa")
+          //     : print("nooooo");
+
+          // downArrowPress();
         },
       ),
       body: GestureDetector(
@@ -72,7 +78,7 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
           child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Form(
-              key: _formKey,
+              key: siglePictureFormKey,
               child: Column(
                 children: <Widget>[
                   Builder(
@@ -127,13 +133,8 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
           Navigator.popAndPushNamed(context, "/camera-trigger-options");
         },
         onNext: () {
-          if (_formKey.currentState.validate()) {
-            Provider.of<SenseBeRxService>(context).setSinglePicture(
-              triggerPulseDuration:
-                  double.tryParse(triggerPulseDurationController.text),
-              halfPressDuration:
-                  double.tryParse(halfPressPulseDurationController.text),
-            );
+          if (siglePictureFormKey.currentState.validate()) {
+            setSinglePicture();
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -146,4 +147,82 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
       ),
     );
   }
+
+  void setSinglePicture() {
+    locator<SenseBeRxService>().setSinglePicture(
+      triggerPulseDuration:
+          double.tryParse(triggerPulseDurationController.text),
+      halfPressDuration: double.tryParse(halfPressPulseDurationController.text),
+    );
+  }
+
+  // void downArrowPress() {
+  //   var shouldPassSetting = locator<SenseBeRxService>().shouldPassSetting;
+  //   showDialog(
+  //     context: context,
+  //     builder: (_) => AlertDialog(
+  //       title: Text(shouldPassSetting
+  //           ? "Do you make to save changes before closing?"
+  //           : "Do you want to discard the config setting?"),
+  //       actions: <Widget>[
+  //         FlatButton(
+  //             child: Text(
+  //               "CANCEL",
+  //               style: TextStyle(
+  //                 fontWeight: FontWeight.bold,
+  //                 color: Theme.of(context).primaryColorLight,
+  //               ),
+  //             ),
+  //             onPressed: shouldPassSetting
+  //                 ? () {
+  //                     // TODO:
+  //                     // closeChangeFlow();
+  //                     Navigator.popUntil(
+  //                       context,
+  //                       ModalRoute.withName(
+  //                         '/devices/sense-be-rx/setting-summary',
+  //                       ),
+  //                     );
+  //                   }
+  //                 : () {
+  //                     Navigator.pop(context);
+  //                   }),
+  //         FlatButton(
+  //           child: Text(
+  //             shouldPassSetting ? "SAVE" : "DISCARD",
+  //             style: TextStyle(
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //           onPressed: shouldPassSetting
+  //               ? siglePictureFormKey.currentState.validate()
+  //                   ? () {
+  //                       // updateSetting();
+
+  //                       setSinglePicture();
+  //                       Navigator.popUntil(
+  //                         context,
+  //                         ModalRoute.withName(
+  //                             '/devices/sense-be-rx/setting-summary'),
+  //                       );
+  //                     }
+  //                   : () {
+  //                       SnackBar snackBar = SnackBar(
+  //                         content: Text(
+  //                             "Cannot save with an invalid value, please resolve the error"),
+  //                       );
+  //                       Scaffold.of(context).showSnackBar(snackBar);
+  //                     }
+  //               : () {
+  //                   locator<SenseBeRxService>().closeFlow();
+  //                   Navigator.popUntil(
+  //                       context,
+  //                       ModalRoute.withName(
+  //                           '/devices/sense-be-rx/profile-summary'));
+  //                 },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

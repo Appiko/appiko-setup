@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/ui/views/about_us_view.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
-class MoreView extends StatelessWidget {
+class MoreView extends StatefulWidget {
+  @override
+  _MoreViewState createState() => _MoreViewState();
+}
+
+class _MoreViewState extends State<MoreView> {
   final Map moreList = {
     "About us": AboutUsView(),
     // "About us": MotionSettingsView(),
@@ -14,8 +20,16 @@ class MoreView extends StatelessWidget {
     "FAQ": Container(),
     "Third party software": Container(),
   };
+
+  PackageInfo info;
+
   @override
   Widget build(BuildContext context) {
+    PackageInfo.fromPlatform().then((p) {
+      setState(() {
+        info = p;
+      });
+    });
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
@@ -29,7 +43,7 @@ class MoreView extends StatelessWidget {
           //     value: Provider.of<SharedPrefs>(context).darkTheme,
           //   ),
           // ),
-          CustomDivider(),
+          // CustomDivider(),
           ListTile(
             title: Text("Advanced options"),
             trailing: Switch.adaptive(
@@ -62,6 +76,11 @@ class MoreView extends StatelessWidget {
             ),
             itemCount: moreList.length,
           ),
+          SizedBox(height: 16),
+          info != null
+              ? Text(
+                  "Version - ${info.version}+${info.buildNumber.padLeft(3, "0")}")
+              : Text(""),
         ],
       ),
     );

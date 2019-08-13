@@ -29,7 +29,7 @@ class _RadioSettingsViewState extends State<RadioSettingsView> {
         title: "Radio",
         downArrow: true,
         onDownArrowPressed: () {
-          Navigator.pop(context);
+          locator<SenseBeRxService>().handleDownArrowPress(context);
         },
       ),
       body: SingleChildScrollView(

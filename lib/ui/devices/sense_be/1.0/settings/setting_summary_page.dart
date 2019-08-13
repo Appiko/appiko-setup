@@ -58,6 +58,8 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
 
     return WillPopScope(
       onWillPop: () async {
+        locator<SenseBeRxService>().updateSetting();
+
         locator<SenseBeRxService>().closeChangeFlow();
 // As cameraSettingPop is related
         Navigator.popAndPushNamed(
@@ -121,8 +123,7 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-          icon: Icon(Icons.check),
-          label: Text("SAVE"),
+          label: Text("DONE"),
           // FIXME: Infinite bounds error
           onPressed: () {
             locator<SenseBeRxService>().updateSetting();

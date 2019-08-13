@@ -678,6 +678,7 @@ class SenseBeRxService extends ChangeNotifier {
     return fieldsToDisable;
   }
 
+  // TODO: Remove onPressed
   showDeleteSettingModal({all = false, context, onPressed}) {
     showDialog(
         context: context,
@@ -760,5 +761,86 @@ class SenseBeRxService extends ChangeNotifier {
               : OperationTime.AMBIENT;
     }
     notifyListeners();
+  }
+
+  void handleDownArrowPress(BuildContext context,
+      [GlobalKey<FormState> key, VoidCallback onSave]) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(
+            // shouldPassSetting
+            // ? "Do you make to save changes before closing?" :
+            "Do you want to discard the setting?"),
+        actions: <Widget>[
+          FlatButton(
+              child: Text(
+                "CANCEL",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColorLight,
+                ),
+              ),
+              onPressed:
+                  // shouldPassSetting
+                  // ? () {
+                  //     // TODO:
+                  //     // closeChangeFlow();
+                  //     Navigator.popUntil(
+                  //       context,
+                  //       ModalRoute.withName(
+                  //         '/devices/sense-be-rx/setting-summary',
+                  //       ),
+                  //     );
+                  //   }
+                  // :
+                  () {
+                Navigator.pop(context);
+              }),
+          FlatButton(
+            child: Text(
+              // shouldPassSetting
+              // ? "SAVE" :
+              "DISCARD",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: shouldPassSetting
+                // ?                 key.currentState.validate()
+                ? () {
+                    // updateSetting();
+                    discardChangeFlow();
+                    // onSave();
+                    Navigator.popUntil(
+                      context,
+                      ModalRoute.withName(
+                          '/devices/sense-be-rx/setting-summary'),
+                    );
+                  }
+                // : () {
+                //     SnackBar snackBar = SnackBar(
+                //       content: Text(
+                //           "Cannot save with an invalid value, please resolve the error"),
+                //     );
+                //     Scaffold.of(context).showSnackBar(snackBar);
+                //   }
+                : () {
+                    closeFlow();
+                    Navigator.popUntil(
+                      context,
+                      ModalRoute.withName(
+                          '/devices/sense-be-rx/profile-summary'),
+                    );
+                  },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void discardChangeFlow() {
+    structure.settings[8] =
+        Setting.clone(setting: structure.settings[settingToUpdate]);
   }
 }

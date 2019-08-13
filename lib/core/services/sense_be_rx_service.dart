@@ -687,6 +687,7 @@ class SenseBeRxService extends ChangeNotifier {
                     "CANCEL",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColorLight,
                     ),
                   ),
                   onPressed: () => Navigator.pop(context),
@@ -701,9 +702,10 @@ class SenseBeRxService extends ChangeNotifier {
                     onPressed: () {
                       onPressed();
                       Navigator.popUntil(
-                          context,
-                          ModalRoute.withName(
-                              '/devices/sense-be-rx/profile-summary'));
+                        context,
+                        ModalRoute.withName(
+                            '/devices/sense-be-rx/profile-summary'),
+                      );
                     }),
               ],
             ));
@@ -739,13 +741,21 @@ class SenseBeRxService extends ChangeNotifier {
           (setting) => setting.sensorSetting.runtimeType == MotionSetting);
       structure.operationTime[0] = setting.time.runtimeType == time.TimeOfDay
           ? OperationTime.TIME_OF_DAY
-          : OperationTime.AMBIENT;
+          : setting.time.runtimeType == time.Ambient &&
+                  (setting.time as time.Ambient).ambientLight ==
+                      time.AmbientLight.ALL_TIME
+              ? OperationTime.ALL_TIME
+              : OperationTime.AMBIENT;
     } else {
       setting = structure.settings.firstWhere(
           (setting) => setting.sensorSetting.runtimeType == TimerSetting);
       structure.operationTime[1] = setting.time.runtimeType == time.TimeOfDay
           ? OperationTime.TIME_OF_DAY
-          : OperationTime.AMBIENT;
+          : setting.time.runtimeType == time.Ambient &&
+                  (setting.time as time.Ambient).ambientLight ==
+                      time.AmbientLight.ALL_TIME
+              ? OperationTime.ALL_TIME
+              : OperationTime.AMBIENT;
     }
     notifyListeners();
   }

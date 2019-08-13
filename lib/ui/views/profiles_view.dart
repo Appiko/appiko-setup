@@ -38,11 +38,39 @@ class ProfilesView extends StatelessWidget {
                           //           .shareProfile(profiles[index].filePath);
                           //     }),
                           IconButton(
-                              icon: Icon(OMIcons.delete),
-                              onPressed: () {
-                                locator<ProfilesService>()
-                                    .deleteProfile(profiles[index].filePath);
-                              }),
+                            icon: Icon(OMIcons.delete),
+                            onPressed: () => showDialog(
+                                builder: (context) => AlertDialog(
+                                      title: Text("Delete Profile?"),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text(
+                                            "CANCEL",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .primaryColorLight,
+                                            ),
+                                          ),
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                        ),
+                                        FlatButton(
+                                            child: Text(
+                                              "DELETE",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            onPressed: () {
+                                              locator<ProfilesService>()
+                                                  .deleteProfile(
+                                                      profiles[index].filePath);
+                                              Navigator.pop(context);
+                                            }),
+                                      ],
+                                    ),
+                                context: context),
+                          ),
                         ],
                       ),
                       onTap: () {

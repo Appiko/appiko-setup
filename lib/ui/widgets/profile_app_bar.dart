@@ -86,7 +86,8 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     "CLOSE",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).accentColor,
+                                      color:
+                                          Theme.of(context).primaryColorLight,
                                     ),
                                   ),
                                   onPressed: () => Navigator.pop(context),

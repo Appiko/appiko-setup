@@ -11,7 +11,7 @@ description: Appiko setup app
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.0-alpha+002
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -32,6 +32,7 @@ dependencies:
   permission_handler: '^3.1.0' #Handle location permissions on android
   path_provider: ^1.1.0 #Get filesystem path
   share_extend: ^1.0.9 #Share profiles
+  package_info: ^0.4.0+6 # Display package info(version number,...)
   
 
 

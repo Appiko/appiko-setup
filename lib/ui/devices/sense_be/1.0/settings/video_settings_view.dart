@@ -282,7 +282,7 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                                       "Maximum number of times to extend videos",
                                   textField: TextFormField(
                                     decoration: InputDecoration(
-                                      helperText: "1 to 5 extensions",
+                                      helperText: "1 to 250 extensions",
                                       labelText: "extensions",
                                     ),
                                     controller: numberOfExtensionsController,
@@ -304,12 +304,12 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                                       if (n == null) {
                                         return "Cannot be empty";
                                       }
-                                      if (n < 1 || n > 5) {
+                                      if (n < 1 || n > 250) {
                                         return "Not in valid range";
                                       }
                                       return null;
                                     },
-                                    maxLength: 1,
+                                    maxLength: 3,
                                     autovalidate: true,
                                   ),
                                 )),

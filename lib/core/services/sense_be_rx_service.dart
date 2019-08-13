@@ -154,9 +154,11 @@ class SenseBeRxService extends ChangeNotifier {
           if (numberofMotionSettings == 1) {
             operationTimeToSet = setting.time.runtimeType == time.TimeOfDay
                 ? OperationTime.TIME_OF_DAY
-                : setting.time.runtimeType == time.Ambient
-                    ? OperationTime.AMBIENT
-                    : OperationTime.ALL_TIME;
+                : (setting.time.runtimeType == time.Ambient &&
+                        (setting.time as time.Ambient).ambientLight ==
+                            time.AmbientLight.ALL_TIME)
+                    ? OperationTime.ALL_TIME
+                    : OperationTime.AMBIENT;
             structure.operationTime[0] = null;
           }
           if (setting.time.runtimeType == time.Ambient) {

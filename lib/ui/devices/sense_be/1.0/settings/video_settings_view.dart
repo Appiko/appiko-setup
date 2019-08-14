@@ -163,7 +163,7 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                     advancedOptionController: localAdvancedOption,
                     child: CustomDropdownButton(
                       isColumn: true,
-                      title: "Video on",
+                      title: "Video starts/stops on",
                       description:
                           "Start or stop recording video on full press or half press?",
                       // radioList: ListView(
@@ -278,7 +278,7 @@ class _VideoSettingsViewState extends State<VideoSettingsView> {
                             AdvancedOptionWrapper(
                                 advancedOptionController: extendVideos,
                                 child: SingleTextField(
-                                  title: "Number of extensions",
+                                  title: "Max number of extensions",
                                   description:
                                       "Maximum number of times to extend videos",
                                   textField: TextFormField(

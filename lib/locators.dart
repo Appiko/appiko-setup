@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
 import 'package:setup/core/services/profiles.dart';

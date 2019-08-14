@@ -1,0 +1,37 @@
+dartdoc:
+  categories: 
+    "SenseBeRx":
+      markdown: doc/devices/sense_be_rx.md
+      name: "SenseBe Rx"
+    "Design":
+      markdown: doc/design.md
+      name: "Design"
+    "Widget":
+      markdown: doc/widget.md
+      name: "Widget"
+    "Compound Widget":
+      markdown: doc/compound_widget.md
+      name: "Compound Widget"
+    "Page":
+      markdown: doc/page_screen_view.md
+      name: "Page"
+    "Service":
+      markdown: doc/services.md
+      name: "Service"
+    "Model":
+      markdown: doc/models.md
+      name: "Model"
+    "Helper":
+      markdown: doc/helpers.md
+      name: "Helper"
+  categoryOrder: ["Design", "Widget", "Compound Widget", "Page", "SenseBeRx"]
+  exclude: ["flutter","dart.collection","dart.math","dart.core","dart.developer","dart.io","dart.ui","dart.isolate","dart.convert","dart.async","dart.typed_data"]
+  linkToSource:
+    url: "https://github.com/appiko/appiko-setup"
+  showUndocumentedCategories: true
+  ignore:
+    - ambiguous-doc-reference
+  errors:
+    - unresolved-doc-reference
+  warnings:
+    - tool-error

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:setup/ui/widgets/bottom_nav.dart';
 
+/// {@category Model}
+/// Interact with [BottomNav]
 class BottomNavModel extends ChangeNotifier {
   int _index = 0;
 

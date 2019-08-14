@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
-///  Example
+/// {@category Widget}
+/// {@category Design}
+///
+///
+/// Dropdown button with a title and description.
+/// Can be arranged in a row or a column.
+///
+///
+/// Example
 ///  ```dart
 ///              CustomDropdownButton(
 ///                title: "Channel",
@@ -37,6 +45,8 @@ class CustomDropdownButton extends StatelessWidget {
   final String title;
   final String description;
   final DropdownButton dropdownButton;
+
+  /// If it should return a Column. i.e., the dropdown button is placed below the title.
   final bool isColumn;
 
   CustomDropdownButton({

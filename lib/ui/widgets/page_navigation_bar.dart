@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// {@category Widget}
+/// {@category Design}
+///
+/// Bottom action bar with `Next` and `Previous` options by default
+///
 /// Example
 ///
 /// ```dart

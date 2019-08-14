@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/profiles.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
 import 'package:setup/ui/widgets/custom_tab_bar.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 
 import '../colors.dart';
 
+/// {@category Compound Widget}
+/// {@category Design}
+///
+/// Profies app bar displayed in [ProfileSummaryView]
 class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   ProfileFile profileFile;
   final TabController tabController;

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 
+/// {@category Compound Widget}
+/// {@category Design}
+///
+/// Half Press pulse duration field, to be displayed when advanced option is on
 class HalfPressField extends StatelessWidget {
   HalfPressField({
     Key key,

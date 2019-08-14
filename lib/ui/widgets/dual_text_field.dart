@@ -17,6 +17,9 @@ import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 ///     );
 /// ```
 
+/// {@category Widget}
+/// {@category Design}
+///
 class DualTextField extends StatefulWidget {
   final String title;
   final String description;

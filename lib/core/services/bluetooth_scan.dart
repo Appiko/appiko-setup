@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:setup/core/services/permissions.dart';
 import 'package:system_setting/system_setting.dart';
 
+/// {@category Service}
 class BluetoothScanService with ChangeNotifier {
   FlutterBlue _flutterBlue = FlutterBlue.instance;
   Duration _scanTimeoutDuration = Duration(seconds: 15);

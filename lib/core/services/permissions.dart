@@ -3,7 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:setup/core/services/platform_services.dart';
 
-
+/// {@category Service}
+/// Service to handle permissions
 class PermissionsService {
   Map<PermissionGroup, PermissionStatus> permissions = {};
 

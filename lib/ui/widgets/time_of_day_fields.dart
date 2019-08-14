@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/time.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/view_models/time_of_day_fields_model.dart';
 import 'package:setup/locators.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_timepicker_screen.dart';
 
+/// {@category Widget}
+/// {@category Design}
+/// Time of day  (Cupertino Date Pickers) displayed in [SettingTimepickerScreen]
 class TimeOfDayFields extends StatefulWidget {
   @override
   _TimeOfDayFieldsState createState() => _TimeOfDayFieldsState();

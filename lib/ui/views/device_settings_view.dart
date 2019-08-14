@@ -5,6 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
 
+/// {@category Page}
+/// {@category Design}
+///
+/// Screen shown when a device is connected
+/// TODO:
 class DeviceSettingsView extends StatefulWidget {
   @override
   _DeviceSettingsViewState createState() => _DeviceSettingsViewState();

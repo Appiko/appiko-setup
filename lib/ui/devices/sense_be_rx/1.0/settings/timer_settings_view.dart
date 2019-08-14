@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
@@ -8,6 +8,11 @@ import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/dual_text_field.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 
+/// {@category Page}
+/// {@category SenseBeRx}
+/// {@category Design}
+///
+/// Time settings configuration screen.
 class TimerSettingsView extends StatefulWidget {
   Setting setting;
 

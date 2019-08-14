@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
 
+/// {@category Widget}
+/// {@category Design}
+///
+///
+/// Bottom Action bar as used in [ProfileSummaryView]
 class BottomActionBar extends StatelessWidget {
   final String actionLabel;
   final bool showProfileButton;

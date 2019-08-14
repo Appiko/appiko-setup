@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
+/// {@category Service}
 class BluetoothConnectionService with ChangeNotifier {
   BluetoothDevice device;
   BluetoothDeviceState deviceState;

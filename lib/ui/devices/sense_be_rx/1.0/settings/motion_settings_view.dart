@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
@@ -10,6 +10,11 @@ import 'package:setup/ui/widgets/custom_switch_field.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 
+/// {@category Page}
+/// {@category SenseBeRx}
+/// {@category Design}
+///
+/// Motion settings configuration screen.
 class MotionSettingsView extends StatefulWidget {
   Setting setting;
 

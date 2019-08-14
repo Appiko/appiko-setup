@@ -23,7 +23,9 @@ import 'package:flutter/material.dart';
 ///        );
 ///```
 ///
-
+/// {@category Widget}
+/// {@category Design}
+///
 class CustomSlider extends StatelessWidget {
   final String title;
   final String description;

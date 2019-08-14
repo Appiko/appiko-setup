@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
 
+/// {@category Page}
+///
+/// TODO:.
 class DeviceSettingsView extends StatefulWidget {
   @override
   _DeviceSettingsViewState createState() => _DeviceSettingsViewState();

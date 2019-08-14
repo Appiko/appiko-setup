@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/camera.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
@@ -12,7 +12,13 @@ import 'package:setup/ui/widgets/half_press.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 
+/// {@category Page}
+/// {@category SenseBeRx}
+/// {@category Design}
+///
+/// Single picture configuration screen.
 class SinglePictureSettingsView extends StatefulWidget {
+  // Accepts setting as a parameter, to prefill fields with actual setting values.
   Setting setting;
 
   SinglePictureSettingsView({Key key, this.setting}) : super(key: key);

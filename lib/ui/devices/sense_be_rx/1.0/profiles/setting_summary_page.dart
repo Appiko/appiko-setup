@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/camera.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
-import 'package:setup/core/models/time.dart' as time;
-import 'package:setup/core/models/time.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart' as time;
+import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/camera_trriger_view.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/setting_timepicker_screen.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_card.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/camera_trriger_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_timepicker_screen.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
-import 'package:setup/ui/widgets/setting_summary_card.dart';
 
 class SettingSummaryPage extends StatefulWidget {
   const SettingSummaryPage({Key key}) : super(key: key);
@@ -20,6 +20,11 @@ class SettingSummaryPage extends StatefulWidget {
   _SettingSummaryPageState createState() => _SettingSummaryPageState();
 }
 
+/// {@category Page}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// This page is displayed after, tapping on any of the [SettingSummaryCard].
 class _SettingSummaryPageState extends State<SettingSummaryPage> {
   Setting setting;
   bool isRadioEnabled;
@@ -137,6 +142,11 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Returns a row displaying the half press trigger duration.
 class HalfPressTriggerTimeRow extends StatelessWidget {
   const HalfPressTriggerTimeRow({
     Key key,
@@ -157,6 +167,11 @@ class HalfPressTriggerTimeRow extends StatelessWidget {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Returns a row displayig the trigger pulse duration.
 class TriggerPulseDurationRow extends StatelessWidget {
   const TriggerPulseDurationRow({
     Key key,
@@ -177,6 +192,11 @@ class TriggerPulseDurationRow extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Combination of [HalfPressTriggerTimeRow] and [TriggerPulseDurationRow]
 class HalfPressAndTriggerPulseDurationRow extends StatelessWidget {
   const HalfPressAndTriggerPulseDurationRow({
     Key key,
@@ -198,6 +218,11 @@ class HalfPressAndTriggerPulseDurationRow extends StatelessWidget {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Returns a row, displaying if the half press is on/off.
 class HalfPressRow extends StatelessWidget {
   const HalfPressRow({
     Key key,
@@ -218,6 +243,11 @@ class HalfPressRow extends StatelessWidget {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Displays if radio should be on or off, for a particular setting.
 class RadioRow extends StatelessWidget {
   final CameraSetting setting;
 
@@ -235,6 +265,11 @@ class RadioRow extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Returns the time ROW which is displayed in the [SettingSummaryPage]
 class TimeRow extends StatelessWidget {
   final Time timeSetting;
 
@@ -338,6 +373,13 @@ class TimeRow extends StatelessWidget {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+///
+/// This can be used as a Wrapper, for elements wich needs to expand
+/// to max width available to it.
+///
+/// Container card to be displayed on [SettingSummaryPage].
 class ListCard extends StatelessWidget {
   final Widget child;
 
@@ -361,6 +403,11 @@ class ListCard extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Motion settings to be displayed on [SettingSummaryPage].
 class MotionListCard extends StatelessWidget {
   final Setting setting;
 
@@ -418,6 +465,11 @@ class MotionListCard extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Timer sensor settings to be displayed on [SettingSummaryPage].
 class TimerListCard extends StatelessWidget {
   final Setting setting;
 
@@ -455,6 +507,12 @@ class TimerListCard extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Wraps trigger info like `Multiple Picture` in a List Card.
+/// Uses [CameraSettingsTitleRow].
 class TriggerInfoCard extends StatelessWidget {
   final String info;
 
@@ -471,6 +529,11 @@ class TriggerInfoCard extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Multiple Picuture settings card to be displayed on [SettingSummaryPage].
 class MultiplePicturesCard extends StatelessWidget {
   final MultiplePicturesSetting setting;
   final int index;
@@ -523,6 +586,11 @@ class MultiplePicturesCard extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Video settings card to be displayed on [SettingSummaryPage].
 class VideoCard extends StatelessWidget {
   final VideoSetting videoSetting;
   final bool timer;
@@ -603,6 +671,11 @@ class VideoCard extends StatelessWidget {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+///
+/// Return a row wich is spaced between a [Text] "Camera Setting" and a value like `Video`
+///
 class CameraSettingsTitleRow extends StatelessWidget {
   final String value;
   const CameraSettingsTitleRow({
@@ -629,6 +702,11 @@ class CameraSettingsTitleRow extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Long Press settings card to be displayed on [SettingSummaryPage].
 class LongPressCard extends StatelessWidget {
   final LongPressSetting longPressSetting;
   final int index;
@@ -673,6 +751,11 @@ class LongPressCard extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Single picture card to be displayed on [SettingSummaryPage].
 class SinglePictureCard extends StatelessWidget {
   final CameraSetting singlePictureSetting;
   final int index;
@@ -710,6 +793,11 @@ class SinglePictureCard extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Half Pres card to be displayed on [SettingSummaryPage].
 class HalfPressCard extends StatelessWidget {
   final CameraSetting halfPressSetting;
 

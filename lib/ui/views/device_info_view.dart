@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
+/// {@category Page}
+/// {@category Design}
+///
+/// Device Information screen
 class DeviceInfoView extends StatelessWidget {
   final Map<String, String> deviceInfo = {
     "Name": "SenseBe #5",

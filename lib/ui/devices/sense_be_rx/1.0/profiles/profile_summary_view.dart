@@ -2,20 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/radio_settings_view.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/setting_summary_page.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/setting_timepicker_screen.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_card.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_page.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/radio_settings_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_timepicker_screen.dart';
+import 'package:setup/ui/views/profiles_view.dart';
 import 'package:setup/ui/widgets/advanced_option_tile.dart';
 import 'package:setup/ui/widgets/advanced_option_wrapper.dart';
 import 'package:setup/ui/widgets/bottom_action_bar.dart';
 import 'package:setup/ui/widgets/profile_app_bar.dart';
-import 'package:setup/ui/widgets/setting_summary_card.dart';
 
+/// {@category Page}
+/// {@category SenseBeRx}
+/// {@category Design}
+///
+///
+/// Profile Summary screen, shown when a profile is clicked from [ProfilesView]
 class ProfileSummaryView extends StatefulWidget {
   @override
   _ProfileSummaryViewState createState() => _ProfileSummaryViewState();

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'colors.dart';
 
+/// {@category Compound Widget}
+/// {@category Design}
+///
+/// Theme data for Dark and Light themes
 class SetupTheme with ChangeNotifier {
   // static FontWeight _medium = FontWeight.w700;
   // static TextTheme _defaultTextTheme = TextTheme(
@@ -22,7 +26,7 @@ class SetupTheme with ChangeNotifier {
       primaryColorDark: black,
       primaryColorLight: black.withAlpha(100),
       scaffoldBackgroundColor: backgroundLight,
-      // backgroundColor: oneColor.withAlpha(100),
+      backgroundColor: oneColor.withAlpha(100), // used behind the progress bar
       cardColor: surfaceLight,
       textSelectionColor: oneColor.withAlpha(100),
       errorColor: errorLight,
@@ -67,7 +71,7 @@ class SetupTheme with ChangeNotifier {
       primaryColorDark: Colors.white.withAlpha(20),
       primaryColorLight: Colors.grey,
       // scaffoldBackgroundColor: base.scaffoldBackgroundColor,
-      // backgroundColor: oneColor.withAlpha(100),
+      backgroundColor: oneColor.withAlpha(100), // used behind the progress bar
       textSelectionColor: oneColor.withAlpha(100),
       errorColor: errorDark,
 

@@ -11,9 +11,9 @@ import 'package:setup/core/view_models/camera_trigger_radio_options_model.dart';
 import 'package:setup/core/view_models/half_press_fields_model.dart';
 import 'package:setup/core/view_models/time_of_day_fields_model.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be/1.0/profiles/profile_summary_view.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/camera_trriger_view.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/setting_summary_page.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_page.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/camera_trriger_view.dart';
 import 'package:setup/ui/setup_theme.dart';
 import 'package:setup/ui/views/create_profile_view.dart';
 import 'package:setup/ui/views/device_info_view.dart';
@@ -24,7 +24,8 @@ import 'package:setup/ui/views/scan_view.dart';
 import 'package:setup/ui/views/shop_view.dart';
 import 'package:setup/ui/widgets/bottom_nav.dart';
 import 'package:setup/ui/devices/sense_pi/1.0/device_settings_view.dart' as pi;
-import 'package:setup/ui/devices/sense_be/1.0/device_settings_view.dart' as be;
+import 'package:setup/ui/devices/sense_be_rx/1.0/device_settings_view.dart'
+    as be;
 
 import 'package:setup/core/view_models/bottom_nav_model.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';

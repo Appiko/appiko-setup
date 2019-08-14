@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
-import 'package:setup/core/models/camera.dart';
-import 'package:setup/core/models/time.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart';
 
 /// [BatteryTypes]s supported by Be Rx
 enum BatteryType {
@@ -74,8 +74,14 @@ enum RadioChannel {
   CHANNEL_9,
 }
 
+/// {@category Model}
+/// {@subCategory Sensor}
+/// {@category SenseBeRx}
 class SensorSetting {}
 
+/// {@category Model}
+/// {@subCategory Sensor}
+/// {@category SenseBeRx}
 class MotionSetting extends SensorSetting {
   int downtime = 0;
   int sensitivity;
@@ -101,6 +107,9 @@ class MotionSetting extends SensorSetting {
   }
 }
 
+/// {@category Model}
+/// {@subCategory Sensor}
+/// {@category SenseBeRx}
 class TimerSetting extends SensorSetting {
   int interval;
 
@@ -118,6 +127,8 @@ class TimerSetting extends SensorSetting {
   }
 }
 
+/// {@category Model}
+/// {@category SenseBeRx}
 class Setting {
   SensorSetting sensorSetting;
   CameraSetting cameraSetting;
@@ -190,6 +201,9 @@ enum RadioSpeed {
   VERY_SLOW,
 }
 
+/// {@category Model}
+/// {@category SenseBeRx}
+/// {@subCategory Radio}
 class RadioSetting {
   // TODO: set default
   RadioChannel radioChannel = RadioChannel.CHANNEL_0;
@@ -264,7 +278,10 @@ class RadioSetting {
   }
 }
 
-//default values
+///
+/// {@category Model}
+/// {@category SenseBeRx}
+///
 class SenseBeRx with ChangeNotifier {
   List<OperationTime> operationTime = List(2); // for motion and timer
 

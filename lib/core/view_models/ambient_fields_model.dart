@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:setup/core/models/time.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart';
+import 'package:setup/ui/widgets/ambient_fields.dart';
 
+/// {@category Model}
+/// Interact with [AmbientFields]
 class AmbientFieldsModel extends ChangeNotifier {
   AmbientLight ambientLight = AmbientLight.DAY_ONLY;
 

@@ -6,6 +6,10 @@ import 'package:setup/ui/views/about_us_view.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
+/// {@category Page}
+/// {@category Design}
+///
+/// More page
 class MoreView extends StatefulWidget {
   @override
   _MoreViewState createState() => _MoreViewState();

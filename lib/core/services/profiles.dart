@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/locators.dart';
-import 'package:share_extend/share_extend.dart';
 
+/// {@category Model}
 class ProfileFile {
   String filePath;
   String fileName;
@@ -23,6 +23,7 @@ class ProfileFile {
   }
 }
 
+/// {@category Service}
 class ProfilesService with ChangeNotifier {
   List<ProfileFile> profiles = [];
   ProfileFile activeProfile;

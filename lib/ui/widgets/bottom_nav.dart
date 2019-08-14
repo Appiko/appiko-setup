@@ -3,6 +3,10 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/view_models/bottom_nav_model.dart';
 
+/// {@category Widget}
+/// {@category Design}
+///
+/// Bottom navigation bar used in the main screen
 class BottomNav extends StatefulWidget {
   @override
   _BottomNavState createState() => _BottomNavState();

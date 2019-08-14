@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// {@category Service}
+/// Shared Prefrences service, used to store small key value pairs like, dart theme.
 class SharedPrefs with ChangeNotifier {
   SharedPreferences _prefs;
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+///Radio field with title and a description
+///
 ///Example
 ///
 ///  ```dart
@@ -26,7 +28,9 @@ import 'package:flutter/material.dart';
 ///      ),
 ///    );
 ///  ```
-
+/// {@category Widget}
+/// {@category Design}
+///
 class CustomRadioField extends StatelessWidget {
   final String title;
   final String description;

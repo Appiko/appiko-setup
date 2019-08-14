@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/camera.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
@@ -10,14 +10,17 @@ import 'package:setup/ui/widgets/advanced_option_wrapper.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 import 'package:setup/ui/widgets/custom_dropdown_button.dart';
-import 'package:setup/ui/widgets/custom_radio_field.dart';
 import 'package:setup/ui/widgets/custom_switch_field.dart';
 import 'package:setup/ui/widgets/dual_text_field.dart';
-import 'package:setup/ui/widgets/half_press.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 
+/// {@category Page}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Video settings configuration screen.
 class VideoSettingsView extends StatefulWidget {
   Setting setting;
 

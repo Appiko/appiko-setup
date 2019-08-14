@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// {@category Widget}
+/// {@category Designd}
 class CustomDivider extends StatelessWidget {
   const CustomDivider({
     Key key,

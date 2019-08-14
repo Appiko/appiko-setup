@@ -6,6 +6,10 @@ import 'package:setup/ui/widgets/half_press_field.dart';
 
 import 'advanced_option_wrapper.dart';
 
+/// {@category Compound Widget}
+/// {@category Design}
+///
+/// Half Press On off switch in combination with [HalfPressField]
 class HalfPress extends StatefulWidget {
   final bool localAdvancedOption;
   final TextEditingController halfPressPulseDurationController;

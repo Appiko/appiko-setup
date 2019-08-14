@@ -7,6 +7,11 @@ enum CameraAction {
   NONE
 }
 
+/// {@category Model}
+/// {@category SenseBeRx}
+/// {@subCategory Camera}
+/// Camera Settings class similar to the [structure](https://docs.google.com/document/d/1C0tPQiZn-kUMS4kk3jAAreZwXnGMy9EKI61eBFCpgxk).
+/// This class is inherited by other classes which needs additional fields, like [VideoSetting]
 class CameraSetting {
   // Enable pre-focus
   bool enablePreFocus = true;
@@ -44,6 +49,9 @@ class CameraSetting {
   }
 }
 
+/// {@category Model}
+/// {@category SenseBeRx}
+/// {@subCategory Camera}
 class MultiplePicturesSetting extends CameraSetting {
   static CameraAction _mode = CameraAction.MULTIPLE_PICTURES;
 
@@ -81,6 +89,9 @@ class MultiplePicturesSetting extends CameraSetting {
   }
 }
 
+/// {@category Model}
+/// {@category SenseBeRx}
+/// {@subCategory Camera}
 class VideoSetting extends CameraSetting {
   static CameraAction _mode = CameraAction.VIDEO;
 
@@ -122,6 +133,9 @@ class VideoSetting extends CameraSetting {
   }
 }
 
+/// {@category Model}
+/// {@category SenseBeRx}
+/// {@subCategory Camera}
 class LongPressSetting extends CameraSetting {
   static CameraAction _mode = CameraAction.LONG_PRESS;
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:setup/core/view_models/custom_tab_bar_model.dart';
-import 'package:setup/locators.dart';
 
+/// {@category Widget}
+/// {@category Design}
+///
 class CustomTabBar extends StatefulWidget implements PreferredSizeWidget {
   final TabController tabController;
 

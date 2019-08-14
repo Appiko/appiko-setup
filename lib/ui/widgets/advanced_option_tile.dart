@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
 
+/// {@category Widget}
+/// {@category Design}
+///
+/// Advanced options tile.
+/// As shown in [MultiplePicturesSetting] and similar places.
 class AdvancedOptionTile extends StatefulWidget {
   final bool value;
   final ValueChanged<bool> onChanged;

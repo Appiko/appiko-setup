@@ -5,6 +5,10 @@ import 'package:setup/core/services/profiles.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
+/// {@category Page}
+/// {@category Design}
+///
+/// Sreen which lists all saved profiles. Also contains add button create a new profile
 class ProfilesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

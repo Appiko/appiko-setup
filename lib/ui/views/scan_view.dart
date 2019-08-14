@@ -7,6 +7,10 @@ import 'package:setup/core/services/device.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
+/// {@category Page}
+/// {@category Design}
+///
+/// Scan page
 class ScanView extends StatefulWidget {
   @override
   _ScanViewState createState() => _ScanViewState();

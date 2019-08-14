@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-///
+/// Custom app bar, with option to convert the default, back arrow to down arrow.
 /// Example
 ///
 ///
@@ -18,11 +18,18 @@ import 'package:flutter/material.dart';
 /// ```
 ///
 
+/// {@category Widget}
+/// {@category Design}
+///
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool downArrow;
   final String subtitle;
+
+  /// Should show [Icons.keyboard_arrow_down] instead of [Icons.arrow_back]
+  final bool downArrow;
   final VoidCallback onDownArrowPressed;
+
+  /// Trailing actions
   final List<Widget> actions;
 
   const CustomAppBar(

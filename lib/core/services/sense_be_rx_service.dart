@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:setup/core/models/camera.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
-import 'package:setup/core/models/time.dart' as time;
+import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart' as time;
 import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/core/view_models/camera_trigger_radio_options_model.dart';
 import 'package:setup/core/view_models/half_press_fields_model.dart';
 import 'package:setup/core/view_models/time_of_day_fields_model.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/half_press_settings_view.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/long_press_settings.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/motion_settings_view.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/multiple_pictures_settings_view.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/single_picture_settings_view.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/timer_settings_view.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/video_settings_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/half_press_settings_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/long_press_settings.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/motion_settings_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/multiple_pictures_settings_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/single_picture_settings_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/timer_settings_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/video_settings_view.dart';
 
 enum TriggerType { MOTION_TRIGGER, TIMER_TRIGGER }
 
+/// {@category Service}
+/// {@category SenseBeRx}
 class SenseBeRxService extends ChangeNotifier {
   SenseBeRx structure = SenseBeRx();
   MetaStructure metaStructure = MetaStructure();

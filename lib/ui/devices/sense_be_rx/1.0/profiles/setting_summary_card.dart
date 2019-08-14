@@ -3,17 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/camera.dart';
-import 'package:setup/core/models/sense_be_rx.dart';
-import 'package:setup/core/models/time.dart' as time;
+import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart' as time;
 import 'package:setup/core/services/sense_be_rx_service.dart';
-import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be/1.0/settings/setting_summary_page.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_page.dart';
 import 'package:setup/ui/widgets/ambient_fields.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Setting summary card shown on the [ProfileSummaryView]
 class SettingSummaryCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDeletePressed;
@@ -340,10 +345,16 @@ Future<void> showTimePickerBottomSheet({
           ));
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// [BottomSheet] shown to change time settings on [ProfileSummaryView] page.
 class ChangeTimeBottomSheet extends StatefulWidget {
   final DateTime time;
   final int settingIndex;
-  // If not isStartTime then its endtime :)
+
+  /// If not isStartTime then its endtime :)
   final bool isStartTime;
 
   const ChangeTimeBottomSheet({
@@ -368,7 +379,6 @@ class _ChangeTimeBottomSheetState extends State<ChangeTimeBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      // crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Align(
@@ -457,6 +467,11 @@ class _ChangeTimeBottomSheetState extends State<ChangeTimeBottomSheet> {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+///
+///
+/// Button placed next to the card in [SettingSummaryCard]
 class TimeButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String time;
@@ -490,6 +505,11 @@ class TimeButton extends StatelessWidget {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+///
+///
+/// [CustomPainter] to draw a cricle on top and bottom of the line next to the [SettingSummaryCard]
 class CirclePainter extends CustomPainter {
   final Color color;
 
@@ -511,6 +531,11 @@ class CirclePainter extends CustomPainter {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Motion Row which appears in the sensor setting part of the [SettingSummaryCard]
 class MotionRow extends StatelessWidget {
   final Setting setting;
 
@@ -554,6 +579,11 @@ class MotionRow extends StatelessWidget {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Time Row which appears in the sensor setting part of the [SettingSummaryCard]
 class TimerRow extends StatelessWidget {
   final Setting setting;
 
@@ -579,6 +609,12 @@ class TimerRow extends StatelessWidget {
   }
 }
 
+/// {@category Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Trigger text on [SettingSummaryCard] like `Multiple Pictures` with a delete Icon to the right.
+/// TODO: Change class name to what makes sense.
 class TriggerInfoText extends StatelessWidget {
   final String value;
 
@@ -611,6 +647,11 @@ class TriggerInfoText extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Multiple pictures Row in the [SettingSummaryCard]
 class MultiplePicturesRow extends StatelessWidget {
   final MultiplePicturesSetting setting;
   final int index;
@@ -665,6 +706,11 @@ class MultiplePicturesRow extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Video Row in the [SettingSummaryCard]
 class VideoRow extends StatelessWidget {
   final VideoSetting videoSetting;
   final int index;
@@ -746,6 +792,11 @@ class VideoRow extends StatelessWidget {
   }
 }
 
+/// {@category Compound Widget}
+/// {@category Design}
+/// {@category SenseBeRx}
+///
+/// Long Press in the [SettingSummaryCard]
 class LongPressRow extends StatelessWidget {
   final LongPressSetting longPressSetting;
   final int index;

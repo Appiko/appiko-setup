@@ -6,6 +6,10 @@ import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 
+/// {@category Page}
+/// {@category Design}
+///
+/// Screen shown when creating a new profile
 class CreateProfileView extends StatefulWidget {
   @override
   _CreateProfileViewState createState() => _CreateProfileViewState();

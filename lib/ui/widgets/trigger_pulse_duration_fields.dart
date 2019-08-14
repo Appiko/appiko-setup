@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:setup/ui/widgets/advanced_option_wrapper.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 
+/// {@category Compound Widget}
+/// {@category Design}
+///
+/// Trigger pulse duration field, to be displayed when advanced option is on
 class TriggerPulseDuration extends StatelessWidget {
   final bool isVideo;
   TriggerPulseDuration({

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// {@category Widget}
+/// {@category Design}
+///
+/// Popup Menu (In app bar) Item.
 class PopupMenuItemButton extends StatelessWidget {
   final Icon icon;
   final String label;

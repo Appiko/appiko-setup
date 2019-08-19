@@ -411,55 +411,55 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
               );
               Scaffold.of(context).showSnackBar(x);
             },
-            onClosePressed: () {
-              if (Provider.of<SenseBeRxService>(context).shouldSave) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text("Save setting before closing?"),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text(
-                          "JUST CLOSE",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        onPressed: () => Navigator.popUntil(
-                            context, ModalRoute.withName('/')),
-                      ),
-                      FlatButton(
-                          child: Text(
-                            "SAVE AND CLOSE",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () {
-                            locator<ProfilesService>()
-                                .updateProfile(profilePath);
-                            locator<SenseBeRxService>().shouldSave = false;
-                            Navigator.popUntil(
-                                context, ModalRoute.withName('/'));
-                          }),
-                    ],
-                  ),
-                );
-              } else {
-                Navigator.popUntil(context, ModalRoute.withName('/'));
-              }
-            },
+            onClosePressed: () => closeSummary(profilePath),
           ),
         ),
       ),
       onWillPop: () async {
-        /// clear structure when going back
-        Provider.of<SenseBeRxService>(context).reset();
-        Navigator.popUntil(context, ModalRoute.withName('/'));
+        closeSummary(profilePath);
         return false;
       },
     );
+  }
+
+  closeSummary(String profilePath) {
+    if (Provider.of<SenseBeRxService>(context).shouldSave) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Save setting before closing?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "JUST CLOSE",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54,
+                ),
+              ),
+              onPressed: () =>
+                  Navigator.popUntil(context, ModalRoute.withName('/')),
+            ),
+            FlatButton(
+                child: Text(
+                  "SAVE AND CLOSE",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  locator<ProfilesService>().updateProfile(profilePath);
+                  locator<SenseBeRxService>().shouldSave = false;
+                  Navigator.popUntil(context, ModalRoute.withName('/'));
+                }),
+          ],
+        ),
+      );
+    } else {
+      /// clear structure when going back
+      Provider.of<SenseBeRxService>(context).reset();
+      Navigator.popUntil(context, ModalRoute.withName('/'));
+    }
   }
 
   void setIndex() {

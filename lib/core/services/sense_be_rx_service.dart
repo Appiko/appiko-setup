@@ -20,6 +20,7 @@ enum TriggerType { MOTION_TRIGGER, TIMER_TRIGGER }
 
 /// {@category Service}
 /// {@category SenseBeRx}
+/// {@category Algorithm}
 class SenseBeRxService extends ChangeNotifier {
   SenseBeRx structure = SenseBeRx();
   MetaStructure metaStructure = MetaStructure();

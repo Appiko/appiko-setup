@@ -1,5 +1,8 @@
 dartdoc:
   categories: 
+    "Algorithm":
+      markdown: doc/algorithms.md
+      name: "Algorithm"
     "SenseBeRx":
       markdown: doc/devices/sense_be_rx.md
       name: "SenseBe Rx"
@@ -24,7 +27,7 @@ dartdoc:
     "Helper":
       markdown: doc/helpers.md
       name: "Helper"
-  categoryOrder: ["Design", "Widget", "Compound Widget", "Page", "SenseBeRx"]
+  categoryOrder: ["Design", "Widget", "Compound Widget", "Page", "SenseBeRx", "Algorithm"]
   exclude: ["flutter","dart.collection","dart.math","dart.core","dart.developer","dart.io","dart.ui","dart.isolate","dart.convert","dart.async","dart.typed_data"]
   linkToSource:
     url: "https://github.com/appiko/appiko-setup"

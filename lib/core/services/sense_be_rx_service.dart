@@ -512,6 +512,7 @@ class SenseBeRxService extends ChangeNotifier {
 
   void reset() {
     structure = SenseBeRx();
+    metaStructure = MetaStructure();
     activeSettingIndex = null;
     activeTriggerType = null;
     structure.motionAmbientState = 0;
@@ -857,7 +858,12 @@ class SenseBeRxService extends ChangeNotifier {
   }
 
   void readFromDevice() async {
-    structure = await locator<BluetoothIOService>().readSetting();
+    structure = await locator<BluetoothIOService>()
+        .readSetting()
+        .then((val) => val['structure']);
+    metaStructure = await locator<BluetoothIOService>()
+        .readSetting()
+        .then((val) => val['meta']);
     deviceInfo = await locator<BluetoothIOService>().readDeviceInfo();
 
     deviceInfo.name = structure.deviceName;

@@ -39,7 +39,7 @@ class BluetoothIOService extends ChangeNotifier {
     }
   }
 
-  Future<SenseBeRx> readSetting() async {
+  Future<Map> readSetting() async {
     BluetoothDevice device = locator<BluetoothConnectionService>().device;
     if (device != null) {
       List<BluetoothService> services = await device.discoverServices();

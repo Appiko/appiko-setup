@@ -133,8 +133,10 @@ class ProfilesService with ChangeNotifier {
   void createStructure(String filePath, Device deviceType) {
     File profileFile = File(filePath);
     var data = profileFile.readAsBytesSync();
-    locator<SenseBeRxService>().structure = null;
-    locator<SenseBeRxService>().structure = unpack(data);
+    locator<SenseBeRxService>().structure =
+        locator<SenseBeRxService>().metaStructure = null;
+    locator<SenseBeRxService>().structure = unpack(data)['structure'];
+    locator<SenseBeRxService>().structure = unpack(data)['meta'];
 
     List<int> metaData = profileFile.readAsBytesSync();
     var metaString = Utf8Codec(allowMalformed: true).decode(metaData);

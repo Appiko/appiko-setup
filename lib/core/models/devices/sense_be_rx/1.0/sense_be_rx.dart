@@ -487,10 +487,11 @@ Uint8List pack(SenseBeRx structure) {
   return packedData.buffer.asUint8List();
 }
 
-SenseBeRx unpack(List<int> intData) {
+Map unpack(List<int> intData) {
   ByteBuffer buffer = Uint8List.fromList(intData).buffer;
   ByteData data = ByteData.view(buffer, 0, 206);
   SenseBeRx structure = SenseBeRx();
+  MetaStructure metaStructure = MetaStructure();
   int offset = -1;
 
   try {
@@ -535,6 +536,10 @@ SenseBeRx unpack(List<int> intData) {
         ..videoWithFullPress = ((cameraFirstByte & 2) >> 1) > 0 ? true : false
         ..enablePreFocus = (cameraFirstByte & 1) > 0 ? true : false;
 
+      if (!structure.settings[i].cameraSetting.videoWithFullPress) {
+        metaStructure.advancedOptionsEnabled[i] = true;
+      }
+
       switch (structure.settings[i].cameraSetting.mode) {
         case CameraAction.MULTIPLE_PICTURES:
           structure.settings[i].cameraSetting = MultiplePicturesSetting()
@@ -544,11 +549,11 @@ SenseBeRx unpack(List<int> intData) {
                 structure.settings[i].cameraSetting.enablePreFocus
             ..videoWithFullPress =
                 structure.settings[i].cameraSetting.videoWithFullPress
-            ..enableRadio = structure.settings[i].cameraSetting.enableRadio
-            ..preFocusPulseDuration =
-                structure.settings[i].cameraSetting.preFocusPulseDuration
-            ..triggerPulseDuration =
-                structure.settings[i].cameraSetting.triggerPulseDuration;
+            ..enableRadio = structure.settings[i].cameraSetting.enableRadio;
+          // ..preFocusPulseDuration =
+          //     structure.settings[i].cameraSetting.preFocusPulseDuration
+          // ..triggerPulseDuration =
+          //     structure.settings[i].cameraSetting.triggerPulseDuration;
           break;
         case CameraAction.VIDEO:
           structure.settings[i].cameraSetting = VideoSetting()
@@ -559,11 +564,12 @@ SenseBeRx unpack(List<int> intData) {
                 structure.settings[i].cameraSetting.enablePreFocus
             ..videoWithFullPress =
                 structure.settings[i].cameraSetting.videoWithFullPress
-            ..enableRadio = structure.settings[i].cameraSetting.enableRadio
-            ..preFocusPulseDuration =
-                structure.settings[i].cameraSetting.preFocusPulseDuration
-            ..triggerPulseDuration =
-                structure.settings[i].cameraSetting.triggerPulseDuration;
+            ..enableRadio = structure.settings[i].cameraSetting.enableRadio;
+
+          // ..preFocusPulseDuration =
+          //     structure.settings[i].cameraSetting.preFocusPulseDuration
+          // ..triggerPulseDuration =
+          //     structure.settings[i].cameraSetting.triggerPulseDuration;
           break;
         case CameraAction.LONG_PRESS:
           structure.settings[i].cameraSetting = LongPressSetting()
@@ -572,11 +578,11 @@ SenseBeRx unpack(List<int> intData) {
                 structure.settings[i].cameraSetting.enablePreFocus
             ..videoWithFullPress =
                 structure.settings[i].cameraSetting.videoWithFullPress
-            ..enableRadio = structure.settings[i].cameraSetting.enableRadio
-            ..preFocusPulseDuration =
-                structure.settings[i].cameraSetting.preFocusPulseDuration
-            ..triggerPulseDuration =
-                structure.settings[i].cameraSetting.triggerPulseDuration;
+            ..enableRadio = structure.settings[i].cameraSetting.enableRadio;
+          // ..preFocusPulseDuration =
+          //     structure.settings[i].cameraSetting.preFocusPulseDuration
+          // ..triggerPulseDuration =
+          //     structure.settings[i].cameraSetting.triggerPulseDuration;
           break;
         default:
       }
@@ -585,6 +591,11 @@ SenseBeRx unpack(List<int> intData) {
       structure.settings[i].cameraSetting
         ..triggerPulseDuration = data.getUint8(offset += 1)
         ..preFocusPulseDuration = data.getUint8(offset += 1);
+
+      if (structure.settings[i].cameraSetting.triggerPulseDuration != 3 ||
+          structure.settings[i].cameraSetting.preFocusPulseDuration != 2) {
+        metaStructure.advancedOptionsEnabled[i] = true;
+      }
 
       // Time Setting
       if ((triggerType == Trigger.MOTION_ONLY &&
@@ -646,7 +657,10 @@ SenseBeRx unpack(List<int> intData) {
     print("Length ${structure.deviceName.length}");
     assert(offset == 198);
 
-    return structure;
+    return {
+      'structure': structure,
+      'meta': metaStructure,
+    };
   } catch (e) {
     throw e;
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:setup/core/services/device.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/locators.dart';
@@ -17,12 +18,11 @@ class CreateProfileView extends StatefulWidget {
 
 class _CreateProfileViewState extends State<CreateProfileView> {
   final _newProfileForm = GlobalKey<FormState>();
-  final _deviceTypes = ["SensePi", "SenseBeRx", "SenseBeTx"];
   final TextEditingController _profileNameController = TextEditingController();
-  String _selectedDevice;
+  Device _selectedDevice;
   @override
   Widget build(BuildContext context) {
-    _selectedDevice = _deviceTypes[1];
+    _selectedDevice = Device.SENSE_BE_RX;
     return Scaffold(
       appBar: CustomAppBar(title: "Create Profile"),
       body: Padding(
@@ -59,11 +59,11 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                   _selectedDevice = value;
                   setState(() {});
                 },
-                items:
-                    _deviceTypes.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+                items: Device.values
+                    .map<DropdownMenuItem<Device>>((Device device) {
+                  return DropdownMenuItem<Device>(
+                    value: device,
+                    child: Text(DeviceHelper.getString(device)),
                   );
                 }).toList(),
               ),

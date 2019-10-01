@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/services/device.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/locators.dart';
 
@@ -12,14 +14,16 @@ import 'package:setup/locators.dart';
 class ProfileFile {
   String filePath;
   String fileName;
-  String deviceType;
+  Device deviceType;
 
   ProfileFile({
     @required this.filePath,
   }) {
     var realFileName = basename(this.filePath);
     fileName = realFileName.split('​')[0];
-    deviceType = realFileName.split('​')[1];
+    //TODO:Add swtich to check for other devies
+    deviceType =
+        realFileName.contains("RX") ? Device.SENSE_BE_RX : Device.SENSE_BE_TX;
   }
 }
 
@@ -41,20 +45,31 @@ class ProfilesService with ChangeNotifier {
     return directory.path;
   }
 
-  _generateFilePath(String profileName, String deviceType) async {
+  _generateFilePath(String profileName, Device deviceType) async {
     final path = await _localPath;
     getProfiles();
     return "$path/profiles/$profileName​$deviceType​${DateTime.now().millisecondsSinceEpoch}";
   }
 
-  addProfile({@required profileName, @required deviceType}) async {
+  addProfile({
+    @required String profileName,
+    @required Device deviceType,
+    referActiveStructure = false,
+  }) async {
+    SenseBeRx senseBeRx = referActiveStructure
+        ? locator<SenseBeRxService>().structure
+        : SenseBeRx();
+    MetaStructure metaStructure = referActiveStructure
+        ? locator<SenseBeRxService>().metaStructure
+        : MetaStructure();
+
     // seprated by a Zero width space character U+200B `​`​
     final path = await _localPath;
     Directory("$path/profiles").createSync();
     File file = File(await _generateFilePath(profileName, deviceType));
-    var packedData = pack(SenseBeRx());
+    var packedData = pack(senseBeRx);
     file.writeAsBytesSync(packedData);
-    var metaString = "META\n" + jsonEncode(MetaStructure());
+    var metaString = "META\n" + jsonEncode(metaStructure);
     file.writeAsStringSync(metaString, mode: FileMode.append);
     notifyListeners();
     getProfiles();
@@ -84,7 +99,8 @@ class ProfilesService with ChangeNotifier {
   //   ShareExtend.share(filePath, "file");
   // }
 
-  getProfiles() async {
+  Future getProfiles() async {
+    // return _memoizer.runOnce(() async {
     final dir = Directory("${await _localPath}/profiles");
     profiles.clear();
     if (dir.existsSync()) {
@@ -95,6 +111,8 @@ class ProfilesService with ChangeNotifier {
       });
       notifyListeners();
     }
+    return profiles;
+    // });
   }
 
   updateProfile(String profilePath) {
@@ -112,7 +130,7 @@ class ProfilesService with ChangeNotifier {
     notifyListeners();
   }
 
-  void createStructure(String filePath, String deviceType) {
+  void createStructure(String filePath, Device deviceType) {
     File profileFile = File(filePath);
     var data = profileFile.readAsBytesSync();
     locator<SenseBeRxService>().structure = null;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 
 /// Example
 ///

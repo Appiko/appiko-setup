@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/services/bluetooth_IO.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
 import 'package:setup/core/services/profiles.dart';
@@ -26,5 +27,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => TimeOfDayFieldsModel());
   locator.registerLazySingleton(() => CameraTriggerRadioOptionsModel());
   locator.registerLazySingleton(() => HalfPressFieldsModel());
-  locator.registerLazySingleton(() => Setting());
+  locator.registerLazySingleton(() => Setting(index: 999));
+  locator.registerLazySingleton(() => BluetoothIOService());
 }

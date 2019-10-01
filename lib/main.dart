@@ -23,7 +23,6 @@ import 'package:setup/ui/views/profiles_view.dart';
 import 'package:setup/ui/views/scan_view.dart';
 import 'package:setup/ui/views/shop_view.dart';
 import 'package:setup/ui/widgets/bottom_nav.dart';
-import 'package:setup/ui/devices/sense_pi/1.0/device_settings_view.dart' as pi;
 import 'package:setup/ui/devices/sense_be_rx/1.0/device_settings_view.dart'
     as be;
 

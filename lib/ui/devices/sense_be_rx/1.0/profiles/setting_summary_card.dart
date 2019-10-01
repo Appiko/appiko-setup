@@ -335,7 +335,6 @@ Future<void> showTimePickerBottomSheet({
   // If not isStartTime then its endtime :)
   bool isStartTime,
 }) {
-  DateTime t = time;
   return showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) => ChangeTimeBottomSheet(

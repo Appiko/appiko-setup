@@ -134,7 +134,12 @@ class Setting {
   CameraSetting cameraSetting;
   Time time;
   int index;
-  Setting({this.sensorSetting, this.cameraSetting, this.time, this.index}) {
+  Setting({
+    this.sensorSetting,
+    this.cameraSetting,
+    this.time,
+    @required this.index,
+  }) {
     sensorSetting = SensorSetting();
     cameraSetting = CameraSetting();
     time = Time();
@@ -146,7 +151,7 @@ class Setting {
   }
 
   static Setting clone({Setting setting, int index}) {
-    var x = new Setting();
+    var x = new Setting(index: index ?? setting.index);
 
     SensorSetting sensorSetting = setting.sensorSetting;
     switch (setting.sensorSetting.runtimeType) {
@@ -188,7 +193,6 @@ class Setting {
         x.time = Time();
     }
 
-    x.index = index ?? setting.index;
     return x;
   }
 }
@@ -205,7 +209,6 @@ enum RadioSpeed {
 /// {@category SenseBeRx}
 /// {@subCategory Radio}
 class RadioSetting {
-  // TODO: set default
   RadioChannel radioChannel = RadioChannel.CHANNEL_0;
 
   /// Once the radio is switched on how long should it be on **multiple of 25ms**
@@ -280,6 +283,49 @@ class RadioSetting {
 
 ///
 /// {@category Model}
+/// {@category DeviceInfo}
+///
+class DeviceInfo with ChangeNotifier {
+  String name;
+  String id;
+  BatteryType batteryType;
+  String firmwareVersion;
+  String batteryVoltage;
+  String macAddress;
+
+  DeviceInfo.unpack(List<int> intData, {String mac}) {
+    ByteBuffer buffer = Uint8List.fromList(intData).buffer;
+    ByteData data = ByteData.view(buffer, 0, intData.length);
+    int offset = -1;
+
+    id = '';
+    for (int i = 0; i < 16; i++) {
+      id += AsciiCodec().decode([data.getUint8(offset += 1)]);
+    }
+
+    batteryVoltage =
+        ((data.getUint8(offset += 1) * 3.6) / 255).toStringAsPrecision(2) + 'V';
+
+    macAddress = mac;
+
+    firmwareVersion =
+        ("${data.getUint8(offset += 1)}.${data.getUint8(offset += 1)}.${data.getUint8(offset += 1)}");
+  }
+
+  Map<dynamic, dynamic> toMap() {
+    return {
+      "Device Name": this.name,
+      "Device ID": this.id,
+      "Battery Voltage": this.batteryVoltage,
+      "Battery Type": this.batteryType,
+      "Firmware Version": this.firmwareVersion,
+      "MAC Address": macAddress,
+    };
+  }
+}
+
+///
+/// {@category Model}
 /// {@category SenseBeRx}
 ///
 class SenseBeRx with ChangeNotifier {
@@ -298,7 +344,7 @@ class SenseBeRx with ChangeNotifier {
   DeviceSpeed deviceSpeed = DeviceSpeed.FAST;
   BatteryType batteryType = BatteryType.STANDARD;
   DateTime today = DateTime.now();
-  String deviceName = '';
+  String deviceName = 'Device Name';
 
   @override
   String toString() {
@@ -441,148 +487,169 @@ Uint8List pack(SenseBeRx structure) {
   return packedData.buffer.asUint8List();
 }
 
-unpack(List<int> intData) {
+SenseBeRx unpack(List<int> intData) {
   ByteBuffer buffer = Uint8List.fromList(intData).buffer;
   ByteData data = ByteData.view(buffer, 0, 206);
   SenseBeRx structure = SenseBeRx();
-
   int offset = -1;
-  OperationTime motionTime = OperationTime.values[data.getUint8(offset += 1)];
-  OperationTime timerTime = OperationTime.values[data.getUint8(offset += 1)];
 
-  structure.operationTime[0] = motionTime;
-  structure.operationTime[1] = timerTime;
+  try {
+    OperationTime motionTime = OperationTime.values[data.getUint8(offset += 1)];
+    OperationTime timerTime = OperationTime.values[data.getUint8(offset += 1)];
 
-  for (int i = 0; i < 8; i++) {
-    /// 1,23,45,67,...
-    // print(offset);
-    Trigger triggerType = Trigger.values[data.getUint8(offset += 1)];
-    switch (triggerType) {
-      case Trigger.MOTION_ONLY:
-        // Sensor Setting
-        structure.settings[i].sensorSetting = MotionSetting(
-          // skiping isEnable which is 1 by default
-          numberOfTriggers: data.getUint8(offset += 2),
-          sensitivity: data.getUint16(offset += 1, Endian.little),
-          downtime: data.getUint16(offset += 2, Endian.little),
+    structure.operationTime[0] = motionTime;
+    structure.operationTime[1] = timerTime;
+
+    for (int i = 0; i < 8; i++) {
+      /// 1,23,45,67,...
+      // print(offset);
+      Trigger triggerType = Trigger.values[data.getUint8(offset += 1)];
+      switch (triggerType) {
+        case Trigger.MOTION_ONLY:
+          // Sensor Setting
+          structure.settings[i].sensorSetting = MotionSetting(
+            // skiping isEnable which is 1 by default
+            numberOfTriggers: data.getUint8(offset += 2),
+            sensitivity: data.getUint16(offset += 1, Endian.little),
+            downtime: data.getUint16(offset += 2, Endian.little),
+          );
+          offset += 1;
+          break;
+        case Trigger.TIMER_ONLY:
+          structure.settings[i].sensorSetting = TimerSetting(
+              interval: data.getUint32(offset += 1, Endian.little));
+          offset += 5;
+          break;
+        default:
+          offset += 6;
+      }
+
+      // Camera Settings
+      int offsetBeforeCam = offset;
+      int cameraFirstByte = data.getUint8(offset += 1);
+      structure.settings[i].cameraSetting = CameraSetting()
+        // First byte
+
+        ..mode = CameraAction.values[((cameraFirstByte & 248) >> 3)]
+        ..enableRadio = ((cameraFirstByte & 4) >> 2) > 0 ? true : false
+        ..videoWithFullPress = ((cameraFirstByte & 2) >> 1) > 0 ? true : false
+        ..enablePreFocus = (cameraFirstByte & 1) > 0 ? true : false;
+
+      switch (structure.settings[i].cameraSetting.mode) {
+        case CameraAction.MULTIPLE_PICTURES:
+          structure.settings[i].cameraSetting = MultiplePicturesSetting()
+            ..numberOfPictures = data.getUint16(offset += 1, Endian.little)
+            ..pictureInterval = data.getUint16(offset += 2, Endian.little)
+            ..enablePreFocus =
+                structure.settings[i].cameraSetting.enablePreFocus
+            ..videoWithFullPress =
+                structure.settings[i].cameraSetting.videoWithFullPress
+            ..enableRadio = structure.settings[i].cameraSetting.enableRadio
+            ..preFocusPulseDuration =
+                structure.settings[i].cameraSetting.preFocusPulseDuration
+            ..triggerPulseDuration =
+                structure.settings[i].cameraSetting.triggerPulseDuration;
+          break;
+        case CameraAction.VIDEO:
+          structure.settings[i].cameraSetting = VideoSetting()
+            ..videoDuration = data.getUint16(offset += 1, Endian.little)
+            ..extensionTime = data.getUint8(offset += 2)
+            ..numberOfExtensions = data.getUint8(offset += 1)
+            ..enablePreFocus =
+                structure.settings[i].cameraSetting.enablePreFocus
+            ..videoWithFullPress =
+                structure.settings[i].cameraSetting.videoWithFullPress
+            ..enableRadio = structure.settings[i].cameraSetting.enableRadio
+            ..preFocusPulseDuration =
+                structure.settings[i].cameraSetting.preFocusPulseDuration
+            ..triggerPulseDuration =
+                structure.settings[i].cameraSetting.triggerPulseDuration;
+          break;
+        case CameraAction.LONG_PRESS:
+          structure.settings[i].cameraSetting = LongPressSetting()
+            ..longPressDuration = data.getUint32(offset += 1, Endian.little)
+            ..enablePreFocus =
+                structure.settings[i].cameraSetting.enablePreFocus
+            ..videoWithFullPress =
+                structure.settings[i].cameraSetting.videoWithFullPress
+            ..enableRadio = structure.settings[i].cameraSetting.enableRadio
+            ..preFocusPulseDuration =
+                structure.settings[i].cameraSetting.preFocusPulseDuration
+            ..triggerPulseDuration =
+                structure.settings[i].cameraSetting.triggerPulseDuration;
+          break;
+        default:
+      }
+      offset = offsetBeforeCam + 5;
+
+      structure.settings[i].cameraSetting
+        ..triggerPulseDuration = data.getUint8(offset += 1)
+        ..preFocusPulseDuration = data.getUint8(offset += 1);
+
+      // Time Setting
+      if ((triggerType == Trigger.MOTION_ONLY &&
+              motionTime == OperationTime.TIME_OF_DAY) ||
+          (triggerType == Trigger.TIMER_ONLY &&
+              timerTime == OperationTime.TIME_OF_DAY)) {
+        structure.settings[i].time = TimeOfDay(
+          startTime: data.getUint32(offset += 1, Endian.little),
+          endTime: data.getUint32(offset += 4, Endian.little),
         );
-        offset += 1;
-        break;
-      case Trigger.TIMER_ONLY:
-        structure.settings[i].sensorSetting =
-            TimerSetting(interval: data.getUint32(offset += 1, Endian.little));
+
+        /// Invalid setting --> will also work for 0xFFFFFFFF sent as default setting from the device.
+        if ((structure.settings[i].time as TimeOfDay).startTime ==
+            (structure.settings[i].time as TimeOfDay).endTime) {
+          structure.settings[i] = Setting(index: i);
+          offset += 3;
+          continue;
+        }
+        print(structure.settings[i].time);
+      } else if (triggerType == Trigger.MOTION_ONLY &&
+          (motionTime == OperationTime.AMBIENT ||
+              motionTime == OperationTime.ALL_TIME)) {
+        structure.settings[i].time = Ambient.inverse(
+          lowerThreshold: data.getUint32(offset += 1, Endian.little),
+          higherThreshold: data.getUint32(offset += 4, Endian.little),
+        );
+        structure.motionAmbientState += AmbientStateValues.getValue(
+            (structure.settings[i].time as Ambient).ambientLight);
+      } else if (triggerType == Trigger.TIMER_ONLY &&
+          (timerTime == OperationTime.AMBIENT ||
+              timerTime == OperationTime.ALL_TIME)) {
+        structure.settings[i].time = Ambient.inverse(
+          lowerThreshold: data.getUint32(offset += 1, Endian.little),
+          higherThreshold: data.getUint32(offset += 4, Endian.little),
+        );
+        structure.timerAmbientState += AmbientStateValues.getValue(
+            (structure.settings[i].time as Ambient).ambientLight);
+      } else {
         offset += 5;
-        break;
-      default:
-        offset += 6;
+      }
+      offset += 3;
     }
+    structure.radioSetting = RadioSetting.inverse(
+      radioChannel: RadioChannel.values[data.getUint8(offset += 1)],
+      radioOperationDuration: data.getUint8(offset += 1),
+      radioOperationFrequency: data.getUint8(offset += 1),
+    );
+    structure.deviceSpeed = DeviceSpeed.values[data.getUint8(offset += 1)];
 
-    // Camera Settings
-    int offsetBeforeCam = offset;
-    int cameraFirstByte = data.getUint8(offset += 1);
-    structure.settings[i].cameraSetting = CameraSetting()
-      // First byte
-
-      ..mode = CameraAction.values[((cameraFirstByte & 248) >> 3)]
-      ..enableRadio = ((cameraFirstByte & 4) >> 2) > 0 ? true : false
-      ..videoWithFullPress = ((cameraFirstByte & 2) >> 1) > 0 ? true : false
-      ..enablePreFocus = (cameraFirstByte & 1) > 0 ? true : false;
-
-    switch (structure.settings[i].cameraSetting.mode) {
-      case CameraAction.MULTIPLE_PICTURES:
-        structure.settings[i].cameraSetting = MultiplePicturesSetting()
-          ..numberOfPictures = data.getUint16(offset += 1, Endian.little)
-          ..pictureInterval = data.getUint16(offset += 2, Endian.little)
-          ..enablePreFocus = structure.settings[i].cameraSetting.enablePreFocus
-          ..videoWithFullPress =
-              structure.settings[i].cameraSetting.videoWithFullPress
-          ..enableRadio = structure.settings[i].cameraSetting.enableRadio
-          ..preFocusPulseDuration =
-              structure.settings[i].cameraSetting.preFocusPulseDuration
-          ..triggerPulseDuration =
-              structure.settings[i].cameraSetting.triggerPulseDuration;
-        break;
-      case CameraAction.VIDEO:
-        structure.settings[i].cameraSetting = VideoSetting()
-          ..videoDuration = data.getUint16(offset += 1, Endian.little)
-          ..extensionTime = data.getUint8(offset += 2)
-          ..numberOfExtensions = data.getUint8(offset += 1)
-          ..enablePreFocus = structure.settings[i].cameraSetting.enablePreFocus
-          ..videoWithFullPress =
-              structure.settings[i].cameraSetting.videoWithFullPress
-          ..enableRadio = structure.settings[i].cameraSetting.enableRadio
-          ..preFocusPulseDuration =
-              structure.settings[i].cameraSetting.preFocusPulseDuration
-          ..triggerPulseDuration =
-              structure.settings[i].cameraSetting.triggerPulseDuration;
-        break;
-      case CameraAction.LONG_PRESS:
-        structure.settings[i].cameraSetting = LongPressSetting()
-          ..longPressDuration = data.getUint32(offset += 1, Endian.little)
-          ..enablePreFocus = structure.settings[i].cameraSetting.enablePreFocus
-          ..videoWithFullPress =
-              structure.settings[i].cameraSetting.videoWithFullPress
-          ..enableRadio = structure.settings[i].cameraSetting.enableRadio
-          ..preFocusPulseDuration =
-              structure.settings[i].cameraSetting.preFocusPulseDuration
-          ..triggerPulseDuration =
-              structure.settings[i].cameraSetting.triggerPulseDuration;
-        break;
-      default:
+    structure.batteryType = BatteryType.values[data.getUint8(offset += 1)];
+    structure.deviceName = '';
+    for (int i = 0; i < 16; i++) {
+      structure.deviceName += AsciiCodec().decode([data.getUint8(offset += 1)]);
     }
-    offset = offsetBeforeCam + 5;
+    print("Length ${structure.deviceName.length}");
+    structure.deviceName
+        .replaceAll(RegExp('  '), '')
+        .replaceFirst(RegExp(' \$'), '');
+    print("Length ${structure.deviceName.length}");
+    assert(offset == 198);
 
-    structure.settings[i].cameraSetting
-      ..triggerPulseDuration = data.getUint8(offset += 1)
-      ..preFocusPulseDuration = data.getUint8(offset += 1);
-
-    // Time Setting
-    if ((triggerType == Trigger.MOTION_ONLY &&
-            motionTime == OperationTime.TIME_OF_DAY) ||
-        (triggerType == Trigger.TIMER_ONLY &&
-            timerTime == OperationTime.TIME_OF_DAY)) {
-      structure.settings[i].time = TimeOfDay(
-        startTime: data.getInt32(offset += 1, Endian.little),
-        endTime: data.getUint32(offset += 4, Endian.little),
-      );
-    } else if (triggerType == Trigger.MOTION_ONLY &&
-        (motionTime == OperationTime.AMBIENT ||
-            motionTime == OperationTime.ALL_TIME)) {
-      structure.settings[i].time = Ambient.inverse(
-        lowerThreshold: data.getUint32(offset += 1, Endian.little),
-        higherThreshold: data.getUint32(offset += 4, Endian.little),
-      );
-      structure.motionAmbientState += AmbientStateValues.getValue(
-          (structure.settings[i].time as Ambient).ambientLight);
-    } else if (triggerType == Trigger.TIMER_ONLY &&
-        (timerTime == OperationTime.AMBIENT ||
-            timerTime == OperationTime.ALL_TIME)) {
-      structure.settings[i].time = Ambient.inverse(
-        lowerThreshold: data.getUint32(offset += 1, Endian.little),
-        higherThreshold: data.getUint32(offset += 4, Endian.little),
-      );
-      structure.timerAmbientState += AmbientStateValues.getValue(
-          (structure.settings[i].time as Ambient).ambientLight);
-    } else {
-      offset += 5;
-    }
-    offset += 3;
+    return structure;
+  } catch (e) {
+    throw e;
   }
-  structure.radioSetting = RadioSetting.inverse(
-    radioChannel: RadioChannel.values[data.getUint8(offset += 1)],
-    radioOperationDuration: data.getUint8(offset += 1),
-    radioOperationFrequency: data.getUint8(offset += 1),
-  );
-  structure.deviceSpeed = DeviceSpeed.values[data.getUint8(offset += 1)];
-
-  structure.batteryType = BatteryType.values[data.getUint8(offset += 1)];
-  structure.deviceName = '';
-  for (int i = 0; i < 16; i++) {
-    structure.deviceName += AsciiCodec().decode([data.getUint8(offset += 1)]);
-  }
-
-  assert(offset == 198);
-  return structure;
 }
 
 // main() {

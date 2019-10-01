@@ -44,7 +44,7 @@ class CameraTriggerView extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: CameraTriggerRadioOptions(),
+            child: CameraTriggerRadioOptions() ?? Container(),
           ),
           PageNavigationBar(
             showNext: true,

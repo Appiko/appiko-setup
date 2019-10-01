@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
-import 'package:provider/provider.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
 import 'package:setup/ui/widgets/custom_tab_bar.dart';
-import 'package:setup/ui/widgets/single_text_field.dart';
+import 'package:setup/ui/widgets/profile_name_dialog.dart';
 
 import '../colors.dart';
 
@@ -50,7 +49,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
               Visibility(
                 visible: true,
                 child: Text(
-                  profileFile.deviceType,
+                  profileFile.deviceType.toString(),
                   style: Theme.of(context)
                       .textTheme
                       .caption
@@ -66,60 +65,10 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () {
               showDialog(
                   context: context,
-                  builder: (context) => Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            SingleTextField(
-                              title: "Profile Name",
-                              textField: TextFormField(
-                                controller: fileNameController,
-                                autofocus: true,
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                FlatButton(
-                                  padding: EdgeInsets.all(0),
-                                  child: Text(
-                                    "CLOSE",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                    ),
-                                  ),
-                                  onPressed: () => Navigator.pop(context),
-                                ),
-                                FlatButton(
-                                  padding: EdgeInsets.all(0),
-                                  child: Text(
-                                    "RENAME",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).accentColor,
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    this.profileFile.fileName =
-                                        fileNameController.text;
-
-                                    Provider.of<ProfilesService>(context)
-                                        .renameProfile(profileFile);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      )));
+                  builder: (context) => ProfileNameDialog(
+                        fileNameController: fileNameController,
+                        profileFile: profileFile,
+                      ));
             },
           ),
 

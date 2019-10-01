@@ -3,7 +3,6 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
-import 'package:setup/core/services/device.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
@@ -99,14 +98,15 @@ class _ScanViewState extends State<ScanView> {
 }
 
 String _getRoute({ScanResult device}) {
-  switch (Devices.devices[device.advertisementData.localName]) {
-    case Device.SENSE_PI:
-      return "/devices/sense-pi";
-      break;
-    case Device.SENSE_BE_RX:
-      return "/devices/sense-be";
-      break;
-    default:
-      return "/";
-  }
+  // switch (Devices.devices[device.advertisementData.localName]) {
+  //   case Device.SENSE_PI:
+  //     return "/devices/sense-pi";
+  //     break;
+  //   case Device.SENSE_BE_RX:
+  //     return "/devices/sense-be";
+  //     break;
+  //   default:
+  //     return "/";
+  // }
+  return "/devices/sense-be";
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:setup/core/services/device.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
@@ -29,7 +30,7 @@ class ProfilesView extends StatelessWidget {
                         style: Theme.of(context).textTheme.body1,
                       ),
                       subtitle: Text(
-                        profiles[index].deviceType,
+                        DeviceHelper.getString(profiles[index].deviceType),
                         style: Theme.of(context).textTheme.caption,
                       ),
                       trailing: Row(

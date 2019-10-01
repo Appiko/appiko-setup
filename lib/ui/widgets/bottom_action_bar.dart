@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
 
 /// {@category Widget}
@@ -43,7 +44,7 @@ class BottomActionBar extends StatelessWidget {
                             "Profiles",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Icon(Icons.keyboard_arrow_up),
+                          Icon(OMIcons.collectionsBookmark),
                         ],
                       ),
                       onPressed: onProfileButtonPressed,

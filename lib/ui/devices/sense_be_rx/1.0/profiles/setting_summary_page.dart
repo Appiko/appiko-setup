@@ -132,8 +132,10 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
           // FIXME: Infinite bounds error
           onPressed: () {
             locator<SenseBeRxService>().updateSetting();
-            Navigator.popUntil(context,
-                ModalRoute.withName('/devices/sense-be-rx/profile-summary'));
+            // Navigator.popUntil(context,
+            //     ModalRoute.withName('/devices/sense-be-rx/profile-summary'));
+            // locator<SenseBeRxService>().getCameraSettingDownArrowPageName();
+            Navigator.pop(context);
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

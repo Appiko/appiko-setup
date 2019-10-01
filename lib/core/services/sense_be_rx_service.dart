@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart' as time;
+import 'package:setup/core/services/bluetooth_IO.dart';
+import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/core/view_models/camera_trigger_radio_options_model.dart';
 import 'package:setup/core/view_models/half_press_fields_model.dart';
@@ -37,6 +40,10 @@ class SenseBeRxService extends ChangeNotifier {
   RadioSetting radioSettingToEdit;
 
   int ambientStateToSubtract = 0;
+
+  DeviceInfo deviceInfo;
+
+  // Map deviceInfoMap;
 
   bool get shouldPassSetting => _shouldPassSetting;
 
@@ -98,8 +105,7 @@ class SenseBeRxService extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///
-
+  /// Get sensor setting view
   getSensorView() {
     return activeTriggerType == TriggerType.MOTION_TRIGGER
         ? shouldPassSetting
@@ -124,7 +130,7 @@ class SenseBeRxService extends ChangeNotifier {
           (setting) => (setting.sensorSetting.runtimeType == SensorSetting),
           orElse: () {
         print("Setting length extended!");
-        return Setting();
+        return Setting(index: 999);
       });
       activeSettingIndex = s.index;
 
@@ -441,7 +447,11 @@ class SenseBeRxService extends ChangeNotifier {
     if (shouldPassSetting) {
       return '/devices/sense-be-rx/setting-summary';
     }
-    return '/devices/sense-be-rx/profile-summary';
+    //  TODO:
+    return locator<BluetoothConnectionService>().deviceState ==
+            BluetoothDeviceState.connected
+        ? '/devices/sense-be'
+        : '/devices/sense-be-rx/profile-summary';
   }
 
   deleteSetting(Setting setting) {
@@ -681,6 +691,13 @@ class SenseBeRxService extends ChangeNotifier {
     return fieldsToDisable;
   }
 
+  getCloseSummaryView() {
+    return locator<BluetoothConnectionService>().deviceState ==
+            BluetoothDeviceState.connected
+        ? '/devices/sense-be'
+        : '/devices/sense-be-rx/profile-summary';
+  }
+
   // TODO: Remove onPressed
   showDeleteSettingModal({all = false, context, onPressed}) {
     showDialog(
@@ -709,8 +726,7 @@ class SenseBeRxService extends ChangeNotifier {
                       onPressed();
                       Navigator.popUntil(
                         context,
-                        ModalRoute.withName(
-                            '/devices/sense-be-rx/profile-summary'),
+                        ModalRoute.withName(getCloseSummaryView()),
                       );
                     }),
               ],
@@ -725,7 +741,9 @@ class SenseBeRxService extends ChangeNotifier {
 
   void resetRadio() {
     structure.radioSetting = RadioSetting(
-        speed: RadioSpeed.NORMAL, radioChannel: RadioChannel.CHANNEL_0);
+      speed: RadioSpeed.NORMAL,
+      radioChannel: RadioChannel.CHANNEL_0,
+    );
     notifyListeners();
   }
 
@@ -772,9 +790,10 @@ class SenseBeRxService extends ChangeNotifier {
       context: context,
       builder: (_) => AlertDialog(
         title: Text(
-            // shouldPassSetting
-            // ? "Do you make to save changes before closing?" :
-            "Do you want to discard the setting?"),
+          // shouldPassSetting
+          // ? "Do you make to save changes before closing?" :
+          "Do you want to discard the setting?",
+        ),
         actions: <Widget>[
           FlatButton(
               child: Text(
@@ -845,5 +864,32 @@ class SenseBeRxService extends ChangeNotifier {
   void discardChangeFlow() {
     structure.settings[8] =
         Setting.clone(setting: structure.settings[settingToUpdate]);
+  }
+
+  void readFromDevice() async {
+    structure = await locator<BluetoothIOService>().readSetting();
+    deviceInfo = await locator<BluetoothIOService>().readDeviceInfo();
+
+    deviceInfo.name = structure.deviceName;
+    deviceInfo.batteryType = structure.batteryType;
+    // deviceInfoMap = deviceInfo.toMap();
+    // deviceInfoMap['Device Name'] = structure.deviceName;
+    // deviceInfoMap['Battery Type'] = structure.batteryType.toString();
+    setOperationTime();
+    notifyListeners();
+  }
+
+  void setOperationTime() {
+    if (numberofMotionSettings == 0) {
+      structure.operationTime[0] = OperationTime.NONE;
+    }
+    if (numberofTimerSettings == 0) {
+      structure.operationTime[1] = OperationTime.NONE;
+    }
+  }
+
+  void setDeviceName(String name) {
+    structure.deviceName = name;
+    notifyListeners();
   }
 }

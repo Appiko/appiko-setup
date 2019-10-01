@@ -829,30 +829,20 @@ class SenseBeRxService extends ChangeNotifier {
               ),
             ),
             onPressed: shouldPassSetting
-                // ?                 key.currentState.validate()
                 ? () {
                     // updateSetting();
                     discardChangeFlow();
                     // onSave();
                     Navigator.popUntil(
                       context,
-                      ModalRoute.withName(
-                          '/devices/sense-be-rx/setting-summary'),
+                      ModalRoute.withName(getCameraSettingDownArrowPageName()),
                     );
                   }
-                // : () {
-                //     SnackBar snackBar = SnackBar(
-                //       content: Text(
-                //           "Cannot save with an invalid value, please resolve the error"),
-                //     );
-                //     Scaffold.of(context).showSnackBar(snackBar);
-                //   }
                 : () {
                     closeFlow();
                     Navigator.popUntil(
                       context,
-                      ModalRoute.withName(
-                          '/devices/sense-be-rx/profile-summary'),
+                      ModalRoute.withName(getCameraSettingDownArrowPageName()),
                     );
                   },
           ),

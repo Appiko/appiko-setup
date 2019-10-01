@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
+import 'package:setup/core/models/generic/camera.dart';
 
 /// {@category Widget}
 /// {@category Design}

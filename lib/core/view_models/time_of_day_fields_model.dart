@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart';
+import 'package:setup/core/models/generic/time.dart';
 import 'package:setup/ui/widgets/time_of_day_fields.dart';
 
 /// {@category Model}

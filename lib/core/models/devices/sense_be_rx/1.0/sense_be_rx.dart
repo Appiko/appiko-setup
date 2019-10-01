@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart';
+import 'package:setup/core/models/generic/camera.dart';
+import 'package:setup/core/models/generic/time.dart';
 
 /// [BatteryTypes]s supported by Be Rx
 enum BatteryType {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/camera.dart';
+import 'package:setup/core/models/generic/camera.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/view_models/camera_trigger_radio_options_model.dart';
 

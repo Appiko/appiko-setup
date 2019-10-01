@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/time.dart';
+import 'package:setup/core/models/generic/time.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/view_models/time_of_day_fields_model.dart';
 import 'package:setup/locators.dart';

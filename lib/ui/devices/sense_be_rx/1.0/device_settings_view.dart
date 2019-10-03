@@ -558,14 +558,14 @@ class RubberLower extends StatelessWidget {
                                     fontSize: 20,
                                   ),
                                 ),
-                                IconButton(
-                                  splashColor: Theme.of(context).accentColor,
-                                  icon: Icon(
-                                    Icons.update,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {},
-                                ),
+                                // IconButton(
+                                //   splashColor: Theme.of(context).accentColor,
+                                //   icon: Icon(
+                                //     Icons.update,
+                                //     color: Colors.white,
+                                //   ),
+                                //   onPressed: () {},
+                                // ),
                               ],
                             ),
                             height: 42,
@@ -621,7 +621,7 @@ class RubberLower extends StatelessWidget {
               tabs: <Widget>[
                 Tab(text: "Motion"),
                 Tab(text: "Timer"),
-                Tab(text: "Radio"),
+                Tab(text: "Others"),
               ],
               controller: _tabController,
             ),

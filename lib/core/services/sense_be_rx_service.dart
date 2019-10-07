@@ -859,12 +859,7 @@ class SenseBeRxService extends ChangeNotifier {
   }
 
   void readFromDevice() async {
-    structure = await locator<BluetoothIOService>()
-        .readSetting()
-        .then((val) => val['structure']);
-    metaStructure = await locator<BluetoothIOService>()
-        .readSetting()
-        .then((val) => val['meta']);
+    await locator<BluetoothIOService>().readSetting();
     deviceInfo = await locator<BluetoothIOService>().readDeviceInfo();
 
     deviceInfo.name = structure.deviceName;

@@ -5,27 +5,36 @@ import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/core/view_models/camera_trigger_radio_options_model.dart';
 import 'package:setup/core/view_models/half_press_fields_model.dart';
 import 'package:setup/core/view_models/time_of_day_fields_model.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_page.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/camera_trriger_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart'
+    as br;
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/camera_trriger_view.dart'
+    as br;
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_summary_page.dart'
+    as br;
+import 'package:setup/ui/devices/sense_pi/1.0/profiles/profile_summary_view.dart'
+    as sp;
+import 'package:setup/ui/devices/sense_pi/1.0/settings/camera_trriger_view.dart'
+    as sp;
+import 'package:setup/ui/devices/sense_pi/1.0/settings/setting_summary_page.dart'
+    as sp;
 import 'package:setup/ui/setup_theme.dart';
 import 'package:setup/ui/views/create_profile_view.dart';
 import 'package:setup/ui/views/device_info_view.dart';
-import 'package:setup/ui/views/device_settings_view.dart';
 import 'package:setup/ui/views/more_view.dart';
 import 'package:setup/ui/views/profiles_view.dart';
 import 'package:setup/ui/views/scan_view.dart';
 import 'package:setup/ui/views/shop_view.dart';
 import 'package:setup/ui/widgets/bottom_nav.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/device_settings_view.dart'
-    as be;
-
+    as br;
+import 'package:setup/ui/devices/sense_pi/1.0/device_settings_view.dart' as sp;
 import 'package:setup/core/view_models/bottom_nav_model.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 
@@ -47,6 +56,7 @@ Future main() async {
             value: locator<BluetoothConnectionService>()),
         ChangeNotifierProvider.value(value: locator<ProfilesService>()),
         ChangeNotifierProvider.value(value: locator<SenseBeRxService>()),
+        ChangeNotifierProvider.value(value: locator<SensePiService>()),
         ChangeNotifierProvider.value(value: locator<AmbientFieldsModel>()),
         ChangeNotifierProvider.value(
             value: locator<CameraTriggerRadioOptionsModel>()),
@@ -70,14 +80,21 @@ class MyApp extends StatelessWidget {
       darkTheme: locator<SetupTheme>().appikoDarkTheme,
       routes: {
         '/': (_) => MyHomePage(),
-        '/device-settings': (_) => DeviceSettingsView(),
         '/device-info': (_) => DeviceInfoView(),
         '/profiles/new': (_) => CreateProfileView(),
-        '/profiles/new': (_) => CreateProfileView(),
-        '/camera-trigger-options': (_) => CameraTriggerView(),
-        '/devices/sense-be': (_) => be.DeviceSettingsView(),
-        '/devices/sense-be-rx/profile-summary': (_) => ProfileSummaryView(),
-        '/devices/sense-be-rx/setting-summary': (_) => SettingSummaryPage()
+
+        '/devices/br': (_) => br.DeviceSettingsView(),
+        '/devices/br/profile-summary': (_) => br.ProfileSummaryView(),
+        '/br/camera-trigger-options': (_) => br.CameraTriggerView(),
+        '/br/setting-summary': (_) => br.SettingSummaryPage(),
+
+        // '/devices/bt': (_) => be.DeviceSettingsView(),
+        // '/devices/bt/profile-summary': (_) => ProfileSummaryView(),
+
+        '/devices/sp': (_) => sp.DeviceSettingsView(),
+        '/devices/sp/profile-summary': (_) => sp.ProfileSummaryView(),
+        '/sp/camera-trigger-options': (_) => sp.CameraTriggerView(),
+        '/sp/setting-summary': (_) => sp.SettingSummaryPage(),
       },
     );
   }

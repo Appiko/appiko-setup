@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/models/generic/setting.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
@@ -12,15 +12,15 @@ import 'package:setup/ui/widgets/page_navigation_bar.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 
 /// {@category Page}
-/// {@category SenseBeRx}
+/// {@category SensePi}
 /// {@category Design}
 ///
 /// Motion settings configuration screen.
 class MotionSettingsView extends StatefulWidget {
   final Setting setting;
 
-  const MotionSettingsView({Key key, this.setting}) : super(key: key);
-
+  MotionSettingsView({Key key, this.setting, @required device})
+      : super(key: key);
   @override
   _MotionSettingsViewState createState() => _MotionSettingsViewState();
 }
@@ -61,11 +61,11 @@ class _MotionSettingsViewState extends State<MotionSettingsView> {
         title: "Motion",
         downArrow: true,
         onDownArrowPressed: () {
-          // Provider.of<SenseBeRxService>(context).closeFlow();
-          // String popUntilName = Provider.of<SenseBeRxService>(context)
+          // Provider.of<SensePiService>(context).closeFlow();
+          // String popUntilName = Provider.of<SensePiService>(context)
           //     .getCameraSettingDownArrowPageName();
           // Navigator.popUntil(context, ModalRoute.withName(popUntilName));
-          locator<SenseBeRxService>().handleDownArrowPress(context);
+          locator<SensePiService>().handleDownArrowPress(context);
         },
       ),
       body: GestureDetector(
@@ -85,7 +85,7 @@ class _MotionSettingsViewState extends State<MotionSettingsView> {
                     description:
                         "Configure the number of beam pulses that need to be missed to trigger.",
                     slider: Slider.adaptive(
-                      label: "${sensitivity.toString().split(".")[0]} / 8",
+                      label: "${sensitivity.toString().split(".")[0]} / 6",
                       onChanged: (val) {
                         setState(() {
                           sensitivity = val;
@@ -95,9 +95,9 @@ class _MotionSettingsViewState extends State<MotionSettingsView> {
                       activeColor: Theme.of(context).accentColor,
                       inactiveColor:
                           Theme.of(context).accentColor.withAlpha(100),
-                      divisions: 7,
+                      divisions: 5,
                       min: 1,
-                      max: 8,
+                      max: 6,
                     ),
                   ),
                   SingleTextField(
@@ -125,44 +125,19 @@ class _MotionSettingsViewState extends State<MotionSettingsView> {
                       autovalidate: true,
                     ),
                   ),
-                  SingleTextField(
-                    title: "Max number of triggers",
-                    description:
-                        "Max number of trigger that can take place as long as a beam is cut",
-                    textField: TextFormField(
-                      controller: numberOfTriggersController,
-                      decoration: InputDecoration(
-                        labelText: "triggers",
-                        helperText: "1 to 250 triggers",
-                      ),
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: false),
-                      validator: (str) {
-                        var numberOfTriggers = int.tryParse(str);
-                        if (numberOfTriggers == null) {
-                          return "Cannot be empty";
-                        }
-                        if (numberOfTriggers < 1 || numberOfTriggers > 250) {
-                          return "Not in range";
-                        }
-                        return null;
-                      },
-                      autovalidate: true,
-                    ),
-                  ),
-                  CustomSwitchField(
-                    title: "Radio",
-                    description:
-                        "Communicate the trigger wirelessly to other devices",
-                    materialSwitch: Switch.adaptive(
-                      value: isRadioEnabled,
-                      onChanged: (val) {
-                        setState(() {
-                          isRadioEnabled = val;
-                        });
-                      },
-                    ),
-                  ),
+                  // CustomSwitchField(
+                  //   title: "Radio",
+                  //   description:
+                  //       "Communicate the trigger wirelessly to other devices",
+                  //   materialSwitch: Switch.adaptive(
+                  //     value: isRadioEnabled,
+                  //     onChanged: (val) {
+                  //       setState(() {
+                  //         isRadioEnabled = val;
+                  //       });
+                  //     },
+                  //   ),
+                  // ),
                   SizedBox(height: 60)
                 ],
               ),
@@ -176,14 +151,13 @@ class _MotionSettingsViewState extends State<MotionSettingsView> {
         nextLabel: "SAVE",
         onNext: () {
           if (_motionFormKey.currentState.validate()) {
-            Provider.of<SenseBeRxService>(context).setMotion(
+            Provider.of<SensePiService>(context).setMotion(
               sensitivity: sensitivity,
               downtime: double.tryParse(downtimeController.text),
-              numberOfTriggers: int.tryParse(numberOfTriggersController.text),
             );
-            Provider.of<SenseBeRxService>(context).setRadio(isRadioEnabled);
+            Provider.of<SensePiService>(context).setRadio(isRadioEnabled);
             String popUntilName =
-                locator<SenseBeRxService>().getCameraSettingDownArrowPageName();
+                locator<SensePiService>().getCameraSettingDownArrowPageName();
             Navigator.popUntil(context, ModalRoute.withName(popUntilName));
           }
         },
@@ -191,7 +165,7 @@ class _MotionSettingsViewState extends State<MotionSettingsView> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => Provider.of<SenseBeRxService>(context)
+              builder: (_) => Provider.of<SensePiService>(context)
                   .getSelectedActionSettingsView(),
             ),
           );

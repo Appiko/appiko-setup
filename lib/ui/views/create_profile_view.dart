@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:setup/core/services/device.dart';
+import 'package:setup/core/services/helper_functions.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/locators.dart';
@@ -19,10 +20,10 @@ class CreateProfileView extends StatefulWidget {
 class _CreateProfileViewState extends State<CreateProfileView> {
   final _newProfileForm = GlobalKey<FormState>();
   final TextEditingController _profileNameController = TextEditingController();
-  Device _selectedDevice;
+  Device _selectedDevice = Device.SENSE_BE_RX;
   @override
   Widget build(BuildContext context) {
-    _selectedDevice = Device.SENSE_BE_RX;
+    // _selectedDevice = Device.SENSE_BE_RX;
     return Scaffold(
       appBar: CustomAppBar(title: "Create Profile"),
       body: Padding(
@@ -56,8 +57,9 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                 decoration: InputDecoration(),
                 value: _selectedDevice,
                 onChanged: (value) {
-                  _selectedDevice = value;
-                  setState(() {});
+                  setState(() {
+                    _selectedDevice = value;
+                  });
                 },
                 items: Device.values
                     .map<DropdownMenuItem<Device>>((Device device) {
@@ -79,14 +81,19 @@ class _CreateProfileViewState extends State<CreateProfileView> {
         onNext: () async {
           locator<SenseBeRxService>().reset();
           if (_newProfileForm.currentState.validate()) {
+            //  Set active device
+            activeDevice = _selectedDevice;
+
             ProfileFile profileFile = ProfileFile(
               filePath: await locator<ProfilesService>().addProfile(
-                  profileName: _profileNameController.text,
-                  deviceType: _selectedDevice),
+                profileName: _profileNameController.text,
+                deviceType: _selectedDevice,
+              ),
             );
+
             locator<ProfilesService>().setActiveProfile(profileFile);
-            Navigator.pushNamed(
-                context, '/devices/sense-be-rx/profile-summary');
+
+            Navigator.pushNamed(context, getProfileSummaryPath());
           }
         },
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/generic/setting.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
@@ -9,7 +9,7 @@ import 'package:setup/ui/widgets/half_press_field.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 
 /// {@category Page}
-/// {@category SenseBeRx}
+/// {@category SensePi}
 /// {@category Design}
 ///
 /// Half press settings configuration screen.
@@ -35,11 +35,11 @@ class _HalfPressSettingsViewState extends State<HalfPressSettingsView> {
         title: "Half press",
         downArrow: true,
         onDownArrowPressed: () {
-          // Provider.of<SenseBeRxService>(context).closeFlow();
-          // String popUntilName = Provider.of<SenseBeRxService>(context)
+          // Provider.of<SensePiService>(context).closeFlow();
+          // String popUntilName = Provider.of<SensePiService>(context)
           //     .getCameraSettingDownArrowPageName();
           // Navigator.popUntil(context, ModalRoute.withName(popUntilName));
-          locator<SenseBeRxService>().handleDownArrowPress(context);
+          locator<SensePiService>().handleDownArrowPress(context);
         },
       ),
       body: GestureDetector(
@@ -60,19 +60,19 @@ class _HalfPressSettingsViewState extends State<HalfPressSettingsView> {
         showPrevious: true,
         onNext: () {
           if (_halfPressFormKey.currentState.validate()) {
-            Provider.of<SenseBeRxService>(context).setHalfPress(
+            Provider.of<SensePiService>(context).setHalfPress(
                 halfPressDuration: double.tryParse(halfPressController.text));
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    Provider.of<SenseBeRxService>(context).getSensorView(),
+                    Provider.of<SensePiService>(context).getSensorView(),
               ),
             );
           }
         },
         onPrevious: () {
-          Navigator.popAndPushNamed(context, "/br/camera-trigger-options");
+          Navigator.popAndPushNamed(context, "/sp/camera-trigger-options");
         },
       ),
     );

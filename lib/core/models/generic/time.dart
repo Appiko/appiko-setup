@@ -123,8 +123,6 @@ class Ambient extends Time {
     }
   }
   Ambient({@required this.ambientLight}) {
-    //TODO: Discuss TwilightOnly
-
     switch (ambientLight) {
       case AmbientLight.DAY_ONLY:
         lowerThreshold = x2;

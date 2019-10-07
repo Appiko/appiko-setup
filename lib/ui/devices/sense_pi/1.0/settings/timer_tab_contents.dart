@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_card.dart';
+import 'package:setup/core/models/generic/sensor_setting.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/profiles/profile_summary_view.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/setting_summary_card.dart';
 
 class TimerTabContents extends StatelessWidget {
   const TimerTabContents({
@@ -23,7 +23,7 @@ class TimerTabContents extends StatelessWidget {
           timerSettingCards.length > 0
               ? DeleteAllSettingsButton(
                   onPressed: () {
-                    Provider.of<SenseBeRxService>(context)
+                    Provider.of<SensePiService>(context)
                         .deleteAllSettings(TimerSetting);
                   },
                 )

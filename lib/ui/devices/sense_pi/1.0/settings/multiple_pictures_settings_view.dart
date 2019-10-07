@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:setup/core/models/devices/sense_pi/1.0/sense_pi.dart';
 import 'package:setup/core/models/generic/camera.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/models/generic/setting.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/advanced_option_tile.dart';
@@ -15,14 +15,14 @@ import 'package:setup/ui/widgets/single_text_field.dart';
 import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 
 /// {@category Page}
-/// {@category SenseBeRx}
+/// {@category SensePi}
 /// {@category Design}
 ///
 /// Multiple pictures configuration screen.
 class MultiplePicturesSettingsView extends StatefulWidget {
-  Setting setting;
+  final Setting setting;
 
-  MultiplePicturesSettingsView({Key key, this.setting}) : super(key: key);
+  const MultiplePicturesSettingsView({Key key, this.setting}) : super(key: key);
 
   @override
   _MultiplePicturesSettingsViewState createState() =>
@@ -62,7 +62,7 @@ class _MultiplePicturesSettingsViewState
           (widget.setting.cameraSetting.triggerPulseDuration / 10).toString();
       halfPressPulseDurationController.text =
           (widget.setting.cameraSetting.preFocusPulseDuration / 10).toString();
-      localAdvancedOption = Provider.of<SenseBeRxService>(context)
+      localAdvancedOption = Provider.of<SensePiService>(context)
           .metaStructure
           .advancedOptionsEnabled[widget.setting.index];
       firstBuild = false;
@@ -74,11 +74,11 @@ class _MultiplePicturesSettingsViewState
         title: "Multiple Pictures",
         downArrow: true,
         onDownArrowPressed: () {
-          // Provider.of<SenseBeRxService>(context).closeFlow();
-          // String popUntilName = Provider.of<SenseBeRxService>(context)
+          // Provider.of<SensePiService>(context).closeFlow();
+          // String popUntilName = Provider.of<SensePiService>(context)
           //     .getCameraSettingDownArrowPageName();
           // Navigator.popUntil(context, ModalRoute.withName(popUntilName));
-          locator<SenseBeRxService>().handleDownArrowPress(context);
+          locator<SensePiService>().handleDownArrowPress(context);
         },
       ),
       body: GestureDetector(
@@ -101,22 +101,22 @@ class _MultiplePicturesSettingsViewState
                           // if advanced option turnedoff
                           if (!value) {
                             triggerPulseDurationController.text =
-                                (locator<BeRxSetting>()
+                                (locator<PiSetting>()
                                             .cameraSetting
                                             .triggerPulseDuration /
                                         10)
                                     .toString();
                             halfPressPulseDurationController.text =
-                                (locator<BeRxSetting>()
+                                (locator<PiSetting>()
                                             .cameraSetting
                                             .preFocusPulseDuration /
                                         10)
                                     .toString();
                             Scaffold.of(context).showSnackBar(
-                                locator<SenseBeRxService>()
+                                locator<SensePiService>()
                                     .advancedSettingOffSnackbar);
                           }
-                          locator<SenseBeRxService>().setAdvancedOptions(value);
+                          locator<SensePiService>().setAdvancedOptions(value);
 
                           localAdvancedOption = value;
                         });
@@ -193,7 +193,7 @@ class _MultiplePicturesSettingsViewState
         showPrevious: true,
         onNext: () {
           if (_multiplePicturesFormKey.currentState.validate()) {
-            Provider.of<SenseBeRxService>(context).setMultiplePicture(
+            Provider.of<SensePiService>(context).setMultiplePicture(
               triggerPulseDuration:
                   double.tryParse(triggerPulseDurationController.text),
               halfPressDuration:
@@ -205,13 +205,13 @@ class _MultiplePicturesSettingsViewState
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    Provider.of<SenseBeRxService>(context).getSensorView(),
+                    Provider.of<SensePiService>(context).getSensorView(),
               ),
             );
           }
         },
         onPrevious: () {
-          Navigator.popAndPushNamed(context, "/br/camera-trigger-options");
+          Navigator.popAndPushNamed(context, "/sp/camera-trigger-options");
         },
       ),
     );

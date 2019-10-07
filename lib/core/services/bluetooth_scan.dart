@@ -44,7 +44,9 @@ class BluetoothScanService with ChangeNotifier {
       _flutterBlue.scan(timeout: _scanTimeoutDuration)
         ..listen(
           (ScanResult s) {
-            if (s.advertisementData.localName != "") {
+            if (s.advertisementData.localName != "" &&
+                s.advertisementData.serviceUuids[0]
+                    .contains(RegExp(r'^3c73dc\d{2}'))) {
               scanResults[s.device.id] = s;
               notifyListeners();
             }

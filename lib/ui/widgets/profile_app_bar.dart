@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:setup/core/services/device.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
 import 'package:setup/ui/widgets/custom_tab_bar.dart';
@@ -12,16 +13,20 @@ import '../colors.dart';
 ///
 /// Profies app bar displayed in [ProfileSummaryView]
 class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
-  ProfileFile profileFile;
+  final ProfileFile profileFile;
   final TabController tabController;
 
   final VoidCallback onDeletePressed;
 
   final TextEditingController fileNameController = TextEditingController();
+
+  final String moreTabName;
+
   ProfileAppBar({
     Key key,
     @required this.profileFile,
     @required this.tabController,
+    @required this.moreTabName,
     this.onDeletePressed,
   }) : super(key: key) {
     fileNameController.text = profileFile.fileName;
@@ -49,7 +54,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
               Visibility(
                 visible: true,
                 child: Text(
-                  profileFile.deviceType.toString(),
+                  DeviceHelper.getString(profileFile.deviceType),
                   style: Theme.of(context)
                       .textTheme
                       .caption
@@ -124,7 +129,8 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
           //   },
           // ),
         ],
-        bottom: CustomTabBar(tabController: tabController));
+        bottom: CustomTabBar(
+            tabController: tabController, moreTabName: moreTabName));
   }
 
   @override

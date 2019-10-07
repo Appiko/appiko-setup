@@ -5,8 +5,13 @@ import 'package:flutter/material.dart';
 ///
 class CustomTabBar extends StatefulWidget implements PreferredSizeWidget {
   final TabController tabController;
+  final String moreTabName;
 
-  const CustomTabBar({Key key, @required this.tabController}) : super(key: key);
+  const CustomTabBar({
+    Key key,
+    @required this.tabController,
+    @required this.moreTabName,
+  }) : super(key: key);
   @override
   _CustomTabBarState createState() => _CustomTabBarState();
 
@@ -27,7 +32,8 @@ class _CustomTabBarState extends State<CustomTabBar>
       tabs: <Widget>[
         Tab(text: "MOTION"),
         Tab(text: "TIMER"),
-        Tab(text: "MORE"),
+        if (widget.moreTabName.isNotEmpty)
+          Tab(text: widget.moreTabName.toUpperCase())
       ],
     );
   }

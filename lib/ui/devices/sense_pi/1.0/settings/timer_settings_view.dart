@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/models/generic/setting.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
@@ -10,7 +10,7 @@ import 'package:setup/ui/widgets/dual_text_field.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 
 /// {@category Page}
-/// {@category SenseBeRx}
+/// {@category SensePi}
 /// {@category Design}
 ///
 /// Time settings configuration screen.
@@ -56,11 +56,11 @@ class _TimerSettingsViewState extends State<TimerSettingsView> {
         title: "Timer",
         downArrow: true,
         onDownArrowPressed: () {
-          // Provider.of<SenseBeRxService>(context).closeFlow();
-          // String popUntilName = Provider.of<SenseBeRxService>(context)
+          // Provider.of<SensePiService>(context).closeFlow();
+          // String popUntilName = Provider.of<SensePiService>(context)
           //     .getCameraSettingDownArrowPageName();
           // Navigator.popUntil(context, ModalRoute.withName(popUntilName));
-          locator<SenseBeRxService>().handleDownArrowPress(context);
+          locator<SensePiService>().handleDownArrowPress(context);
         },
       ),
       body: GestureDetector(
@@ -101,7 +101,7 @@ class _TimerSettingsViewState extends State<TimerSettingsView> {
         nextLabel: "SAVE",
         onNext: () {
           if (_timerFormKey.currentState.validate()) {
-            Provider.of<SenseBeRxService>(context).setTimer(
+            Provider.of<SensePiService>(context).setTimer(
               interval: Duration(
                 minutes: int.tryParse(t1Controller.text),
                 seconds: double.tryParse(t2Controller.text).floor(),
@@ -113,7 +113,7 @@ class _TimerSettingsViewState extends State<TimerSettingsView> {
               ),
             );
             String popUntilName =
-                locator<SenseBeRxService>().getCameraSettingDownArrowPageName();
+                locator<SensePiService>().getCameraSettingDownArrowPageName();
             Navigator.popUntil(context, ModalRoute.withName(popUntilName));
           }
         },
@@ -121,7 +121,7 @@ class _TimerSettingsViewState extends State<TimerSettingsView> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => Provider.of<SenseBeRxService>(context)
+              builder: (_) => Provider.of<SensePiService>(context)
                   .getSelectedActionSettingsView(),
             ),
           );

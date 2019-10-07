@@ -5,12 +5,14 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/generic/camera.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/models/generic/sensor_setting.dart';
+import 'package:setup/core/models/generic/setting.dart';
 import 'package:setup/core/models/generic/time.dart' as time;
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_page.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_summary_page.dart';
 import 'package:setup/ui/widgets/ambient_fields.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
@@ -285,7 +287,7 @@ class SettingSummaryCard extends StatelessWidget {
   Future<void> showAmbientOptionsBottomSheet({
     time.AmbientLight ambientLight,
     BuildContext context,
-    Setting setting,
+    BeRxSetting setting,
   }) {
     int state = 0;
 
@@ -536,11 +538,11 @@ class CirclePainter extends CustomPainter {
 ///
 /// Motion Row which appears in the sensor setting part of the [SettingSummaryCard]
 class MotionRow extends StatelessWidget {
-  final Setting setting;
+  final BeRxSetting setting;
 
   const MotionRow({Key key, @required this.setting}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, {maxSensitivity = 8}) {
     return ListTile(
       dense: true,
       title: Column(
@@ -549,7 +551,8 @@ class MotionRow extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Sensitivity"),
-              Text("${(setting.sensorSetting as MotionSetting).sensitivity}/8"),
+              Text(
+                  "${(setting.sensorSetting as MotionSetting).sensitivity}/$maxSensitivity"),
             ],
           ),
           SizedBox(height: 4),
@@ -584,7 +587,7 @@ class MotionRow extends StatelessWidget {
 ///
 /// Time Row which appears in the sensor setting part of the [SettingSummaryCard]
 class TimerRow extends StatelessWidget {
-  final Setting setting;
+  final BeRxSetting setting;
 
   const TimerRow({Key key, @required this.setting}) : super(key: key);
   @override

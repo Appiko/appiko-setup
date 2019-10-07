@@ -4,12 +4,13 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/generic/camera.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/models/generic/time.dart' as time;
 import 'package:setup/core/models/generic/time.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_card.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/settings/camera_trriger_view.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_summary_card.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_timepicker_screen.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 
@@ -26,13 +27,13 @@ class SettingSummaryPage extends StatefulWidget {
 ///
 /// This page is displayed after, tapping on any of the [SettingSummaryCard].
 class _SettingSummaryPageState extends State<SettingSummaryPage> {
-  Setting setting;
+  BeRxSetting setting;
   bool isRadioEnabled;
   Widget cameraCard;
   String timeString;
   @override
   Widget build(BuildContext context) {
-    Setting setting = Provider.of<SenseBeRxService>(context).activeSetting;
+    BeRxSetting setting = Provider.of<SenseBeRxService>(context).activeSetting;
 
     switch (setting.cameraSetting.mode) {
       case CameraAction.SINGLE_PICTURE:
@@ -67,10 +68,7 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
 
         locator<SenseBeRxService>().closeChangeFlow();
 // As cameraSettingPop is related
-        Navigator.popAndPushNamed(
-            context,
-            Provider.of<SenseBeRxService>(context)
-                .getCameraSettingDownArrowPageName());
+        Navigator.popAndPushNamed(context, locator<SenseBeRxService>().getCloseSummaryPath());
 
         return true;
       },
@@ -411,7 +409,7 @@ class ListCard extends StatelessWidget {
 ///
 /// Motion settings to be displayed on [SettingSummaryPage].
 class MotionListCard extends StatelessWidget {
-  final Setting setting;
+  final BeRxSetting setting;
 
   const MotionListCard({Key key, @required this.setting}) : super(key: key);
   @override
@@ -473,7 +471,7 @@ class MotionListCard extends StatelessWidget {
 ///
 /// Timer sensor settings to be displayed on [SettingSummaryPage].
 class TimerListCard extends StatelessWidget {
-  final Setting setting;
+  final BeRxSetting setting;
 
   const TimerListCard({Key key, @required this.setting}) : super(key: key);
   @override

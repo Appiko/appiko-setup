@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/models/devices/sense_pi/1.0/sense_pi.dart';
 import 'package:setup/core/models/generic/operation_time.dart';
 import 'package:setup/core/models/generic/radio_setting.dart';
 import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/services/device.dart';
 import 'package:setup/core/services/profiles.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/motion_tab_contents.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/radio_tab_contents.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_summary_card.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_timepicker_screen.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/timer_tab_contents.dart';
-
+import 'package:setup/ui/devices/sense_pi/1.0/settings/motion_tab_contents.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/radio_tab_contents.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/setting_summary_card.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/setting_timepicker_screen.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/timer_tab_contents.dart';
 import 'package:setup/ui/views/profiles_view.dart';
 import 'package:setup/ui/widgets/bottom_action_bar.dart';
 import 'package:setup/ui/widgets/profile_app_bar.dart';
@@ -29,14 +28,12 @@ final String maxNumberReachedErrorMessage =
     "Reached the maximum number of settings";
 
 /// {@category Page}
-/// {@category SenseBeRx}
+/// {@category SensePi}
 /// {@category Design}
 ///
 ///
 /// Profile Summary screen, shown when a profile is clicked from [ProfilesView]
 class ProfileSummaryView extends StatefulWidget {
-  final Device device;
-  const ProfileSummaryView({Key key, this.device}) : super(key: key);
   @override
   _ProfileSummaryViewState createState() => _ProfileSummaryViewState();
 }
@@ -55,7 +52,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
   @override
   initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(setIndex);
   }
 
@@ -64,11 +61,11 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
     ProfileFile profileFile =
         Provider.of<ProfilesService>(context).activeProfile;
     String profilePath = profileFile.filePath;
-    SenseBeRx structure = Provider.of<SenseBeRxService>(context).structure;
+    SensePi structure = Provider.of<SensePiService>(context).structure;
     String motionFABDisabledMessage = '';
     String timerFABDisabledMessage = '';
 
-    if (Provider.of<SenseBeRxService>(context).numberofOccupiedSettings == 8) {
+    if (Provider.of<SensePiService>(context).numberofOccupiedSettings == 8) {
       timerFABDisabledMessage = maxNumberReachedErrorMessage;
       motionFABDisabledMessage = maxNumberReachedErrorMessage;
     }
@@ -91,7 +88,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
         getSettingsCards(structure.settings, TimerSetting, context);
 
     RadioSetting radioSetting = structure.radioSetting;
-// TODO: remove build error
+// FIXME: remove build error
     radioOperationDurationController.text =
         radioSetting.radioOperationDuration.toString();
     radioOperationFrequencyController.text =
@@ -101,13 +98,13 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
       child: Scaffold(
         appBar: ProfileAppBar(
           profileFile: profileFile,
-          moreTabName: 'MORE',
           tabController: _tabController,
+          moreTabName: '',
           onDeletePressed: () {
             Provider.of<ProfilesService>(context)
                 .deleteProfile(profileFile.filePath);
             Navigator.popUntil(context, ModalRoute.withName('/'));
-            Provider.of<SenseBeRxService>(context).reset();
+            Provider.of<SensePiService>(context).reset();
           },
         ),
         body: TabBarView(
@@ -116,7 +113,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
           children: <Widget>[
             MotionTabContents(motionSettingCards: motionSettingCards),
             TimerTabContents(timerSettingCards: timerSettingCards),
-            MoreTabContents(),
+            // MoreTabContents(showBeam: false),
           ],
         ),
         floatingActionButton: Builder(
@@ -134,7 +131,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
                           (_tabController.index == 1 &&
                               timerFABDisabledMessage.isEmpty)
                       ? () {
-                          locator<SenseBeRxService>()
+                          locator<SensePiService>()
                               .setActiveIndex(tabIndex: _tabController.index);
                           Navigator.push(
                             context,
@@ -169,7 +166,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
             actionLabel: "Save",
             onActionPressed: () {
               locator<ProfilesService>().updateProfile(profilePath);
-              locator<SenseBeRxService>().shouldSave = false;
+              locator<SensePiService>().shouldSave = false;
               var x = SnackBar(
                 content: Text(
                   "Saved Successfully  🎉",
@@ -194,7 +191,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
   }
 
   closeSummary(String profilePath) {
-    if (Provider.of<SenseBeRxService>(context).shouldSave) {
+    if (Provider.of<SensePiService>(context).shouldSave) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -220,7 +217,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
                 ),
                 onPressed: () {
                   locator<ProfilesService>().updateProfile(profilePath);
-                  locator<SenseBeRxService>().shouldSave = false;
+                  locator<SensePiService>().shouldSave = false;
                   Navigator.popUntil(context, ModalRoute.withName('/'));
                 }),
           ],
@@ -228,7 +225,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
       );
     } else {
       /// clear structure when going back
-      Provider.of<SenseBeRxService>(context).reset();
+      Provider.of<SensePiService>(context).reset();
       Navigator.popUntil(context, ModalRoute.withName('/'));
     }
   }
@@ -241,7 +238,7 @@ class _ProfileSummaryViewState extends State<ProfileSummaryView>
 }
 
 List<SettingSummaryCard> getSettingsCards(
-    List<BeRxSetting> settings, Type type, BuildContext context) {
+    List<PiSetting> settings, Type type, BuildContext context) {
   List<SettingSummaryCard> settingsCard = [];
   settings.forEach((setting) {
     if (setting.sensorSetting.runtimeType == type && setting.index != 8) {
@@ -249,15 +246,14 @@ List<SettingSummaryCard> getSettingsCards(
           setting: setting,
           onTap: () {
             print(type);
-            Provider.of<SenseBeRxService>(context)
+            Provider.of<SensePiService>(context)
                 .setActiveIndex(setting: setting);
 
-            Navigator.pushNamed(context, '/br/setting-summary');
+            Navigator.pushNamed(context, '/sp/setting-summary');
           },
           onDeletePressed: () {
-            locator<SenseBeRxService>().showDeleteSettingModal(
-              onPressed: () =>
-                  locator<SenseBeRxService>().deleteSetting(setting),
+            locator<SensePiService>().showDeleteSettingModal(
+              onPressed: () => locator<SensePiService>().deleteSetting(setting),
               context: context,
             );
           }));
@@ -291,7 +287,7 @@ class DeleteAllSettingsButton extends StatelessWidget {
             color: Theme.of(context).errorColor,
           ),
         ),
-        onPressed: () => locator<SenseBeRxService>().showDeleteSettingModal(
+        onPressed: () => locator<SensePiService>().showDeleteSettingModal(
             all: true, onPressed: onPressed, context: context),
       ),
       SizedBox(height: 20),

@@ -3,7 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/models/generic/device_info.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
+import 'package:setup/core/services/helper_functions.dart';
 import 'package:setup/locators.dart';
 
 /// {@category service}
@@ -39,12 +41,13 @@ class BluetoothIOService extends ChangeNotifier {
     }
   }
 
-  Future<Map> readSetting() async {
+  readSetting() async {
     BluetoothDevice device = locator<BluetoothConnectionService>().device;
     if (device != null) {
       List<BluetoothService> services = await device.discoverServices();
 
-      return unpack(await services[2].characteristics[1].read());
+      createStructureFromData(
+          data: await services[2].characteristics[1].read());
     }
     return null;
   }

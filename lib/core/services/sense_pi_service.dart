@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:setup/core/models/devices/sense_pi/1.0/sense_pi.dart';
 import 'package:setup/core/models/generic/camera.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/models/generic/device_info.dart';
 import 'package:setup/core/models/generic/meta.dart';
 import 'package:setup/core/models/generic/operation_time.dart';
@@ -11,27 +11,27 @@ import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/models/generic/time.dart' as time;
 import 'package:setup/core/services/bluetooth_IO.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
+import 'package:setup/core/services/device.dart';
 import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/core/view_models/camera_trigger_radio_options_model.dart';
 import 'package:setup/core/view_models/half_press_fields_model.dart';
 import 'package:setup/core/view_models/time_of_day_fields_model.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/half_press_settings_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/long_press_settings.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/motion_settings_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/multiple_pictures_settings_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/single_picture_settings_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/timer_settings_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/video_settings_view.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/half_press_settings_view.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/long_press_settings.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/motion_settings_view.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/multiple_pictures_settings_view.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/single_picture_settings_view.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/timer_settings_view.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/video_settings_view.dart';
 
 enum TriggerType { MOTION_TRIGGER, TIMER_TRIGGER }
 
 /// {@category Service}
-/// {@category SenseBeRx}
+/// {@category SensePi}
 /// {@category Algorithm}
-class SenseBeRxService extends ChangeNotifier {
-  SenseBeRx structure = SenseBeRx();
-
+class SensePiService extends ChangeNotifier {
+  SensePi structure = SensePi();
   MetaStructure metaStructure = MetaStructure();
   bool _shouldPassSetting = false;
 
@@ -50,6 +50,7 @@ class SenseBeRxService extends ChangeNotifier {
   DeviceInfo deviceInfo;
 
   // Map deviceInfoMap;
+
   bool get shouldPassSetting => _shouldPassSetting;
 
   set shouldPassSetting(bool shouldPassSetting) {
@@ -57,14 +58,28 @@ class SenseBeRxService extends ChangeNotifier {
     notifyListeners();
   }
 
+  String getCloseSummaryPath() {
+    return locator<BluetoothConnectionService>().deviceState ==
+            BluetoothDeviceState.connected
+        ? '/devices/sp'
+        : '/devices/sp/profile-summary';
+  }
+
+  String getCameraSettingDownArrowPageName() {
+    if (shouldPassSetting) {
+      return '/sp/setting-summary';
+    }
+    return getCloseSummaryPath();
+  }
+
   int activeSettingIndex = 0;
   TriggerType activeTriggerType = TriggerType.MOTION_TRIGGER;
   OperationTime operationTime = OperationTime.TIME_OF_DAY;
   time.AmbientLight ambientLight = time.AmbientLight.DAY_ONLY;
 
-  bool settingFlowComplete = false;
+  bool settingFlowComplete;
 
-  BeRxSetting get activeSetting => structure.settings[activeSettingIndex];
+  PiSetting get activeSetting => structure.settings[activeSettingIndex];
   int get operationTimeIndex =>
       activeTriggerType == TriggerType.MOTION_TRIGGER ? 0 : 1;
 
@@ -105,24 +120,23 @@ class SenseBeRxService extends ChangeNotifier {
     metaStructure.advancedOptionsEnabled[activeSettingIndex] = val;
   }
 
-  void setDeviceSpeed(value) {
-    structure.deviceSpeed = value;
-    notifyListeners();
-  }
-
   /// Get sensor setting view
   getSensorView() {
     return activeTriggerType == TriggerType.MOTION_TRIGGER
         ? shouldPassSetting
             ? MotionSettingsView(
-                setting: structure.settings[activeSettingIndex])
-            : MotionSettingsView()
+                setting: structure.settings[activeSettingIndex],
+                device: Device.SENSE_BE_RX,
+              )
+            : MotionSettingsView(
+                device: Device.SENSE_BE_RX,
+              )
         : shouldPassSetting
             ? TimerSettingsView(setting: structure.settings[activeSettingIndex])
             : TimerSettingsView();
   }
 
-  setActiveIndex({int tabIndex, BeRxSetting setting}) {
+  setActiveIndex({int tabIndex, PiSetting setting}) {
     ambientStateToSubtract = 0;
     settingFlowComplete = false;
     // locator<TimeOfDayFieldsModel>().startTime = time.getDateTimefromSeconds(0);
@@ -131,11 +145,11 @@ class SenseBeRxService extends ChangeNotifier {
 
     if (setting == null) {
       activeSettingIndex = null;
-      BeRxSetting s = structure.settings.firstWhere(
+      PiSetting s = structure.settings.firstWhere(
           (setting) => (setting.sensorSetting.runtimeType == SensorSetting),
           orElse: () {
         print("Setting length extended!");
-        return BeRxSetting(index: 999);
+        return PiSetting(index: 999);
       });
       activeSettingIndex = s.index;
 
@@ -157,7 +171,7 @@ class SenseBeRxService extends ChangeNotifier {
       settingToUpdate = setting.index;
 
       structure.settings[activeSettingIndex] =
-          BeRxSetting.clone(setting: setting, index: 8);
+          PiSetting.clone(setting: setting, index: 8);
 
       metaStructure.advancedOptionsEnabled[8] =
           metaStructure.advancedOptionsEnabled[settingToUpdate];
@@ -320,7 +334,7 @@ class SenseBeRxService extends ChangeNotifier {
     structure.settings[settingToUpdate].index = settingToUpdate;
     metaStructure.advancedOptionsEnabled[settingToUpdate] =
         metaStructure.advancedOptionsEnabled[8];
-    structure.settings[8] = BeRxSetting(index: 8);
+    structure.settings[8] = PiSetting(index: 8);
     metaStructure.advancedOptionsEnabled[8] = false;
     shouldPassSetting = false;
     ambientStateToAdd = 0;
@@ -382,10 +396,9 @@ class SenseBeRxService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setMotion({double sensitivity, int numberOfTriggers, double downtime}) {
+  void setMotion({double sensitivity, double downtime}) {
     structure.settings[activeSettingIndex].sensorSetting = MotionSetting(
       downtime: (downtime * 10).toInt(),
-      numberOfTriggers: numberOfTriggers,
       sensitivity: sensitivity.toInt(),
     );
 
@@ -443,23 +456,16 @@ class SenseBeRxService extends ChangeNotifier {
   closeFlow() {
     if (!settingFlowComplete && !shouldPassSetting) {
       structure.settings[activeSettingIndex] =
-          BeRxSetting(index: activeSettingIndex);
+          PiSetting(index: activeSettingIndex);
       notifyListeners();
     }
   }
 
-  String getCameraSettingDownArrowPageName() {
-    if (shouldPassSetting) {
-      return '/br/setting-summary';
-    }
-    return getCloseSummaryPath();
-  }
-
-  deleteSetting(BeRxSetting setting) {
+  deleteSetting(PiSetting setting) {
     if (setting.index == 8) {
       setting = structure.settings[settingToUpdate];
     }
-    structure.settings[setting.index] = BeRxSetting(index: setting.index);
+    structure.settings[setting.index] = PiSetting(index: setting.index);
     subtactStateIfAmbient(setting);
 
     if (setting.sensorSetting.runtimeType == MotionSetting) {
@@ -479,7 +485,7 @@ class SenseBeRxService extends ChangeNotifier {
       if (setting.sensorSetting.runtimeType == type) {
         print("Deleting");
         subtactStateIfAmbient(setting);
-        return BeRxSetting(index: setting.index);
+        return PiSetting(index: setting.index);
       }
       return setting;
     }).toList();
@@ -512,7 +518,7 @@ class SenseBeRxService extends ChangeNotifier {
   }
 
   void reset() {
-    structure = SenseBeRx();
+    structure = SensePi();
     metaStructure = MetaStructure();
     activeSettingIndex = null;
     activeTriggerType = null;
@@ -621,13 +627,13 @@ class SenseBeRxService extends ChangeNotifier {
           : TriggerType.TIMER_TRIGGER;
     }
     for (int i = 0; i < 8; i++) {
-      BeRxSetting setting = structure.settings[i];
+      PiSetting setting = structure.settings[i];
 
       if (setting.index != 8 &&
           setting.index != activeSettingIndex &&
           setting.sensorSetting.runtimeType ==
               (activeTriggerType.index == 0 ? MotionSetting : TimerSetting)) {
-        // BeRxSetting start and end times
+        // Setting start and end times
         int startTime = (setting.time as time.TimeOfDay).startTime;
         int endTime = (setting.time as time.TimeOfDay).endTime;
         print("Setting $startTime, $endTime");
@@ -693,13 +699,6 @@ class SenseBeRxService extends ChangeNotifier {
     return fieldsToDisable;
   }
 
-  String getCloseSummaryPath() {
-    return locator<BluetoothConnectionService>().deviceState ==
-            BluetoothDeviceState.connected
-        ? '/devices/br'
-        : '/devices/br/profile-summary';
-  }
-
   // TODO: Remove onPressed
   showDeleteSettingModal({all = false, context, onPressed}) {
     showDialog(
@@ -758,7 +757,7 @@ class SenseBeRxService extends ChangeNotifier {
   }
 
   void closeChangeFlow() {
-    BeRxSetting setting;
+    PiSetting setting;
     shouldPassSetting = false;
     ambientStateToSubtract = 0;
     ambientStateToAdd = 0;
@@ -855,16 +854,12 @@ class SenseBeRxService extends ChangeNotifier {
 
   void discardChangeFlow() {
     structure.settings[8] =
-        BeRxSetting.clone(setting: structure.settings[settingToUpdate]);
+        PiSetting.clone(setting: structure.settings[settingToUpdate]);
   }
 
   void readFromDevice() async {
-    structure = await locator<BluetoothIOService>()
-        .readSetting()
-        .then((val) => val['structure']);
-    metaStructure = await locator<BluetoothIOService>()
-        .readSetting()
-        .then((val) => val['meta']);
+    await locator<BluetoothIOService>().readSetting();
+
     deviceInfo = await locator<BluetoothIOService>().readDeviceInfo();
 
     deviceInfo.name = structure.deviceName;

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:setup/core/models/generic/battery.dart';
 import 'package:setup/core/models/generic/camera.dart';
-import 'package:setup/core/models/generic/device_speed.dart';
 import 'package:setup/core/models/generic/meta.dart';
 import 'package:setup/core/models/generic/operation_time.dart';
 import 'package:setup/core/models/generic/radio_setting.dart';
@@ -15,36 +14,92 @@ import 'package:setup/core/models/generic/tirgger.dart';
 
 /// {@category Model}
 /// {@subCategory Sensor}
-/// {@category SenseBeRx}
+
 class MotionSetting extends SensorSetting {
   int downtime = 0;
   int sensitivity;
-  int numberOfTriggers;
 
-  MotionSetting({
+  // Min 0 max 63
+  int amplification;
+
+  // Min 0 max 255
+  int threshold;
+
+  MotionSetting({this.downtime = 0, this.sensitivity = 1}) {
+    switch (this.sensitivity) {
+      case 1:
+        this.amplification = 0;
+        this.threshold = 250;
+        break;
+      case 2:
+        this.amplification = 20;
+        this.threshold = 250;
+        break;
+      case 3:
+        this.amplification = 20;
+        this.threshold = 175;
+        break;
+      case 4:
+        this.amplification = 40;
+        this.threshold = 175;
+        break;
+      case 5:
+        this.amplification = 40;
+        this.threshold = 100;
+        break;
+      case 6:
+        this.amplification = 60;
+        this.threshold = 100;
+        break;
+    }
+  }
+
+  MotionSetting.inverse({
     this.downtime = 0,
-    this.sensitivity = 1,
-    this.numberOfTriggers = 0,
-  });
-
+    @required this.amplification,
+    @required this.threshold,
+  }) {
+    switch (this.threshold) {
+      case 250:
+        if (this.amplification == 00) {
+          this.sensitivity = 1;
+        } else if (this.amplification == 20) {
+          this.sensitivity = 2;
+        }
+        break;
+      case 175:
+        if (this.amplification == 20) {
+          this.sensitivity = 3;
+        } else if (this.amplification == 40) {
+          this.sensitivity = 4;
+        }
+        break;
+      case 100:
+        if (this.amplification == 40) {
+          this.sensitivity = 5;
+        } else if (this.amplification == 60) {
+          this.sensitivity = 6;
+        }
+        break;
+    }
+  }
   static MotionSetting clone(MotionSetting sensorSetting) {
     return MotionSetting(
       downtime: sensorSetting.downtime,
-      numberOfTriggers: sensorSetting.numberOfTriggers,
       sensitivity: sensorSetting.sensitivity,
     );
   }
 
   @override
   String toString() {
-    return 'MotionSetting{downtime: $downtime, sensitivity: $sensitivity, numberOfTriggers: $numberOfTriggers}';
+    return 'MotionSetting{downtime: $downtime, sensitivity: $sensitivity, amplification: $amplification, threshold: $threshold}';
   }
 }
 
 /// {@category Model}
-/// {@category SenseBeRx}
-class BeRxSetting extends Setting {
-  BeRxSetting({
+/// {@category SensePi}
+class PiSetting extends Setting {
+  PiSetting({
     SensorSetting sensorSetting,
     CameraSetting cameraSetting,
     Time time,
@@ -56,8 +111,13 @@ class BeRxSetting extends Setting {
           index: index,
         );
 
-  static BeRxSetting clone({BeRxSetting setting, int index}) {
-    BeRxSetting x = new BeRxSetting(index: index ?? setting.index);
+  @override
+  String toString() {
+    return 'Setting{sensorSetting: $sensorSetting, cameraSetting: $cameraSetting, time: $time}';
+  }
+
+  static PiSetting clone({PiSetting setting, int index}) {
+    var x = new PiSetting(index: index ?? setting.index);
 
     SensorSetting sensorSetting = setting.sensorSetting;
     switch (setting.sensorSetting.runtimeType) {
@@ -105,9 +165,9 @@ class BeRxSetting extends Setting {
 
 ///
 /// {@category Model}
-/// {@category SenseBeRx}
+/// {@category SensePi}
 ///
-class SenseBeRx with ChangeNotifier {
+class SensePi with ChangeNotifier {
   List<OperationTime> operationTime = List(2); // for motion and timer
 
   ///[Ambient Light States]
@@ -115,23 +175,22 @@ class SenseBeRx with ChangeNotifier {
   int timerAmbientState = 0;
 
   /// 8 + 1 for duplication
-  List<BeRxSetting> settings = List.generate(9, (i) => BeRxSetting(index: i));
+  List<PiSetting> settings = List.generate(9, (i) => PiSetting(index: i));
   RadioSetting radioSetting = RadioSetting(
     speed: RadioSpeed.NORMAL,
     radioChannel: RadioChannel.CHANNEL_0,
   );
-  DeviceSpeed deviceSpeed = DeviceSpeed.FAST;
   BatteryType batteryType = BatteryType.STANDARD;
   DateTime today = DateTime.now();
   String deviceName = 'Device Name';
 
   @override
   String toString() {
-    return 'Structure{settings: $settings, radioSetting: $radioSetting, deviceSpeed: $deviceSpeed, batteryType: $batteryType, today: $today, deviceName: $deviceName}';
+    return 'Structure{settings: $settings, radioSetting: $radioSetting, batteryType: $batteryType, today: $today, deviceName: $deviceName}';
   }
 }
 
-Uint8List pack(SenseBeRx structure) {
+Uint8List pack(SensePi structure) {
   ByteData packedData = ByteData(206);
 
   /// Adding Operation time in order of Motion - Timer
@@ -151,12 +210,11 @@ Uint8List pack(SenseBeRx structure) {
 
           // **Sensor Setting 6 Bytes**
           packedData.setUint8(offset += 1, 0x1); // Is enable
-          packedData.setUint8(offset += 1, sensorSetting.numberOfTriggers);
+          packedData.setUint8(offset += 1, sensorSetting.amplification);
           packedData.setUint16(
-              offset += 1, sensorSetting.sensitivity, Endian.little);
+              offset += 1, sensorSetting.threshold, Endian.little);
           packedData.setUint16(
               offset += 2, sensorSetting.downtime, Endian.little);
-
           break;
 
         case TimerSetting:
@@ -243,7 +301,7 @@ Uint8List pack(SenseBeRx structure) {
       offset += 1, structure.radioSetting.radioOperationFrequency);
 
   // ** Device Speed 1 Byte
-  packedData.setUint8(offset += 1, structure.deviceSpeed.index);
+  packedData.setUint8(offset += 1, 0);
 
   // ** Battery Type 1 Byte
   packedData.setUint8(offset += 1, structure.batteryType.index);
@@ -268,7 +326,7 @@ Uint8List pack(SenseBeRx structure) {
 Map unpack(List<int> intData) {
   ByteBuffer buffer = Uint8List.fromList(intData).buffer;
   ByteData data = ByteData.view(buffer, 0, 206);
-  SenseBeRx structure = SenseBeRx();
+  SensePi structure = SensePi();
   MetaStructure metaStructure = MetaStructure();
   int offset = -1;
 
@@ -286,10 +344,10 @@ Map unpack(List<int> intData) {
       switch (triggerType) {
         case Trigger.MOTION_ONLY:
           // Sensor Setting
-          structure.settings[i].sensorSetting = MotionSetting(
+          structure.settings[i].sensorSetting = MotionSetting.inverse(
             // skiping isEnable which is 1 by default
-            numberOfTriggers: data.getUint8(offset += 2),
-            sensitivity: data.getUint16(offset += 1, Endian.little),
+            amplification: data.getUint8(offset += 2),
+            threshold: data.getUint16(offset += 1, Endian.little),
             downtime: data.getUint16(offset += 2, Endian.little),
           );
           offset += 1;
@@ -328,10 +386,7 @@ Map unpack(List<int> intData) {
             ..videoWithFullPress =
                 structure.settings[i].cameraSetting.videoWithFullPress
             ..enableRadio = structure.settings[i].cameraSetting.enableRadio;
-          // ..preFocusPulseDuration =
-          //     structure.settings[i].cameraSetting.preFocusPulseDuration
-          // ..triggerPulseDuration =
-          //     structure.settings[i].cameraSetting.triggerPulseDuration;
+
           break;
         case CameraAction.VIDEO:
           structure.settings[i].cameraSetting = VideoSetting()
@@ -344,10 +399,6 @@ Map unpack(List<int> intData) {
                 structure.settings[i].cameraSetting.videoWithFullPress
             ..enableRadio = structure.settings[i].cameraSetting.enableRadio;
 
-          // ..preFocusPulseDuration =
-          //     structure.settings[i].cameraSetting.preFocusPulseDuration
-          // ..triggerPulseDuration =
-          //     structure.settings[i].cameraSetting.triggerPulseDuration;
           break;
         case CameraAction.LONG_PRESS:
           structure.settings[i].cameraSetting = LongPressSetting()
@@ -357,10 +408,7 @@ Map unpack(List<int> intData) {
             ..videoWithFullPress =
                 structure.settings[i].cameraSetting.videoWithFullPress
             ..enableRadio = structure.settings[i].cameraSetting.enableRadio;
-          // ..preFocusPulseDuration =
-          //     structure.settings[i].cameraSetting.preFocusPulseDuration
-          // ..triggerPulseDuration =
-          //     structure.settings[i].cameraSetting.triggerPulseDuration;
+
           break;
         default:
       }
@@ -388,7 +436,7 @@ Map unpack(List<int> intData) {
         /// Invalid setting --> will also work for 0xFFFFFFFF sent as default setting from the device.
         if ((structure.settings[i].time as TimeOfDay).startTime ==
             (structure.settings[i].time as TimeOfDay).endTime) {
-          structure.settings[i] = BeRxSetting(index: i);
+          structure.settings[i] = PiSetting(index: i);
           offset += 3;
           continue;
         }
@@ -421,14 +469,16 @@ Map unpack(List<int> intData) {
       radioOperationDuration: data.getUint8(offset += 1),
       radioOperationFrequency: data.getUint8(offset += 1),
     );
-    structure.deviceSpeed = DeviceSpeed.values[data.getUint8(offset += 1)];
+
+    // Ignore the device speed value for Pi
+    // structure.deviceSpeed = DeviceSpeed.values[data.getUint8(offset += 1)];
+    offset += 1;
 
     structure.batteryType = BatteryType.values[data.getUint8(offset += 1)];
     structure.deviceName = '';
     for (int i = 0; i < 16; i++) {
       structure.deviceName += AsciiCodec().decode([data.getUint8(offset += 1)]);
     }
-    // TODO: Device name not trimmed
     print("Length ${structure.deviceName.length}");
     structure.deviceName
         .replaceAll(RegExp('  '), '')
@@ -445,43 +495,5 @@ Map unpack(List<int> intData) {
   }
 }
 
-// main() {
-//   Structure structure = Structure();
 
-//   for (int i = 0; i < 8; i++) {
-//     structure.settings[i] = Setting(
-//       cameraSetting: MultiplePicturesSetting(),
-//       sensorSetting: MotionSetting(
-//         downtime: 0,
-//         numberOfTriggers: 10,
-//         sensitivity: 45,
-//       ),
-//       // time: TimeOfDay(
-//       //   startTime: getTimeInSeconds(DateTime.now()),
-//       //   endTime: getTimeInSeconds(DateTime.now().add(Duration(hours: 5))),
-//       // ),
 
-//       time: Ambient(ambientLight: AmbientLight.DAY_ONLY),
-//     );
-//   }
-
-//   structure
-//     ..batteryType = BatteryType.RECHARGEABLE
-//     ..deviceName = "Hello"
-//     ..deviceSpeed = DeviceSpeed.FAST
-//     ..operaionTime = [
-//       OperationTime.ALL_TIME,
-//       OperationTime.TIME_OF_DAY,
-//     ]
-//     ..radioSetting = RadioSetting();
-
-//   print(structure.toString());
-
-//   print("\n\n\n\n");
-//   ByteData packedData = pack(structure);
-
-//   // print(packedData.buffer.asUint8List());
-
-//   Structure structure2 = unpack(packedData.buffer.asUint8List());
-//   print(structure2.toString());
-// }

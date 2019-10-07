@@ -3,6 +3,8 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
+import 'package:setup/core/services/device.dart';
+import 'package:setup/core/services/helper_functions.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
@@ -19,7 +21,7 @@ class _ScanViewState extends State<ScanView> {
   @override
   Widget build(BuildContext context) {
     bool _isScanning = Provider.of<BluetoothScanService>(context).isScanning;
-    List _scanResults =
+    List<ScanResult> _scanResults =
         Provider.of<BluetoothScanService>(context).scanResults.values.toList();
     bool _isBluetoothOn =
         Provider.of<BluetoothScanService>(context).isBluetoothOn;
@@ -44,13 +46,16 @@ class _ScanViewState extends State<ScanView> {
                           title: Text(
                               _scanResults[index].advertisementData.localName),
                           trailing: Text(_scanResults[index].rssi.toString()),
-                          onTap: () {
+                          onTap: () async {
                             locator<BluetoothScanService>().stopScan();
-                            locator<BluetoothConnectionService>()
-                                .connect(_scanResults[index].device);
+                            await locator<BluetoothConnectionService>().connect(
+                              device: _scanResults[index].device,
+                              uuid: _scanResults[index]
+                                  .advertisementData
+                                  .serviceUuids[0],
+                            );
 
-                            Navigator.pushNamed(context,
-                                _getRoute(device: _scanResults[index]));
+                            Navigator.pushNamed(context, _getRoute());
                           });
                     },
                   ),
@@ -97,16 +102,16 @@ class _ScanViewState extends State<ScanView> {
   }
 }
 
-String _getRoute({ScanResult device}) {
-  // switch (Devices.devices[device.advertisementData.localName]) {
-  //   case Device.SENSE_PI:
-  //     return "/devices/sense-pi";
-  //     break;
-  //   case Device.SENSE_BE_RX:
-  //     return "/devices/sense-be";
-  //     break;
-  //   default:
-  //     return "/";
-  // }
-  return "/devices/sense-be";
+String _getRoute() {
+  switch (activeDevice) {
+    case Device.SENSE_PI:
+      return "/devices/sp";
+      break;
+    case Device.SENSE_BE_RX:
+      return "/devices/br";
+      break;
+    default:
+      return "/";
+  }
+  // return "/devices/br";
 }

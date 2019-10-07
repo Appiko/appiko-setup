@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/services/device.dart';
+import 'package:setup/core/services/helper_functions.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
@@ -79,14 +80,14 @@ class ProfilesView extends StatelessWidget {
                         ],
                       ),
                       onTap: () {
+                        locator<ProfilesService>()
+                            .setActiveProfile(profiles[index]);
                         locator<ProfilesService>().createStructure(
                             profiles[index].filePath,
                             profiles[index].deviceType);
-                        locator<ProfilesService>()
-                            .setActiveProfile(profiles[index]);
                         Navigator.pushNamed(
                           context,
-                          '/devices/sense-be-rx/profile-summary',
+                          getProfileSummaryPath(),
                         );
                       },
                     );

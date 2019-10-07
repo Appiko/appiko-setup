@@ -5,6 +5,8 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:rubber/rubber.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/models/generic/operation_time.dart';
+import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/services/bluetooth_IO.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
@@ -13,14 +15,14 @@ import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/setting_summary_card.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/motion_tab_contents.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/radio_tab_contents.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_summary_card.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_timepicker_screen.dart';
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/timer_tab_contents.dart';
 import 'package:setup/ui/widgets/bottom_action_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
-import 'package:setup/ui/widgets/motion_tab_contents.dart';
 import 'package:setup/ui/widgets/profile_name_dialog.dart';
-import 'package:setup/ui/widgets/radio_tab_contents.dart';
-import 'package:setup/ui/widgets/timer_tab_contents.dart';
 
 /// {@category Page}
 ///
@@ -621,7 +623,7 @@ class RubberLower extends StatelessWidget {
               tabs: <Widget>[
                 Tab(text: "Motion"),
                 Tab(text: "Timer"),
-                Tab(text: "Others"),
+                Tab(text: "More"),
               ],
               controller: _tabController,
             ),
@@ -635,7 +637,7 @@ class RubberLower extends StatelessWidget {
           children: <Widget>[
             MotionTabContents(motionSettingCards: motionSettingCards),
             TimerTabContents(timerSettingCards: timerSettingCards),
-            RadioTabContents(),
+            MoreTabContents(),
           ],
           controller: _tabController,
         ),

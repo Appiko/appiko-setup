@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:setup/core/models/generic/operation_time.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
+
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/core/view_models/time_of_day_fields_model.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/camera_trriger_view.dart';
+import 'package:setup/ui/devices/sense_pi/1.0/settings/camera_trriger_view.dart';
+
 import 'package:setup/ui/widgets/ambient_fields.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_radio_field.dart';
@@ -14,7 +17,7 @@ import 'package:setup/ui/widgets/page_navigation_bar.dart';
 import 'package:setup/ui/widgets/time_of_day_fields.dart';
 
 /// {@category Page}
-/// {@category SenseBeRx}
+/// {@category SensePi}
 /// {@category Design}
 ///
 /// Time picker screen which is displayed at the beigining of a new setting.
@@ -26,7 +29,7 @@ class SettingTimepickerScreen extends StatefulWidget {
 
 class _SettingTimepickerScreenState extends State<SettingTimepickerScreen> {
   OperationTime localSelectedOperationTime =
-      locator<SenseBeRxService>().operationTimeToSet;
+      locator<SensePiService>().operationTimeToSet;
 
   @override
   Widget build(BuildContext context) {
@@ -34,24 +37,24 @@ class _SettingTimepickerScreenState extends State<SettingTimepickerScreen> {
 
     /// TODO: #RENAME
     int operationTimeIndex =
-        Provider.of<SenseBeRxService>(context).operationTimeIndex;
+        Provider.of<SensePiService>(context).operationTimeIndex;
 
     // null / None
-    OperationTime selectedOperationTime = Provider.of<SenseBeRxService>(context)
+    OperationTime selectedOperationTime = Provider.of<SensePiService>(context)
         .structure
         .operationTime[operationTimeIndex];
 
     // if (selectedOperationTime == null) {
     //   localSelectedOperationTime =
-    //       Provider.of<SenseBeRxService>(context).operationTimeToSet;
+    //       Provider.of<SensePiService>(context).operationTimeToSet;
     // }
 
     return WillPopScope(
       onWillPop: () async {
-        Provider.of<SenseBeRxService>(context).closeFlow();
+        Provider.of<SensePiService>(context).closeFlow();
 
         String popUntilName =
-            locator<SenseBeRxService>().getCameraSettingDownArrowPageName();
+            locator<SensePiService>().getCameraSettingDownArrowPageName();
         Navigator.popUntil(context, ModalRoute.withName(popUntilName));
         return false;
       },
@@ -133,7 +136,7 @@ class _SettingTimepickerScreenState extends State<SettingTimepickerScreen> {
                       OperationTime.TIME_OF_DAY)
               ? null
               : () {
-                  locator<SenseBeRxService>().setTime(
+                  locator<SensePiService>().setTime(
                       (selectedOperationTime == null ||
                               selectedOperationTime == OperationTime.NONE)
                           ? localSelectedOperationTime

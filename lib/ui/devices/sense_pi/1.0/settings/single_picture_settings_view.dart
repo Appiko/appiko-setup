@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:setup/core/models/devices/sense_pi/1.0/sense_pi.dart';
 import 'package:setup/core/models/generic/camera.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/models/generic/setting.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/advanced_option_tile.dart';
@@ -14,7 +14,7 @@ import 'package:setup/ui/widgets/page_navigation_bar.dart';
 import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 
 /// {@category Page}
-/// {@category SenseBeRx}
+/// {@category SensePi}
 /// {@category Design}
 ///
 /// Single picture configuration screen.
@@ -51,7 +51,7 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
           (widget.setting.cameraSetting.triggerPulseDuration / 10).toString();
       halfPressPulseDurationController.text =
           (widget.setting.cameraSetting.preFocusPulseDuration / 10).toString();
-      localAdvancedOption = Provider.of<SenseBeRxService>(context)
+      localAdvancedOption = Provider.of<SensePiService>(context)
           .metaStructure
           .advancedOptionsEnabled[widget.setting.index];
       firstBuild = false;
@@ -64,11 +64,11 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
         title: "Single Picture",
         downArrow: true,
         onDownArrowPressed: () {
-          // Provider.of<SenseBeRxService>(context).closeFlow();
-          // String popUntilName = Provider.of<SenseBeRxService>(context)
+          // Provider.of<SensePiService>(context).closeFlow();
+          // String popUntilName = Provider.of<SensePiService>(context)
           //     .getCameraSettingDownArrowPageName();
           // Navigator.popUntil(context, ModalRoute.withName(popUntilName));
-          locator<SenseBeRxService>().handleDownArrowPress(context);
+          locator<SensePiService>().handleDownArrowPress(context);
           // siglePictureFormKey.currentState.validate()
           //     ? print("dsa")
           //     : print("nooooo");
@@ -96,22 +96,22 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
                           // if advanced option turnedoff
                           if (!value) {
                             triggerPulseDurationController.text =
-                                (locator<BeRxSetting>()
+                                (locator<PiSetting>()
                                             .cameraSetting
                                             .triggerPulseDuration /
                                         10)
                                     .toString();
                             halfPressPulseDurationController.text =
-                                (locator<BeRxSetting>()
+                                (locator<PiSetting>()
                                             .cameraSetting
                                             .preFocusPulseDuration /
                                         10)
                                     .toString();
                             Scaffold.of(context).showSnackBar(
-                                locator<SenseBeRxService>()
+                                locator<SensePiService>()
                                     .advancedSettingOffSnackbar);
                           }
-                          locator<SenseBeRxService>().setAdvancedOptions(value);
+                          locator<SensePiService>().setAdvancedOptions(value);
                           localAdvancedOption = value;
                         });
                       },
@@ -137,7 +137,7 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
         showPrevious: true,
         showNext: true,
         onPrevious: () {
-          Navigator.popAndPushNamed(context, "/br/camera-trigger-options");
+          Navigator.popAndPushNamed(context, "/sp/camera-trigger-options");
         },
         onNext: () {
           if (siglePictureFormKey.currentState.validate()) {
@@ -146,7 +146,7 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    Provider.of<SenseBeRxService>(context).getSensorView(),
+                    Provider.of<SensePiService>(context).getSensorView(),
               ),
             );
           }
@@ -156,7 +156,7 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
   }
 
   void setSinglePicture() {
-    locator<SenseBeRxService>().setSinglePicture(
+    locator<SensePiService>().setSinglePicture(
       triggerPulseDuration:
           double.tryParse(triggerPulseDurationController.text),
       halfPressDuration: double.tryParse(halfPressPulseDurationController.text),
@@ -164,7 +164,7 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
   }
 
   // void downArrowPress() {
-  //   var shouldPassSetting = locator<SenseBeRxService>().shouldPassSetting;
+  //   var shouldPassSetting = locator<SensePiService>().shouldPassSetting;
   //   showDialog(
   //     context: context,
   //     builder: (_) => AlertDialog(
@@ -221,7 +221,7 @@ class _SinglePictureSettingsViewState extends State<SinglePictureSettingsView> {
   //                       Scaffold.of(context).showSnackBar(snackBar);
   //                     }
   //               : () {
-  //                   locator<SenseBeRxService>().closeFlow();
+  //                   locator<SensePiService>().closeFlow();
   //                   Navigator.popUntil(
   //                       context,
   //                       ModalRoute.withName(

@@ -110,6 +110,8 @@ String _getRoute() {
     case Device.SENSE_BE_RX:
       return "/devices/br";
       break;
+    case Device.SENSE_BE_TX:
+      return "/devices/bt";
     default:
       return "/";
   }

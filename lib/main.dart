@@ -5,6 +5,7 @@ import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_be_tx_service.dart';
 import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/core/view_models/ambient_fields_model.dart';
@@ -18,6 +19,14 @@ import 'package:setup/ui/devices/sense_be_rx/1.0/settings/camera_trriger_view.da
     as br;
 import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_summary_page.dart'
     as br;
+import 'package:setup/ui/devices/sense_be_tx/1.0/device_settings_view.dart'
+    as bt;
+import 'package:setup/ui/devices/sense_be_tx/1.0/profiles/profile_summary_view.dart'
+    as bt;
+import 'package:setup/ui/devices/sense_be_tx/1.0/settings/camera_trriger_view.dart'
+    as bt;
+import 'package:setup/ui/devices/sense_be_tx/1.0/settings/setting_summary_page.dart'
+    as bt;
 import 'package:setup/ui/devices/sense_pi/1.0/profiles/profile_summary_view.dart'
     as sp;
 import 'package:setup/ui/devices/sense_pi/1.0/settings/camera_trriger_view.dart'
@@ -57,6 +66,7 @@ Future main() async {
         ChangeNotifierProvider.value(value: locator<ProfilesService>()),
         ChangeNotifierProvider.value(value: locator<SenseBeRxService>()),
         ChangeNotifierProvider.value(value: locator<SensePiService>()),
+        ChangeNotifierProvider.value(value: locator<SenseBeTxService>()),
         ChangeNotifierProvider.value(value: locator<AmbientFieldsModel>()),
         ChangeNotifierProvider.value(
             value: locator<CameraTriggerRadioOptionsModel>()),
@@ -82,15 +92,14 @@ class MyApp extends StatelessWidget {
         '/': (_) => MyHomePage(),
         '/device-info': (_) => DeviceInfoView(),
         '/profiles/new': (_) => CreateProfileView(),
-
         '/devices/br': (_) => br.DeviceSettingsView(),
         '/devices/br/profile-summary': (_) => br.ProfileSummaryView(),
         '/br/camera-trigger-options': (_) => br.CameraTriggerView(),
         '/br/setting-summary': (_) => br.SettingSummaryPage(),
-
-        // '/devices/bt': (_) => be.DeviceSettingsView(),
-        // '/devices/bt/profile-summary': (_) => ProfileSummaryView(),
-
+        '/devices/bt': (_) => bt.DeviceSettingsView(),
+        '/devices/bt/profile-summary': (_) => bt.ProfileSummaryView(),
+        '/bt/camera-trigger-options': (_) => bt.CameraTriggerView(),
+        '/bt/setting-summary': (_) => bt.SettingSummaryPage(),
         '/devices/sp': (_) => sp.DeviceSettingsView(),
         '/devices/sp/profile-summary': (_) => sp.ProfileSummaryView(),
         '/sp/camera-trigger-options': (_) => sp.CameraTriggerView(),

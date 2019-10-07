@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/models/generic/device_info.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/helper_functions.dart';

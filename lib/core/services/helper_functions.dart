@@ -2,11 +2,14 @@ import 'dart:typed_data';
 
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart'
     as br;
+import 'package:setup/core/models/devices/sense_be_tx/1.0/sense_be_tx.dart'
+    as bt;
 import 'package:setup/core/models/devices/sense_pi/1.0/sense_pi.dart' as sp;
 import 'package:setup/core/models/generic/meta.dart';
 import 'package:setup/core/services/device.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_be_tx_service.dart';
 import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/locators.dart';
 
@@ -16,56 +19,13 @@ getProfileSummaryPath() {
       return '/devices/sp/profile-summary';
       break;
     case Device.SENSE_BE_TX:
-      // TODO:
-      return '/devices/br/profile-summary';
+      return '/devices/bt/profile-summary';
       break;
     case Device.SENSE_BE_RX:
       return '/devices/br/profile-summary';
       break;
   }
 }
-
-// getCloseSummaryPath() {
-//   if (locator<BluetoothConnectionService>().deviceState ==
-//       BluetoothDeviceState.connected) {
-//     switch (locator<BluetoothConnectionService>().connectedDeviceType) {
-//       case Device.SENSE_PI:
-//         return '/devices/sp';
-//         break;
-//       case Device.SENSE_BE_TX:
-//         return '/devices/bt';
-//         break;
-//       case Device.SENSE_BE_RX:
-//         return '/devices/br';
-//         break;
-//     }
-//   } else {
-//     return getProfileSummaryPath();
-//   }
-// }
-
-// getCameraSettingDownArrowPageName() {
-//   bool shouldPassSetting = false;
-
-//   switch (activeDevice) {
-//     case Device.SENSE_PI:
-//       shouldPassSetting = locator<SensePiService>().shouldPassSetting;
-//       break;
-//     case Device.SENSE_BE_RX:
-//       shouldPassSetting = locator<SenseBeRxService>().shouldPassSetting;
-//       break;
-//     case Device.SENSE_BE_TX:
-//       // TODO:
-//       // shouldPassSetting =  locator<SenseBeTxService>().shouldPassSetting;
-//       break;
-//   }
-
-//   if (shouldPassSetting) {
-//     return 'setting-summary';
-//   }
-
-//   return getCloseSummaryPath();
-// }
 
 getStructure({shouldReferActiveStructure = false}) {
   switch (activeDevice) {
@@ -80,7 +40,9 @@ getStructure({shouldReferActiveStructure = false}) {
           : br.SenseBeRx();
       break;
     case Device.SENSE_BE_TX:
-      // TODO:
+      return shouldReferActiveStructure
+          ? locator<SenseBeTxService>().structure
+          : bt.SenseBeTx();
       break;
   }
 }
@@ -98,8 +60,9 @@ getMetaStructure({shouldReferActiveStructure = false}) {
           : MetaStructure();
       break;
     case Device.SENSE_BE_TX:
-      // TODO:
-      return MetaStructure();
+      return shouldReferActiveStructure
+          ? locator<SenseBeTxService>().metaStructure
+          : MetaStructure();
       break;
   }
 }
@@ -113,8 +76,7 @@ setMetaStructure(MetaStructure metaStructure) {
       locator<SenseBeRxService>().metaStructure = metaStructure;
       break;
     case Device.SENSE_BE_TX:
-      // TODO:
-      return MetaStructure();
+      locator<SenseBeTxService>().metaStructure = metaStructure;
       break;
   }
 }
@@ -128,7 +90,7 @@ getPackedData([struct]) {
       return br.pack(struct ?? getStructure(shouldReferActiveStructure: true));
       break;
     case Device.SENSE_BE_TX:
-      // TODO:
+      return bt.pack(struct ?? getStructure(shouldReferActiveStructure: true));
       break;
   }
 }
@@ -147,7 +109,9 @@ createStructureFromData({Uint8List data}) {
       locator<SenseBeRxService>().metaStructure = unpackedData['meta'];
       break;
     case Device.SENSE_BE_TX:
-      // TODO:
+      Map unpackedData = bt.unpack(data);
+      locator<SenseBeTxService>().structure = unpackedData['structure'];
+      locator<SenseBeTxService>().metaStructure = unpackedData['meta'];
       break;
   }
 }

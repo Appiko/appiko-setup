@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:setup/core/models/devices/sense_be_tx/1.0/sense_be_tx.dart';
 import 'package:setup/core/models/generic/camera.dart';
-import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+
 import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/models/generic/time.dart' as time;
 import 'package:setup/core/models/generic/time.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_be_tx_service.dart';
 import 'package:setup/locators.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/camera_trriger_view.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_summary_card.dart';
-import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_timepicker_screen.dart';
+import 'package:setup/ui/devices/sense_be_tx/1.0/settings/camera_trriger_view.dart';
+import 'package:setup/ui/devices/sense_be_tx/1.0/settings/setting_summary_card.dart';
+import 'package:setup/ui/devices/sense_be_tx/1.0/settings/setting_timepicker_screen.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 
 class SettingSummaryPage extends StatefulWidget {
@@ -23,17 +24,17 @@ class SettingSummaryPage extends StatefulWidget {
 
 /// {@category Page}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// This page is displayed after, tapping on any of the [SettingSummaryCard].
 class _SettingSummaryPageState extends State<SettingSummaryPage> {
-  BeRxSetting setting;
+  BeTxSetting setting;
   bool isRadioEnabled;
   Widget cameraCard;
   String timeString;
   @override
   Widget build(BuildContext context) {
-    BeRxSetting setting = Provider.of<SenseBeRxService>(context).activeSetting;
+    BeTxSetting setting = Provider.of<SenseBeTxService>(context).activeSetting;
 
     switch (setting.cameraSetting.mode) {
       case CameraAction.SINGLE_PICTURE:
@@ -64,12 +65,12 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
 
     return WillPopScope(
       onWillPop: () async {
-        locator<SenseBeRxService>().updateSetting();
+        locator<SenseBeTxService>().updateSetting();
 
-        locator<SenseBeRxService>().closeChangeFlow();
+        locator<SenseBeTxService>().closeChangeFlow();
 // As cameraSettingPop is related
         Navigator.popAndPushNamed(
-            context, locator<SenseBeRxService>().getCloseSummaryPath());
+            context, locator<SenseBeTxService>().getCloseSummaryPath());
 
         return true;
       },
@@ -81,9 +82,9 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
           actions: <Widget>[
             IconButton(
               onPressed: () {
-                locator<SenseBeRxService>().showDeleteSettingModal(
+                locator<SenseBeTxService>().showDeleteSettingModal(
                     onPressed: () {
-                      locator<SenseBeRxService>().deleteSetting(setting);
+                      locator<SenseBeTxService>().deleteSetting(setting);
                     },
                     context: context);
               },
@@ -110,15 +111,20 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
               ),
               SizedBox(height: 12),
               InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        Provider.of<SenseBeRxService>(context).getSensorView(),
-                  ),
-                ),
+                onTap: () {
+                  Widget view = Provider.of<SenseBeTxService>(context)
+                      .getSensorView(context: context);
+                  if (view != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => view,
+                      ),
+                    );
+                  }
+                },
                 child: (setting.sensorSetting.runtimeType == MotionSetting)
-                    ? MotionListCard(setting: setting)
+                    ? Container()
                     : (setting.sensorSetting.runtimeType == TimerSetting)
                         ? TimerListCard(setting: setting)
                         : null,
@@ -130,10 +136,10 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
           label: Text("DONE"),
           // FIXME: Infinite bounds error
           onPressed: () {
-            locator<SenseBeRxService>().updateSetting();
+            locator<SenseBeTxService>().updateSetting();
             // Navigator.popUntil(context,
             //     ModalRoute.withName('/devices/sense-be-rx/profile-summary'));
-            // locator<SenseBeRxService>().getCameraSettingDownArrowPageName();
+            // locator<SenseBeTxService>().getCameraSettingDownArrowPageName();
             Navigator.pop(context);
           },
         ),
@@ -145,7 +151,7 @@ class _SettingSummaryPageState extends State<SettingSummaryPage> {
 
 /// {@category Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Returns a row displaying the half press trigger duration.
 class HalfPressTriggerTimeRow extends StatelessWidget {
@@ -170,7 +176,7 @@ class HalfPressTriggerTimeRow extends StatelessWidget {
 
 /// {@category Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Returns a row displayig the trigger pulse duration.
 class TriggerPulseDurationRow extends StatelessWidget {
@@ -195,7 +201,7 @@ class TriggerPulseDurationRow extends StatelessWidget {
 
 /// {@category Compound Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Combination of [HalfPressTriggerTimeRow] and [TriggerPulseDurationRow]
 class HalfPressAndTriggerPulseDurationRow extends StatelessWidget {
@@ -221,7 +227,7 @@ class HalfPressAndTriggerPulseDurationRow extends StatelessWidget {
 
 /// {@category Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Returns a row, displaying if the half press is on/off.
 class HalfPressRow extends StatelessWidget {
@@ -246,7 +252,7 @@ class HalfPressRow extends StatelessWidget {
 
 /// {@category Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Displays if radio should be on or off, for a particular setting.
 class RadioRow extends StatelessWidget {
@@ -268,7 +274,7 @@ class RadioRow extends StatelessWidget {
 
 /// {@category Compound Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Returns the time ROW which is displayed in the [SettingSummaryPage]
 class TimeRow extends StatelessWidget {
@@ -406,73 +412,11 @@ class ListCard extends StatelessWidget {
 
 /// {@category Compound Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
-///
-/// Motion settings to be displayed on [SettingSummaryPage].
-class MotionListCard extends StatelessWidget {
-  final BeRxSetting setting;
-
-  const MotionListCard({Key key, @required this.setting}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return ListCard(
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            title: Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 12),
-              child: Text(
-                "Sensor Settings",
-                style: Theme.of(context).textTheme.title.copyWith(fontSize: 20),
-              ),
-            ),
-            subtitle: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Sensitivity"),
-                    Text(
-                        "${(setting.sensorSetting as MotionSetting).sensitivity}/8"),
-                  ],
-                ),
-                SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Downtime"),
-                    Text(
-                        "${(setting.sensorSetting as MotionSetting).downtime ~/ 10}s"),
-                  ],
-                ),
-                SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Number of triggers"),
-                    Text(
-                        "${(setting.sensorSetting as MotionSetting).numberOfTriggers}"),
-                  ],
-                ),
-                SizedBox(height: 4),
-                RadioRow(setting: setting.cameraSetting),
-                SizedBox(height: 12),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// {@category Compound Widget}
-/// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Timer sensor settings to be displayed on [SettingSummaryPage].
 class TimerListCard extends StatelessWidget {
-  final BeRxSetting setting;
+  final BeTxSetting setting;
 
   const TimerListCard({Key key, @required this.setting}) : super(key: key);
   @override
@@ -510,7 +454,7 @@ class TimerListCard extends StatelessWidget {
 
 /// {@category Compound Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Wraps trigger info like `Multiple Picture` in a List Card.
 /// Uses [CameraSettingsTitleRow].
@@ -532,7 +476,7 @@ class TriggerInfoCard extends StatelessWidget {
 
 /// {@category Compound Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Multiple Picuture settings card to be displayed on [SettingSummaryPage].
 class MultiplePicturesCard extends StatelessWidget {
@@ -570,7 +514,7 @@ class MultiplePicturesCard extends StatelessWidget {
                 ),
                 SizedBox(height: 4),
                 HalfPressRow(setting: setting),
-                Provider.of<SenseBeRxService>(context)
+                Provider.of<SenseBeTxService>(context)
                         .metaStructure
                         .advancedOptionsEnabled[index]
                     ? setting.enablePreFocus
@@ -589,7 +533,7 @@ class MultiplePicturesCard extends StatelessWidget {
 
 /// {@category Compound Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Video settings card to be displayed on [SettingSummaryPage].
 class VideoCard extends StatelessWidget {
@@ -657,7 +601,7 @@ class VideoCard extends StatelessWidget {
                         : Container(),
                 SizedBox(height: 4),
 
-                Provider.of<SenseBeRxService>(context)
+                Provider.of<SenseBeTxService>(context)
                         .metaStructure
                         .advancedOptionsEnabled[index]
                     ? TriggerPulseDurationRow(setting: videoSetting)
@@ -705,7 +649,7 @@ class CameraSettingsTitleRow extends StatelessWidget {
 
 /// {@category Compound Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Long Press settings card to be displayed on [SettingSummaryPage].
 class LongPressCard extends StatelessWidget {
@@ -736,7 +680,7 @@ class LongPressCard extends StatelessWidget {
                 SizedBox(height: 4),
                 HalfPressRow(setting: longPressSetting),
                 SizedBox(height: 4),
-                Provider.of<SenseBeRxService>(context)
+                Provider.of<SenseBeTxService>(context)
                             .metaStructure
                             .advancedOptionsEnabled[index] &&
                         longPressSetting.enablePreFocus
@@ -754,7 +698,7 @@ class LongPressCard extends StatelessWidget {
 
 /// {@category Compound Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Single picture card to be displayed on [SettingSummaryPage].
 class SinglePictureCard extends StatelessWidget {
@@ -776,7 +720,7 @@ class SinglePictureCard extends StatelessWidget {
             subtitle: Column(
               children: <Widget>[
                 HalfPressRow(setting: singlePictureSetting),
-                Provider.of<SenseBeRxService>(context)
+                Provider.of<SenseBeTxService>(context)
                         .metaStructure
                         .advancedOptionsEnabled[index]
                     ? singlePictureSetting.enablePreFocus
@@ -796,7 +740,7 @@ class SinglePictureCard extends StatelessWidget {
 
 /// {@category Compound Widget}
 /// {@category Design}
-/// {@category SenseBeRx}
+/// {@category SenseBeTx}
 ///
 /// Half Pres card to be displayed on [SettingSummaryPage].
 class HalfPressCard extends StatelessWidget {

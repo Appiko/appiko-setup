@@ -181,17 +181,16 @@ class SensePi with ChangeNotifier {
     radioChannel: RadioChannel.CHANNEL_0,
   );
   BatteryType batteryType = BatteryType.STANDARD;
-  DateTime today = DateTime.now();
   String deviceName = 'Device Name';
 
   @override
   String toString() {
-    return 'Structure{settings: $settings, radioSetting: $radioSetting, batteryType: $batteryType, today: $today, deviceName: $deviceName}';
+    return 'Structure{settings: $settings, radioSetting: $radioSetting, batteryType: $batteryType, deviceName: $deviceName}';
   }
 }
 
 Uint8List pack(SensePi structure) {
-  ByteData packedData = ByteData(206);
+  ByteData packedData = ByteData(209);
 
   /// Adding Operation time in order of Motion - Timer
   int offset = -1;
@@ -300,8 +299,8 @@ Uint8List pack(SensePi structure) {
   packedData.setUint8(
       offset += 1, structure.radioSetting.radioOperationFrequency);
 
-  // ** Device Speed 1 Byte
-  packedData.setUint8(offset += 1, 0);
+  // ** Skip 4 bytes of common data
+  offset += 4;
 
   // ** Battery Type 1 Byte
   packedData.setUint8(offset += 1, structure.batteryType.index);
@@ -319,13 +318,13 @@ Uint8List pack(SensePi structure) {
   packedData.setUint8(offset += 1, DateTime.now().month);
   packedData.setUint8(offset += 1, DateTime.now().year % 2000);
 
-  assert(offset == 205);
+  assert(offset == 208);
   return packedData.buffer.asUint8List();
 }
 
 Map unpack(List<int> intData) {
   ByteBuffer buffer = Uint8List.fromList(intData).buffer;
-  ByteData data = ByteData.view(buffer, 0, 206);
+  ByteData data = ByteData.view(buffer, 0, 202);
   SensePi structure = SensePi();
   MetaStructure metaStructure = MetaStructure();
   int offset = -1;
@@ -470,9 +469,8 @@ Map unpack(List<int> intData) {
       radioOperationFrequency: data.getUint8(offset += 1),
     );
 
-    // Ignore the device speed value for Pi
-    // structure.deviceSpeed = DeviceSpeed.values[data.getUint8(offset += 1)];
-    offset += 1;
+    // Ignore common data 4 Bytes for Pi
+    offset += 4;
 
     structure.batteryType = BatteryType.values[data.getUint8(offset += 1)];
     structure.deviceName = '';
@@ -484,7 +482,7 @@ Map unpack(List<int> intData) {
         .replaceAll(RegExp('  '), '')
         .replaceFirst(RegExp(' \$'), '');
     print("Length ${structure.deviceName.length}");
-    assert(offset == 198);
+    assert(offset == 201);
 
     return {
       'structure': structure,
@@ -494,6 +492,3 @@ Map unpack(List<int> intData) {
     throw e;
   }
 }
-
-
-

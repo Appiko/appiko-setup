@@ -103,6 +103,12 @@ class BeTxSetting extends Setting {
   }
 }
 
+enum Range {
+  LOW,
+  MEDIUM,
+  HIGH,
+}
+
 ///
 /// {@category Model}
 /// {@category SenseBeTx}
@@ -122,17 +128,17 @@ class SenseBeTx with ChangeNotifier {
   );
   DeviceSpeed deviceSpeed = DeviceSpeed.FAST;
   BatteryType batteryType = BatteryType.STANDARD;
-  DateTime today = DateTime.now();
   String deviceName = 'Device Name';
+  Range range = Range.MEDIUM;
 
   @override
   String toString() {
-    return 'Structure{settings: $settings, radioSetting: $radioSetting, deviceSpeed: $deviceSpeed, batteryType: $batteryType, today: $today, deviceName: $deviceName}';
+    return 'Structure{settings: $settings, radioSetting: $radioSetting, deviceSpeed: $deviceSpeed, batteryType: $batteryType, deviceName: $deviceName}';
   }
 }
 
 Uint8List pack(SenseBeTx structure) {
-  ByteData packedData = ByteData(206);
+  ByteData packedData = ByteData(209);
 
   /// Adding Operation time in order of Motion - Timer
   int offset = -1;
@@ -242,8 +248,11 @@ Uint8List pack(SenseBeTx structure) {
   packedData.setUint8(
       offset += 1, structure.radioSetting.radioOperationFrequency);
 
-  // ** Device Speed 1 Byte
+  // ** Device Speed and range 2 Byte
   packedData.setUint8(offset += 1, structure.deviceSpeed.index);
+  packedData.setUint8(offset += 1, structure.range.index);
+  // skip 2 bytes of common data
+  offset += 2;
 
   // ** Battery Type 1 Byte
   packedData.setUint8(offset += 1, structure.batteryType.index);
@@ -261,13 +270,13 @@ Uint8List pack(SenseBeTx structure) {
   packedData.setUint8(offset += 1, DateTime.now().month);
   packedData.setUint8(offset += 1, DateTime.now().year % 2000);
 
-  assert(offset == 205);
+  assert(offset == 208);
   return packedData.buffer.asUint8List();
 }
 
 Map unpack(List<int> intData) {
   ByteBuffer buffer = Uint8List.fromList(intData).buffer;
-  ByteData data = ByteData.view(buffer, 0, 206);
+  ByteData data = ByteData.view(buffer, 0, 202);
   SenseBeTx structure = SenseBeTx();
   MetaStructure metaStructure = MetaStructure();
   int offset = -1;
@@ -422,6 +431,9 @@ Map unpack(List<int> intData) {
       radioOperationFrequency: data.getUint8(offset += 1),
     );
     structure.deviceSpeed = DeviceSpeed.values[data.getUint8(offset += 1)];
+    structure.range = Range.values[data.getUint8(offset += 1)];
+    // skip 2 bytes common
+    offset += 2;
 
     structure.batteryType = BatteryType.values[data.getUint8(offset += 1)];
     structure.deviceName = '';
@@ -434,7 +446,8 @@ Map unpack(List<int> intData) {
         .replaceAll(RegExp('  '), '')
         .replaceFirst(RegExp(' \$'), '');
     print("Length ${structure.deviceName.length}");
-    assert(offset == 198);
+    print("$offset");
+    assert(offset == 201);
 
     return {
       'structure': structure,

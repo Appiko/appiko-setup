@@ -113,3 +113,22 @@ Every Sense device added, also needs to have a service file under `/lib/core/ser
 - Other services go under
 
 `/lib/core/services`
+
+---
+
+## Adding support to a new device
+Copy paste the setting of the most similar UI/Structure and functionality.
+
+`cd` into the new folder.
+
+- Replace known strings using the below command be careful while doing things like `br to bt` as it will make the `break` to `bteak`.
+
+```sh
+appiko-setup/lib/ui/devices/sense_be_tx on  development
+➜ find ./ -type f -exec sed -i 's/sense_be_rx/sense_be_tx/g' {} \;
+```
+
+- Remove all unused imports and make sure that none of the import statements consists imports from the copied folder.
+- Resolve errors in vs code.
+- Make changes to the functionality /UI/ Structure as necessary.
+- You'll mostly run into `!debug_lock` error; the Debug console will help you find the origin of the error. It is mostly because we wait for a route which has not been created (Navigation).

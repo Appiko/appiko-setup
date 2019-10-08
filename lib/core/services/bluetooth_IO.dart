@@ -27,16 +27,6 @@ class BluetoothIOService extends ChangeNotifier {
             data,
             withoutResponse: false,
           );
-      print(await services[2].characteristics[1].read());
-
-      print(device.id.id);
-      print(services[0].characteristics[1].uuid.toString());
-//      RxBle
-//      await RxBle.writeChar(
-//        device.id.id,
-//        services[0].characteristics[1].uuid.toString(),
-//        utf8.encode("100"),
-//      );
     }
   }
 

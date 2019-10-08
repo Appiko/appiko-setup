@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:setup/core/models/devices/sense_be_tx/1.0/sense_be_tx.dart';
 import 'package:setup/core/models/generic/device_speed.dart';
 import 'package:setup/core/models/generic/radio_setting.dart';
 import 'package:setup/core/services/sense_be_tx_service.dart';
@@ -10,7 +11,6 @@ import 'package:setup/ui/devices/sense_be_tx/1.0/settings/setting_summary_page.d
 import 'package:setup/ui/widgets/advanced_option_tile.dart';
 import 'package:setup/ui/widgets/advanced_option_wrapper.dart';
 import 'package:setup/ui/widgets/custom_dropdown_button.dart';
-import 'package:setup/ui/widgets/custom_radio_field.dart';
 
 class MoreTabContents extends StatefulWidget {
   final bool showBeam;
@@ -23,15 +23,8 @@ class MoreTabContents extends StatefulWidget {
   _MoreTabContentsState createState() => _MoreTabContentsState();
 }
 
-enum Range {
-  HIGH,
-  MEDIUM,
-  LOW,
-}
-
 class _MoreTabContentsState extends State<MoreTabContents> {
   bool advancedOptionMoreTab = locator<SharedPrefs>().advancedOptions;
-  Range selectedRage = Range.HIGH;
   bool firstBuild = true;
 
   @override
@@ -134,7 +127,8 @@ class _MoreTabContentsState extends State<MoreTabContents> {
                 CustomDropdownButton(
                   title: 'Range',
                   dropdownButton: DropdownButton<Range>(
-                    value: selectedRage,
+                    value:
+                        Provider.of<SenseBeTxService>(context).structure.range,
                     underline: Container(),
                     style: Theme.of(context).textTheme.title.copyWith(
                           fontSize: 18,
@@ -150,9 +144,7 @@ class _MoreTabContentsState extends State<MoreTabContents> {
                             ))
                         .toList(),
                     onChanged: (Range range) {
-                      setState(() {
-                        selectedRage = range;
-                      });
+                      Provider.of<SenseBeTxService>(context).setRange(range);
                     },
                   ),
                 ),

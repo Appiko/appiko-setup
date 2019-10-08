@@ -512,7 +512,7 @@ class RubberLower extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            DeviceHelper.getString(Device.SENSE_BE_RX),
+                            DeviceHelper.getString(Device.SENSE_BE_TX),
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.normal,

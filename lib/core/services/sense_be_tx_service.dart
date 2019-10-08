@@ -885,4 +885,9 @@ class SenseBeTxService extends ChangeNotifier {
     structure.deviceName = name;
     notifyListeners();
   }
+
+  void setRange(Range range) {
+    structure.range = range;
+    notifyListeners();
+  }
 }

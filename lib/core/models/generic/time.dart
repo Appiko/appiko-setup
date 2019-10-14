@@ -202,7 +202,7 @@ String getTimeString({DateTime dateTime, AmbientLight ambientLight}) {
     int minutes = dateTime.minute;
     String indicator = "AM";
 
-    if (hours > 12) {
+    if (hours >= 12) {
       hours %= 12;
       indicator = "PM";
     }

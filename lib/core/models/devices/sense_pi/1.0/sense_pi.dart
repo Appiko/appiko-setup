@@ -489,6 +489,7 @@ Map unpack(List<int> intData) {
       'meta': metaStructure,
     };
   } catch (e) {
+    print(e);
     throw e;
   }
 }

@@ -11,19 +11,8 @@ class PermissionsService {
   Future<bool> hasLocationAccess() async {
     PermissionStatus locationStatus = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.locationWhenInUse);
-    return (locationStatus == PermissionStatus.granted);
-  }
-
-  Future<bool> isLocationOn() async {
-    ServiceStatus locationService = await PermissionHandler()
-        .checkServiceStatus(PermissionGroup.locationWhenInUse);
-    if (locationService != ServiceStatus.enabled) {
-      print('making platform call');
-      await PlatformServies().requestLocationService();
-    }
-    return (await PermissionHandler()
-            .checkServiceStatus(PermissionGroup.locationWhenInUse) ==
-        ServiceStatus.enabled);
+    return (locationStatus == PermissionStatus.disabled ||
+        locationStatus == PermissionStatus.granted);
   }
 
   Future<dynamic> requestLoctionAccess({@required BuildContext context}) async {
@@ -35,8 +24,9 @@ class PermissionsService {
         context: context,
         builder: (_) {
           return AlertDialog(
-            title: new Text("Location Access"),
-            content: new Text("Access location for .... "),
+            title: new Text("Location"),
+            content: new Text(
+                "Location is needed to interact with Bluetooth devices on Android.\nPlease allow location to scan for devices."),
             actions: <Widget>[
               FlatButton(
                 child: Text(
@@ -58,12 +48,12 @@ class PermissionsService {
                     ),
                   ),
                   onPressed: () async {
+                    Navigator.of(context).pop();
                     permissions.addAll(
                       await PermissionHandler().requestPermissions(
                           [PermissionGroup.locationWhenInUse]),
                     );
-                    PlatformServies().requestLocationService();
-                    Navigator.of(context).pop();
+                    // PlatformServies().requestLocationService();
                   }),
             ],
           );

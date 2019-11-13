@@ -5,6 +5,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:rubber/rubber.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
+import 'package:setup/core/models/generic/battery.dart';
 import 'package:setup/core/models/generic/operation_time.dart';
 import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/services/bluetooth_IO.dart';
@@ -523,10 +524,11 @@ class RubberLower extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
                               Text(
-                                Provider.of<SenseBeRxService>(context)
-                                    .deviceInfo
-                                    .batteryType
-                                    .toString(),
+                                BatteryHelper.getString(
+                                  Provider.of<SenseBeRxService>(context)
+                                      .deviceInfo
+                                      .batteryType,
+                                ),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,

@@ -33,8 +33,10 @@ dependencies:
   path_provider: ^1.1.0 #Get filesystem path
   share_extend: ^1.0.9 #Share profiles
   package_info: ^0.4.0+6 # Display package info(version number,...)
-  rubber: ^0.4.0
+  rubber: ^0.4.0 #Bottom sheet
   async: ^2.3.0
+  material_design_icons_flutter: 3.3.4595
+
 dev_dependencies:
   flutter_launcher_icons: "^0.7.2" #Generate launcher icons
   flutter_test:

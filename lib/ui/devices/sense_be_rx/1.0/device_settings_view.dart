@@ -1,6 +1,7 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:rubber/rubber.dart';
@@ -535,9 +536,21 @@ class RubberLower extends StatelessWidget {
                                   fontSize: 14,
                                 ),
                               ),
-                              Icon(
-                                Icons.battery_std,
-                                color: Colors.white,
+                              SizedBox(height: 25),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4),
+                                child: Icon(
+                                  BatteryHelper.getIcon(
+                                    Provider.of<SenseBeRxService>(context)
+                                        .deviceInfo
+                                        .batteryType,
+                                    Provider.of<SenseBeRxService>(context)
+                                        .deviceInfo
+                                        .batteryVoltage,
+                                  ),
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),

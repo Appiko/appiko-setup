@@ -13,7 +13,7 @@ class DeviceInfo with ChangeNotifier {
   String id;
   BatteryType batteryType;
   String firmwareVersion;
-  String batteryVoltage;
+  double batteryVoltage;
   String macAddress;
 
   DeviceInfo.unpack(
@@ -29,8 +29,8 @@ class DeviceInfo with ChangeNotifier {
       id += AsciiCodec().decode([data.getUint8(offset += 1)]);
     }
 
-    batteryVoltage =
-        ((data.getUint8(offset += 1) * 3.6) / 255).toStringAsPrecision(2) + 'V';
+    batteryVoltage = double.tryParse(
+        ((data.getUint8(offset += 1) * 3.6) / 255).toStringAsPrecision(2));
 
     macAddress = mac;
 
@@ -43,7 +43,7 @@ class DeviceInfo with ChangeNotifier {
       "Device Name": this.name,
       "Device ID": this.id,
       "Battery Voltage": this.batteryVoltage,
-      "Battery Type": BatteryHelper.getString(this.batteryType),
+      "Battery Type": BatteryHelper.getString(this.batteryType) + "V",
       "Firmware Version": this.firmwareVersion,
       "MAC Address": macAddress,
     };

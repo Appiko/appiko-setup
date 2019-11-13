@@ -535,9 +535,21 @@ class RubberLower extends StatelessWidget {
                                   fontSize: 14,
                                 ),
                               ),
-                              Icon(
-                                Icons.battery_std,
-                                color: Colors.white,
+                              SizedBox(height: 25),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                child: Icon(
+                                  BatteryHelper.getIcon(
+                                    Provider.of<SenseBeTxService>(context)
+                                        .deviceInfo
+                                        .batteryType,
+                                    Provider.of<SenseBeTxService>(context)
+                                        .deviceInfo
+                                        .batteryVoltage,
+                                  ),
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),

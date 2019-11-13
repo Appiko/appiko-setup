@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:setup/core/models/generic/battery.dart';
 import 'package:setup/core/models/generic/camera.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart';
 import 'package:setup/core/models/generic/device_info.dart';
@@ -880,9 +881,11 @@ class SenseBeRxService extends ChangeNotifier {
     }
   }
 
-  void setDeviceName(String name) {
+  void setDeviceInfo(String name, BatteryType batteryType) {
     structure.deviceName = name;
+    structure.batteryType = batteryType;
     deviceInfo.name = name.trim();
+    deviceInfo.batteryType = batteryType;
     notifyListeners();
   }
 }

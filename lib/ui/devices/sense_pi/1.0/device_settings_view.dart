@@ -23,11 +23,11 @@ import 'package:setup/ui/devices/sense_pi/1.0/settings/setting_timepicker_screen
 import 'package:setup/ui/devices/sense_pi/1.0/settings/timer_tab_contents.dart';
 import 'package:setup/ui/widgets/bottom_action_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
+import 'package:setup/ui/widgets/device_info_dialog.dart';
 import 'package:setup/ui/widgets/profile_name_dialog.dart';
 
 /// {@category Page}
 ///
-/// TODO:.
 class DeviceSettingsView extends StatefulWidget {
   @override
   _DeviceSettingsViewState createState() => _DeviceSettingsViewState();
@@ -604,12 +604,13 @@ class RubberLower extends StatelessWidget {
                   );
                   showDialog(
                       context: context,
-                      builder: (context) => SingleFieldDialogBox(
-                            title: "Device Name",
+                      builder: (context) => DeviceInfoDialog(
+                            batteryType:
+                                locator<SensePiService>().structure.batteryType,
                             textEditingController: name,
-                            onActionPressed: () {
+                            onActionPressed: (BatteryType batteryType) {
                               locator<SensePiService>()
-                                  .setDeviceName(name.text);
+                                  .setDeviceInfo(name.text, batteryType);
                               Navigator.pop(context);
                             },
                           ));

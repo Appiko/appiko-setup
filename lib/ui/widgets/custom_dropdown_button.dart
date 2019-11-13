@@ -45,6 +45,7 @@ class CustomDropdownButton extends StatelessWidget {
   final String title;
   final String description;
   final DropdownButton dropdownButton;
+  final bool hasOutline;
 
   /// If it should return a Column. i.e., the dropdown button is placed below the title.
   final bool isColumn;
@@ -55,6 +56,7 @@ class CustomDropdownButton extends StatelessWidget {
     this.description,
     @required this.dropdownButton,
     this.isColumn = false,
+    this.hasOutline = false,
   }) : super(key: key);
 
   @override
@@ -81,7 +83,17 @@ class CustomDropdownButton extends StatelessWidget {
                         )
                       : Container(),
                 ),
-                dropdownButton,
+                hasOutline
+                    ? Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: EdgeInsets.only(left: 8, right: 8),
+                        margin: EdgeInsets.only(top: 20),
+                        child: dropdownButton,
+                      )
+                    : dropdownButton,
               ],
             )
           : Row(

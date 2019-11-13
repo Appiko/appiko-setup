@@ -44,6 +44,7 @@ class SingleFeildDialogBox extends StatelessWidget {
     Key key,
     @required this.textEditingController,
     @required this.onActionPressed,
+    this.title,
     this.onCancelPressed,
     this.actionLabel,
   }) : super(key: key);
@@ -52,6 +53,8 @@ class SingleFeildDialogBox extends StatelessWidget {
   final VoidCallback onCancelPressed;
   final VoidCallback onActionPressed;
   final String actionLabel;
+  final String title;
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -64,7 +67,7 @@ class SingleFeildDialogBox extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               SingleTextField(
-                title: "Profile Name",
+                title: title ?? "Profile Name",
                 textField: TextFormField(
                   controller: textEditingController,
                   autofocus: true,

@@ -605,6 +605,7 @@ class RubberLower extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (context) => SingleFeildDialogBox(
+                            title: "Device Name",
                             textEditingController: name,
                             onActionPressed: () {
                               locator<SensePiService>()

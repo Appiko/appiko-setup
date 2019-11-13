@@ -618,7 +618,7 @@ class RubberLower extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.info_outline),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/device-info');
+                  Navigator.pushNamed(context, '/bt/device-info');
                 },
               ),
             ],

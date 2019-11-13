@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_be_tx_service.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
@@ -14,22 +14,13 @@ class DeviceInfoView extends StatefulWidget {
 }
 
 class _DeviceInfoViewState extends State<DeviceInfoView> {
-  // final Map<String, String> deviceInfo = {
-  //   "Name": "SenseBe #5",
-  //   "Battery Type": "Rechargable AA",
-  //   "Battery Voltage": "2.3V",
-  //   "MAC Address": "C2:45:78:125",
-  //   "Device Id": "SB0123489972130"
-  // };
-  // DeviceInfo _deviceInfo;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: "Device Information",
       ),
-      body: Provider.of<SenseBeRxService>(context).deviceInfo == null
+      body: Provider.of<SenseBeTxService>(context).deviceInfo == null
           ? Center(child: CircularProgressIndicator())
           : Column(
               children: <Widget>[
@@ -40,7 +31,7 @@ class _DeviceInfoViewState extends State<DeviceInfoView> {
                     child: ListView.separated(
                       shrinkWrap: true,
                       separatorBuilder: (_, __) => CustomDivider(),
-                      itemCount: Provider.of<SenseBeRxService>(context)
+                      itemCount: Provider.of<SenseBeTxService>(context)
                           .deviceInfo
                           .toMap()
                           .length,
@@ -48,7 +39,7 @@ class _DeviceInfoViewState extends State<DeviceInfoView> {
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                           title: Text(
-                            Provider.of<SenseBeRxService>(context)
+                            Provider.of<SenseBeTxService>(context)
                                 .deviceInfo
                                 .toMap()
                                 .keys
@@ -56,7 +47,7 @@ class _DeviceInfoViewState extends State<DeviceInfoView> {
                                 .toString(),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          trailing: Text(Provider.of<SenseBeRxService>(context)
+                          trailing: Text(Provider.of<SenseBeTxService>(context)
                               .deviceInfo
                               .toMap()
                               .values

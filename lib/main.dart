@@ -17,6 +17,8 @@ import 'package:setup/ui/devices/sense_be_rx/1.0/profiles/profile_summary_view.d
     as br;
 import 'package:setup/ui/devices/sense_be_rx/1.0/settings/camera_trriger_view.dart'
     as br;
+import 'package:setup/ui/devices/sense_be_rx/1.0/settings/device_info_view.dart'
+    as br;
 import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_summary_page.dart'
     as br;
 import 'package:setup/ui/devices/sense_be_tx/1.0/device_settings_view.dart'
@@ -25,17 +27,20 @@ import 'package:setup/ui/devices/sense_be_tx/1.0/profiles/profile_summary_view.d
     as bt;
 import 'package:setup/ui/devices/sense_be_tx/1.0/settings/camera_trriger_view.dart'
     as bt;
+import 'package:setup/ui/devices/sense_be_tx/1.0/settings/device_info_view.dart'
+    as bt;
 import 'package:setup/ui/devices/sense_be_tx/1.0/settings/setting_summary_page.dart'
     as bt;
 import 'package:setup/ui/devices/sense_pi/1.0/profiles/profile_summary_view.dart'
     as sp;
 import 'package:setup/ui/devices/sense_pi/1.0/settings/camera_trriger_view.dart'
     as sp;
+import 'package:setup/ui/devices/sense_pi/1.0/settings/device_info_view.dart'
+    as sp;
 import 'package:setup/ui/devices/sense_pi/1.0/settings/setting_summary_page.dart'
     as sp;
 import 'package:setup/ui/setup_theme.dart';
 import 'package:setup/ui/views/create_profile_view.dart';
-import 'package:setup/ui/views/device_info_view.dart';
 import 'package:setup/ui/views/more_view.dart';
 import 'package:setup/ui/views/profiles_view.dart';
 import 'package:setup/ui/views/scan_view.dart';
@@ -90,7 +95,9 @@ class MyApp extends StatelessWidget {
       darkTheme: locator<SetupTheme>().appikoDarkTheme,
       routes: {
         '/': (_) => MyHomePage(),
-        '/device-info': (_) => DeviceInfoView(),
+        '/bt/device-info': (_) => bt.DeviceInfoView(),
+        '/br/device-info': (_) => br.DeviceInfoView(),
+        '/sp/device-info': (_) => sp.DeviceInfoView(),
         '/profiles/new': (_) => CreateProfileView(),
         '/devices/br': (_) => br.DeviceSettingsView(),
         '/devices/br/profile-summary': (_) => br.ProfileSummaryView(),

@@ -99,7 +99,7 @@ class ProfilesService with ChangeNotifier {
   //   ShareExtend.share(filePath, "file");
   // }
 
-  Future getProfiles() async {
+  Future<List<ProfileFile>> getProfiles() async {
     // return _memoizer.runOnce(() async {
     final dir = Directory("${await _localPath}/profiles");
     profiles.clear();

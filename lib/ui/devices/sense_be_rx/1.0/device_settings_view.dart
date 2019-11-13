@@ -40,7 +40,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
   ScrollController _scrollViewController;
   RubberAnimationController _controller;
   int _activeIndex = 0;
-  Future profiles = locator<ProfilesService>().getProfiles();
+  Future<List<ProfileFile>> profiles = locator<ProfilesService>().getProfiles();
   bool _hideFAB = false;
 
   ScrollController _scrollController;
@@ -261,9 +261,17 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                               ),
                               FutureBuilder(
                                   future: profiles,
-                                  builder: (context, snapshot) {
+                                  builder: (context,
+                                      AsyncSnapshot<List<ProfileFile>>
+                                          snapshot) {
                                     if (snapshot.hasData) {
-                                      if (snapshot.data.length == 0) {
+                                      List<ProfileFile> _profiles = snapshot
+                                          .data
+                                          .where((profileFile) =>
+                                              profileFile.deviceType ==
+                                              Device.SENSE_BE_RX)
+                                          .toList();
+                                      if (_profiles.length == 0) {
                                         return ListTile(
                                           title: Text(
                                             "No profiles created for this device yet!",
@@ -276,22 +284,20 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                                         physics: NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         itemBuilder: (context, i) => ListTile(
-                                          title:
-                                              Text(snapshot.data[i].fileName),
+                                          title: Text(_profiles[i].fileName),
                                           onTap: () {
                                             _controller.collapse();
                                             locator<ProfilesService>()
                                                 .createStructure(
-                                              snapshot.data[i].filePath,
-                                              snapshot.data[i].deviceType,
+                                              _profiles[i].filePath,
+                                              _profiles[i].deviceType,
                                             );
                                             locator<ProfilesService>()
-                                                .setActiveProfile(
-                                                    snapshot.data[i]);
+                                                .setActiveProfile(_profiles[i]);
                                             setState(() {});
                                           },
                                         ),
-                                        itemCount: snapshot.data.length,
+                                        itemCount: _profiles.length,
                                       );
                                     }
                                     if (snapshot.hasError) {

@@ -40,7 +40,7 @@ class DeviceInfo with ChangeNotifier {
       "Device Name": this.name,
       "Device ID": this.id,
       "Battery Voltage": this.batteryVoltage,
-      "Battery Type": this.batteryType,
+      "Battery Type": BatteryHelper.getString(this.batteryType),
       "Firmware Version": this.firmwareVersion,
       "MAC Address": macAddress,
     };

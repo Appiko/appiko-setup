@@ -53,11 +53,9 @@ class DualTextField extends StatefulWidget {
   _DualTextFieldState createState() => _DualTextFieldState();
 }
 
-// TODO: Implement validators
 class _DualTextFieldState extends State<DualTextField> {
   @override
   void initState() {
-    // TODO: Fix default values
     if (widget.t1Controller.text == "")
       widget.t1Controller.text =
           widget.firstFieldMin.toString().padLeft(2, "0");

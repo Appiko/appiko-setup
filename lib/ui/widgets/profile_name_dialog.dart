@@ -4,7 +4,6 @@ import 'package:setup/core/services/profiles.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 
-// TODO: Add save functionality
 class ProfileNameDialog extends StatelessWidget {
   final TextEditingController fileNameController;
   final ProfileFile profileFile;

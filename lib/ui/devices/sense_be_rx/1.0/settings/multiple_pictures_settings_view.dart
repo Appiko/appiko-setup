@@ -20,7 +20,7 @@ import 'package:setup/ui/widgets/trigger_pulse_duration_fields.dart';
 ///
 /// Multiple pictures configuration screen.
 class MultiplePicturesSettingsView extends StatefulWidget {
-  Setting setting;
+  final Setting setting;
 
   MultiplePicturesSettingsView({Key key, this.setting}) : super(key: key);
 

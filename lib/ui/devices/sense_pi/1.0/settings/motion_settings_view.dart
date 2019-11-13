@@ -7,7 +7,6 @@ import 'package:setup/core/services/shared_prefs.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/custom_app_bar.dart';
 import 'package:setup/ui/widgets/custom_slider.dart';
-import 'package:setup/ui/widgets/custom_switch_field.dart';
 import 'package:setup/ui/widgets/page_navigation_bar.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 

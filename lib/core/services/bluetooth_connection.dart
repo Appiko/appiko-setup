@@ -49,7 +49,7 @@ class BluetoothConnectionService with ChangeNotifier {
         break;
       //TODO: Make this according to the table.
       case "3c73dc60":
-        return Device.SENSE_BE_TX;
+        return Device.SENSE_PI;
         break;
     }
     return null;

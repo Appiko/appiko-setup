@@ -16,7 +16,10 @@ class DeviceInfo with ChangeNotifier {
   String batteryVoltage;
   String macAddress;
 
-  DeviceInfo.unpack(List<int> intData, {String mac}) {
+  DeviceInfo.unpack(
+    List<int> intData, {
+    @required String mac,
+  }) {
     ByteBuffer buffer = Uint8List.fromList(intData).buffer;
     ByteData data = ByteData.view(buffer, 0, intData.length);
     int offset = -1;

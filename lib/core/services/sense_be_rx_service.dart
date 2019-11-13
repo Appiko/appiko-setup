@@ -882,6 +882,7 @@ class SenseBeRxService extends ChangeNotifier {
 
   void setDeviceName(String name) {
     structure.deviceName = name;
+    deviceInfo.name = name.trim();
     notifyListeners();
   }
 }

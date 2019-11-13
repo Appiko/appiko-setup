@@ -20,7 +20,7 @@ class ProfileNameDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new SingleFeildDialogBox(
+    return new SingleFieldDialogBox(
         textEditingController: fileNameController,
         onActionPressed: () async {
           if (deviceType != null) {
@@ -39,8 +39,8 @@ class ProfileNameDialog extends StatelessWidget {
   }
 }
 
-class SingleFeildDialogBox extends StatelessWidget {
-  const SingleFeildDialogBox({
+class SingleFieldDialogBox extends StatelessWidget {
+  const SingleFieldDialogBox({
     Key key,
     @required this.textEditingController,
     @required this.onActionPressed,

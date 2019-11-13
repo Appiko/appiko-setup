@@ -604,7 +604,7 @@ class RubberLower extends StatelessWidget {
                   );
                   showDialog(
                       context: context,
-                      builder: (context) => SingleFeildDialogBox(
+                      builder: (context) => SingleFieldDialogBox(
                             title: "Device Name",
                             textEditingController: name,
                             onActionPressed: () {

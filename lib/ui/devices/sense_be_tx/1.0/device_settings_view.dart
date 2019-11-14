@@ -304,8 +304,6 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                 animationController: _controller,
                 scrollController: _scrollController,
               ),
-
-
               floatingActionButton: Builder(
                 builder: (context) => (_activeIndex != 2 && !_hideFAB)
                     ? FloatingActionButton(
@@ -376,6 +374,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                       : () async {
                           await locator<BluetoothIOService>().write(
                               pack(locator<SenseBeTxService>().structure));
+                          showWriteSuccessfulSnackbar(context);
                         },
                   onClosePressed: () {
                     closeConnection(context, isDisconnected);

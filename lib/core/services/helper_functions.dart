@@ -157,4 +157,22 @@ createStructureFromData({Uint8List data}) {
   }
 }
 
+showWriteSuccessfulSnackbar(BuildContext context) {
+  SnackBar s = SnackBar(
+    backgroundColor: Theme.of(context).accentColor,
+    duration: Duration(seconds: 1),
+    action: SnackBarAction(
+        label: "OK",
+        textColor: Colors.white,
+        onPressed: () {
+          Scaffold.of(context).hideCurrentSnackBar();
+        }),
+    content: Text(
+      "Write Successful   🎉",
+      style: TextStyle(fontWeight: FontWeight.bold),
+    ),
+  );
+  Scaffold.of(context).showSnackBar(s);
+}
+
 Device activeDevice;

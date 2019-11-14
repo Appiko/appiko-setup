@@ -374,6 +374,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                       : () async {
                           await locator<BluetoothIOService>().write(
                               pack(locator<SenseBeTxService>().structure));
+                          locator<SenseBeTxService>().shouldSave = false;
                           showWriteSuccessfulSnackbar(context);
                         },
                   onClosePressed: () {

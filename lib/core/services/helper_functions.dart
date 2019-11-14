@@ -176,3 +176,4 @@ showWriteSuccessfulSnackbar(BuildContext context) {
 }
 
 Device activeDevice;
+bool workingOnDevice;

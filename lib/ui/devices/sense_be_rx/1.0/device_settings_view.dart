@@ -408,6 +408,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
 
   closeConnection(BuildContext context, bool isDisconnected) {
     print("Called close connection");
+
     if (locator<SenseBeRxService>().shouldSave && !isDisconnected) {
       showDialog(
         context: context,
@@ -423,8 +424,9 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                 ),
               ),
               onPressed: () {
-                // Navigator.popUntil(context, ModalRoute.withName('/'));
                 Provider.of<BluetoothConnectionService>(context).disconnect();
+                workingOnDevice = false;
+                Navigator.popUntil(context, ModalRoute.withName('/'));
               },
             ),
             FlatButton(
@@ -435,12 +437,12 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                   ),
                 ),
                 onPressed: () async {
-                  //TODO:
                   locator<SenseBeRxService>().shouldSave = false;
                   await locator<BluetoothIOService>()
                       .write(pack(locator<SenseBeRxService>().structure));
-                  // Navigator.popUntil(context, ModalRoute.withName('/'));
                   Provider.of<BluetoothConnectionService>(context).disconnect();
+                  workingOnDevice = false;
+                  Navigator.popUntil(context, ModalRoute.withName('/'));
                 }),
           ],
         ),
@@ -471,6 +473,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                 ),
                 onPressed: () async {
                   Navigator.popUntil(context, ModalRoute.withName('/'));
+                  workingOnDevice = false;
                 }),
           ],
         ),
@@ -480,6 +483,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
         Provider.of<BluetoothConnectionService>(context).disconnect();
       }
       Navigator.popUntil(context, ModalRoute.withName('/'));
+      workingOnDevice = false;
     }
   }
 

@@ -425,8 +425,9 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                 ),
               ),
               onPressed: () {
-                Provider.of<BluetoothConnectionService>(context).disconnect();
                 Navigator.popUntil(context, ModalRoute.withName('/'));
+                Provider.of<BluetoothConnectionService>(context).disconnect();
+                workingOnDevice = false;
               },
             ),
             FlatButton(
@@ -440,8 +441,9 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                   locator<SenseBeTxService>().shouldSave = false;
                   await locator<BluetoothIOService>()
                       .write(pack(locator<SenseBeTxService>().structure));
-                  Provider.of<BluetoothConnectionService>(context).disconnect();
                   Navigator.popUntil(context, ModalRoute.withName('/'));
+                  Provider.of<BluetoothConnectionService>(context).disconnect();
+                  workingOnDevice = false;
                 }),
           ],
         ),
@@ -472,15 +474,17 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                 ),
                 onPressed: () async {
                   Navigator.popUntil(context, ModalRoute.withName('/'));
+                  workingOnDevice = false;
                 }),
           ],
         ),
       );
     } else {
+      Navigator.popUntil(context, ModalRoute.withName('/'));
+      workingOnDevice = false;
       if (!isDisconnected) {
         Provider.of<BluetoothConnectionService>(context).disconnect();
       }
-      Navigator.popUntil(context, ModalRoute.withName('/'));
     }
   }
 

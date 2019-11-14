@@ -18,6 +18,7 @@ class BluetoothConnectionService with ChangeNotifier {
     await this.device.connect(autoConnect: false);
     connectedDeviceType = _getDeviceType(uuid);
     activeDevice = connectedDeviceType;
+    workingOnDevice = true;
     print("Connected to $connectedDeviceType");
     this.device.state.listen((BluetoothDeviceState bluetoothDeviceState) {
       print("$bluetoothDeviceState");
@@ -49,9 +50,8 @@ class BluetoothConnectionService with ChangeNotifier {
         break;
       //TODO: Make this according to the table.
       case "3c73dc60":
-        return Device.SENSE_PI;
+        return Device.SENSE_BE_TX;
         break;
     }
-    return null;
   }
 }

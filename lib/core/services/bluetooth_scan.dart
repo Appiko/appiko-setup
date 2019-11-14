@@ -37,24 +37,24 @@ class BluetoothScanService with ChangeNotifier {
 
   _scan() async {
     if (isBluetoothOn && await PermissionsService().hasLocationAccess()) {
-    stopScan(); //Stop previously running scan
-    isScanning = true;
-    scanResults.clear();
-    notifyListeners();
-    _flutterBlue.scan(timeout: _scanTimeoutDuration)
-      ..listen(
-        (ScanResult s) {
-          if (s.advertisementData.localName != "" &&
-              s.advertisementData.serviceUuids[0]
-                  .contains(RegExp(r'^3c73dc\d{2}'))) {
-            scanResults[s.device.id] = s;
-            notifyListeners();
-          }
-        },
-        onDone: () {
-          stopScan();
-        },
-      );
+      stopScan(); //Stop previously running scan
+      isScanning = true;
+      scanResults.clear();
+      notifyListeners();
+      _flutterBlue.scan(timeout: _scanTimeoutDuration)
+        ..listen(
+          (ScanResult s) {
+            if (s.advertisementData.localName != "" &&
+                s.advertisementData.serviceUuids[0]
+                    .contains(RegExp(r'^3c73dc\d{2}'))) {
+              scanResults[s.device.id] = s;
+              notifyListeners();
+            }
+          },
+          onDone: () {
+            stopScan();
+          },
+        );
     }
   }
 

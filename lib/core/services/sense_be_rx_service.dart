@@ -12,6 +12,7 @@ import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/models/generic/time.dart' as time;
 import 'package:setup/core/services/bluetooth_IO.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
+import 'package:setup/core/services/helper_functions.dart';
 import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/core/view_models/camera_trigger_radio_options_model.dart';
 import 'package:setup/core/view_models/half_press_fields_model.dart';
@@ -695,10 +696,7 @@ class SenseBeRxService extends ChangeNotifier {
   }
 
   String getCloseSummaryPath() {
-    return locator<BluetoothConnectionService>().deviceState ==
-            BluetoothDeviceState.connected
-        ? '/devices/br'
-        : '/devices/br/profile-summary';
+    return workingOnDevice ? '/devices/br' : '/devices/br/profile-summary';
   }
 
   // TODO: Remove onPressed

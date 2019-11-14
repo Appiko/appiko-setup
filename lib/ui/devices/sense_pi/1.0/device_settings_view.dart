@@ -24,6 +24,7 @@ import 'package:setup/ui/devices/sense_pi/1.0/settings/timer_tab_contents.dart';
 import 'package:setup/ui/widgets/bottom_action_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 import 'package:setup/ui/widgets/device_info_dialog.dart';
+import 'package:setup/ui/widgets/device_settings_profiles_layer.dart';
 
 /// {@category Page}
 ///
@@ -172,131 +173,11 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                   motionSettingCards: motionSettingCards,
                   timerSettingCards: timerSettingCards,
                 ),
-                upperLayer: Container(
-                  color: Colors.white,
-                  height: double.infinity,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Column(
-                          children: <Widget>[
-                            Builder(
-                              builder: (context) => OutlineButton(
-                                  child: Text(
-                                    "SAVE AS NEW PROFILE",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
-                                  ),
-                                  highlightedBorderColor: Colors.black,
-                                  onPressed: () async {
-                                    _controller.collapse();
-                                    saveAsProfile(
-                                        context, profileFile, Device.SENSE_PI);
-                                  }),
-                            ),
-                            Builder(
-                              builder: (context) => (profileFile != null)
-                                  ? OutlineButton(
-                                      child: Text(
-                                        "UPDATE SELECTED PROFILE",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                      ),
-                                      highlightedBorderColor: Colors.black,
-                                      onPressed: () {
-                                        _controller.collapse();
-                                        locator<ProfilesService>()
-                                            .updateProfile(
-                                                profileFile.filePath);
-                                        SnackBar s = SnackBar(
-                                          backgroundColor:
-                                              Theme.of(context).accentColor,
-                                          duration: Duration(seconds: 3),
-                                          content: Text(
-                                              "${profileFile.fileName} updated 🎉 "),
-                                        );
-                                        Scaffold.of(context).showSnackBar(s);
-                                      },
-                                    )
-                                  : Container(width: 0),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Load from saved profiles",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                            FutureBuilder(
-                                future: profiles,
-                                builder: (context,
-                                    AsyncSnapshot<List<ProfileFile>> snapshot) {
-                                  if (snapshot.hasData) {
-                                    List<ProfileFile> _profiles = snapshot.data
-                                        .where((profileFile) =>
-                                            profileFile.deviceType ==
-                                            Device.SENSE_PI)
-                                        .toList();
-                                    if (_profiles.length == 0) {
-                                      return ListTile(
-                                        title: Text(
-                                          "No profiles created for this device yet!",
-                                        ),
-                                      );
-                                    }
-                                    return ListView.separated(
-                                      separatorBuilder: (_, __) =>
-                                          CustomDivider(),
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, i) => ListTile(
-                                        title: Text(_profiles[i].fileName),
-                                        onTap: () {
-                                          _controller.collapse();
-                                          locator<ProfilesService>()
-                                              .createStructure(
-                                            _profiles[i].filePath,
-                                            _profiles[i].deviceType,
-                                          );
-                                          locator<ProfilesService>()
-                                              .setActiveProfile(_profiles[i]);
-                                          setState(() {});
-                                        },
-                                      ),
-                                      itemCount: _profiles.length,
-                                    );
-                                  }
-                                  if (snapshot.hasError) {
-                                    return ListTile(
-                                      title: Text(
-                                        "No profiles created for this device yet!",
-                                      ),
-                                    );
-                                  }
-                                  return Container();
-                                }),
-                          ],
-                        ),
-                      ],
-                    ),
-                    physics: NeverScrollableScrollPhysics(),
-                    controller: _scrollController,
-                  ),
+                upperLayer: DeviceSettingProfilesLayer(
+                  controller: _controller,
+                  profileFile: profileFile,
+                  deviceType: Device.SENSE_PI,
+                  scrollController: _scrollController,
                 ),
                 animationController: _controller,
                 scrollController: _scrollController,

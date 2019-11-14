@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/generic/time.dart';
+import 'package:setup/core/services/device.dart';
+import 'package:setup/core/services/helper_functions.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_be_tx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/core/view_models/time_of_day_fields_model.dart';
 import 'package:setup/locators.dart';
 
@@ -30,8 +34,7 @@ class _TimeOfDayFieldsState extends State<TimeOfDayFields> {
         SchedulerPhase.persistentCallbacks) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         setState(() {
-          errorMessage = locator<SenseBeRxService>()
-              .timeCheck(pickerStartTime: startTime, pickerEndTime: endTime);
+          errorMessage = getErrorMessage();
         });
         if (errorMessage.isNotEmpty) {
           locator<TimeOfDayFieldsModel>().timeOverlap = true;
@@ -128,5 +131,24 @@ class _TimeOfDayFieldsState extends State<TimeOfDayFields> {
         SizedBox(height: 10),
       ],
     );
+  }
+
+  String getErrorMessage() {
+    String errMsg;
+    switch (activeDevice) {
+      case Device.SENSE_BE_TX:
+        errMsg = locator<SenseBeTxService>()
+            .timeCheck(pickerStartTime: startTime, pickerEndTime: endTime);
+        break;
+      case Device.SENSE_BE_RX:
+        errMsg = locator<SenseBeRxService>()
+            .timeCheck(pickerStartTime: startTime, pickerEndTime: endTime);
+        break;
+      case Device.SENSE_PI:
+        errMsg = locator<SensePiService>()
+            .timeCheck(pickerStartTime: startTime, pickerEndTime: endTime);
+        break;
+    }
+    return errMsg;
   }
 }

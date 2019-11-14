@@ -163,6 +163,18 @@ class _DeviceSettingProfilesLayerState
                               );
                               locator<ProfilesService>()
                                   .setActiveProfile(_profiles[i]);
+                              final SnackBar profileSelectedSnackBar = SnackBar(
+                                content: Text(
+                                  "Selected ${_profiles[i].fileName}",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                elevation: 5,
+                                backgroundColor: Theme.of(context).accentColor,
+                                duration: Duration(seconds: 1),
+                                behavior: SnackBarBehavior.fixed,
+                              );
+                              Scaffold.of(context)
+                                  .showSnackBar(profileSelectedSnackBar);
                               setState(() {});
                             },
                           ),

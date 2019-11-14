@@ -70,9 +70,10 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () {
               showDialog(
                   context: context,
-                  builder: (context) => ProfileNameDialog(
+                  builder: (_) => ProfileNameDialog(
                         fileNameController: fileNameController,
                         profileFile: profileFile,
+                        scaffoldContext: context,
                       ));
             },
           ),

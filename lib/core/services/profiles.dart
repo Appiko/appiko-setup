@@ -51,7 +51,7 @@ class ProfilesService with ChangeNotifier {
     return "$path/profiles/$profileName​$deviceType​${DateTime.now().millisecondsSinceEpoch}";
   }
 
-  addProfile({
+  Future<String> addProfile({
     @required String profileName,
     @required Device deviceType,
     referActiveStructure = false,
@@ -83,7 +83,7 @@ class ProfilesService with ChangeNotifier {
     getProfiles();
   }
 
-  renameProfile(ProfileFile profile) async {
+  Future renameProfile(ProfileFile profile) async {
     File file = File(profile.filePath);
     String newFilePath =
         await _generateFilePath(profile.fileName, profile.deviceType);

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart'
     as br;
 import 'package:setup/core/models/devices/sense_be_tx/1.0/sense_be_tx.dart'
@@ -12,6 +13,7 @@ import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/core/services/sense_be_tx_service.dart';
 import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/locators.dart';
+import 'package:setup/ui/widgets/profile_name_dialog.dart';
 
 getProfileSummaryPath() {
   switch (locator<ProfilesService>().activeProfile.deviceType) {
@@ -93,6 +95,45 @@ getPackedData([struct]) {
       return bt.pack(struct ?? getStructure(shouldReferActiveStructure: true));
       break;
   }
+}
+
+showDisconnectedDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+            title: Text("Connection lost"),
+            content: Text(
+                "The connection to the device is lost. You can still edit the settings and save as a profile or go back and reconnect to the device"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("GO BACK"),
+                onPressed: () =>
+                    Navigator.popUntil(context, ModalRoute.withName('/')),
+              ),
+              FlatButton(
+                child: Text("CONTINUE"),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ));
+}
+
+saveAsProfile(
+  BuildContext sContext,
+  ProfileFile profileFile,
+  Device deviceType,
+) async {
+  await showDialog(
+      context: sContext,
+      builder: (context) => ProfileNameDialog(
+            fileNameController: TextEditingController(
+              text: "",
+            ),
+            profileFile: profileFile,
+            deviceType: deviceType,
+            scaffoldContext: sContext,
+          ));
 }
 
 createStructureFromData({Uint8List data}) {

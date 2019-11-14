@@ -1,7 +1,6 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:rubber/rubber.dart';
@@ -13,6 +12,7 @@ import 'package:setup/core/services/bluetooth_IO.dart';
 import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/bluetooth_scan.dart';
 import 'package:setup/core/services/device.dart';
+import 'package:setup/core/services/helper_functions.dart';
 import 'package:setup/core/services/profiles.dart';
 import 'package:setup/core/services/sense_be_rx_service.dart';
 import 'package:setup/locators.dart';
@@ -25,7 +25,6 @@ import 'package:setup/ui/devices/sense_be_rx/1.0/settings/timer_tab_contents.dar
 import 'package:setup/ui/widgets/bottom_action_bar.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 import 'package:setup/ui/widgets/device_info_dialog.dart';
-import 'package:setup/ui/widgets/profile_name_dialog.dart';
 
 /// {@category Page}
 ///
@@ -45,6 +44,8 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
 
   ScrollController _scrollController;
   AsyncMemoizer _memoizer = AsyncMemoizer();
+
+  bool showedDissconnectDialog = false;
 
   @override
   void initState() {
@@ -85,6 +86,8 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
         Provider.of<BluetoothConnectionService>(context).deviceState;
     bool _isBluetoothOn =
         Provider.of<BluetoothScanService>(context).isBluetoothOn;
+    bool isDisconnected =
+        deviceState == BluetoothDeviceState.disconnected || !_isBluetoothOn;
     SenseBeRx structure = Provider.of<SenseBeRxService>(context).structure;
 
     List<SettingSummaryCard> motionSettingCards =
@@ -122,13 +125,12 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
 
     print("Rebuilding ${this.runtimeType}");
 
-    if (deviceState == BluetoothDeviceState.disconnected || !_isBluetoothOn) {
+    if (isDisconnected && !showedDissconnectDialog) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.popUntil(context, ModalRoute.withName('/'));
+        showDisconnectedDialog(context);
+        showedDissconnectDialog = true;
       });
-      return Scaffold();
     }
-
     if (deviceState == BluetoothDeviceState.connecting || deviceState == null) {
       return Scaffold(
         body: Center(
@@ -148,274 +150,263 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
       _memoizer.runOnce(() {
         locator<SenseBeRxService>().readFromDevice();
       });
-      return Provider.of<SenseBeRxService>(context).deviceInfo == null
-          ? Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("Reading data..."),
-                    SizedBox(height: 30),
-                    CircularProgressIndicator(),
-                  ],
-                ),
+    }
+    return Provider.of<SenseBeRxService>(context).deviceInfo == null
+        ? Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("Reading data..."),
+                  SizedBox(height: 30),
+                  CircularProgressIndicator(),
+                ],
               ),
-            )
-          : WillPopScope(
-              child: Scaffold(
-                body: RubberBottomSheet(
-                  lowerLayer: RubberLower(
-                    scrollViewController: _scrollViewController,
-                    tabController: _tabController,
-                    motionSettingCards: motionSettingCards,
-                    timerSettingCards: timerSettingCards,
-                  ),
-                  upperLayer: Container(
-                    color: Colors.white,
-                    height: double.infinity,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Column(
-                            // TODO: Check if profile active and hide update button if not.
-                            children: <Widget>[
-                              Builder(
-                                builder: (context) => OutlineButton(
-                                  child: Text(
-                                    "SAVE AS NEW PROFILE",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
-                                  ),
-                                  highlightedBorderColor: Colors.black,
-                                  onPressed: () async {
-                                    _controller.collapse();
-                                    await showDialog(
-                                        context: context,
-                                        builder: (context) => ProfileNameDialog(
-                                              fileNameController:
-                                                  TextEditingController(
-                                                text: "",
-                                              ),
-                                              profileFile: profileFile,
-                                              deviceType: Device.SENSE_BE_RX,
-                                            ));
-                                    SnackBar s = SnackBar(
-                                      backgroundColor:
-                                          Theme.of(context).accentColor,
-                                      duration: Duration(seconds: 3),
-                                      content: Text("Saved successfully 🎉 "),
-                                    );
-                                    Scaffold.of(context).showSnackBar(s);
-                                  },
+            ),
+          )
+        : WillPopScope(
+            child: Scaffold(
+              body: RubberBottomSheet(
+                lowerLayer: RubberLower(
+                  scrollViewController: _scrollViewController,
+                  tabController: _tabController,
+                  motionSettingCards: motionSettingCards,
+                  timerSettingCards: timerSettingCards,
+                ),
+                upperLayer: Container(
+                  color: Colors.white,
+                  height: double.infinity,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Column(
+                          children: <Widget>[
+                            Builder(
+                              builder: (context) => OutlineButton(
+                                child: Text(
+                                  "SAVE AS NEW PROFILE",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                              Builder(
-                                builder: (context) => (profileFile != null)
-                                    ? OutlineButton(
-                                        child: Text(
-                                          "UPDATE SELECTED PROFILE",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: Colors.black,
-                                        ),
-                                        highlightedBorderColor: Colors.black,
-                                        onPressed: () {
-                                          _controller.collapse();
-                                          locator<ProfilesService>()
-                                              .updateProfile(
-                                                  profileFile.filePath);
-                                          SnackBar s = SnackBar(
-                                            backgroundColor:
-                                                Theme.of(context).accentColor,
-                                            duration: Duration(seconds: 3),
-                                            content: Text(
-                                                "${profileFile.fileName} updated 🎉 "),
-                                          );
-                                          Scaffold.of(context).showSnackBar(s);
-                                        },
-                                      )
-                                    : Container(width: 0),
-                              ),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Load from saved profiles",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                                highlightedBorderColor: Colors.black,
+                                onPressed: () async {
+                                  _controller.collapse();
+                                  saveAsProfile(
+                                      context, profileFile, Device.SENSE_BE_RX);
+                                },
                               ),
-                              FutureBuilder(
-                                  future: profiles,
-                                  builder: (context,
-                                      AsyncSnapshot<List<ProfileFile>>
-                                          snapshot) {
-                                    if (snapshot.hasData) {
-                                      List<ProfileFile> _profiles = snapshot
-                                          .data
-                                          .where((profileFile) =>
-                                              profileFile.deviceType ==
-                                              Device.SENSE_BE_RX)
-                                          .toList();
-                                      if (_profiles.length == 0) {
-                                        return ListTile(
-                                          title: Text(
-                                            "No profiles created for this device yet!",
-                                          ),
+                            ),
+                            Builder(
+                              builder: (context) => (profileFile != null)
+                                  ? OutlineButton(
+                                      child: Text(
+                                        "UPDATE SELECTED PROFILE",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      borderSide: BorderSide(
+                                        color: Colors.black,
+                                      ),
+                                      highlightedBorderColor: Colors.black,
+                                      onPressed: () {
+                                        _controller.collapse();
+                                        locator<ProfilesService>()
+                                            .updateProfile(
+                                                profileFile.filePath);
+                                        SnackBar s = SnackBar(
+                                          backgroundColor:
+                                              Theme.of(context).accentColor,
+                                          duration: Duration(seconds: 3),
+                                          content: Text(
+                                              "${profileFile.fileName} updated 🎉 "),
                                         );
-                                      }
-                                      return ListView.separated(
-                                        separatorBuilder: (_, __) =>
-                                            CustomDivider(),
-                                        physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, i) => ListTile(
-                                          title: Text(_profiles[i].fileName),
-                                          onTap: () {
-                                            _controller.collapse();
-                                            locator<ProfilesService>()
-                                                .createStructure(
-                                              _profiles[i].filePath,
-                                              _profiles[i].deviceType,
-                                            );
-                                            locator<ProfilesService>()
-                                                .setActiveProfile(_profiles[i]);
-                                            setState(() {});
-                                          },
-                                        ),
-                                        itemCount: _profiles.length,
-                                      );
-                                    }
-                                    if (snapshot.hasError) {
+                                        Scaffold.of(context).showSnackBar(s);
+                                      },
+                                    )
+                                  : Container(width: 0),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Load from saved profiles",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            FutureBuilder(
+                                future: profiles,
+                                builder: (context,
+                                    AsyncSnapshot<List<ProfileFile>> snapshot) {
+                                  if (snapshot.hasData) {
+                                    List<ProfileFile> _profiles = snapshot.data
+                                        .where((profileFile) =>
+                                            profileFile.deviceType ==
+                                            Device.SENSE_BE_RX)
+                                        .toList();
+                                    if (_profiles.length == 0) {
                                       return ListTile(
                                         title: Text(
                                           "No profiles created for this device yet!",
                                         ),
                                       );
                                     }
-                                    return Container();
-                                  }),
-                            ],
-                          ),
-                        ],
-                      ),
-                      physics: NeverScrollableScrollPhysics(),
-                      controller: _scrollController,
+                                    return ListView.separated(
+                                      separatorBuilder: (_, __) =>
+                                          CustomDivider(),
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, i) => ListTile(
+                                        title: Text(_profiles[i].fileName),
+                                        onTap: () {
+                                          _controller.collapse();
+                                          locator<ProfilesService>()
+                                              .createStructure(
+                                            _profiles[i].filePath,
+                                            _profiles[i].deviceType,
+                                          );
+                                          locator<ProfilesService>()
+                                              .setActiveProfile(_profiles[i]);
+                                          setState(() {});
+                                        },
+                                      ),
+                                      itemCount: _profiles.length,
+                                    );
+                                  }
+                                  if (snapshot.hasError) {
+                                    return ListTile(
+                                      title: Text(
+                                        "No profiles created for this device yet!",
+                                      ),
+                                    );
+                                  }
+                                  return Container();
+                                }),
+                          ],
+                        ),
+                      ],
                     ),
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: _scrollController,
                   ),
-                  animationController: _controller,
-                  scrollController: _scrollController,
                 ),
-                // body: RubberBottomSheet(
-                //   animationController: _controller,
-                //   lowerLayer: Container(color: Colors.orange),
-                //   upperLayer: Container(color: Colors.red),
-                // ),
-
-                floatingActionButton: Builder(
-                  builder: (context) => (_activeIndex != 2 && !_hideFAB)
-                      ? FloatingActionButton(
-                          backgroundColor: (_tabController.index == 0 &&
-                                      motionFABDisabledMessage.isEmpty) ||
-                                  (_tabController.index == 1 &&
-                                      timerFABDisabledMessage.isEmpty)
-                              ? null
-                              : Colors.grey,
-                          child: Icon(Icons.add),
-                          onPressed: (_tabController.index == 0 &&
-                                      motionFABDisabledMessage.isEmpty) ||
-                                  (_tabController.index == 1 &&
-                                      timerFABDisabledMessage.isEmpty)
-                              ? () {
-                                  locator<SenseBeRxService>().setActiveIndex(
-                                      tabIndex: _tabController.index);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => SettingTimepickerScreen(),
-                                    ),
-                                  );
-                                }
-                              : () {
-                                  SnackBar s = SnackBar(
-                                    backgroundColor:
-                                        Theme.of(context).errorColor,
-                                    duration: Duration(seconds: 3),
-                                    action: SnackBarAction(
-                                      label: "OK",
-                                      textColor: Colors.white,
-                                      onPressed: () => Scaffold.of(context)
-                                          .hideCurrentSnackBar(),
-                                    ),
-                                    content: Text(
-                                      _tabController.index == 0
-                                          ? motionFABDisabledMessage
-                                          : timerFABDisabledMessage,
-                                    ),
-                                  );
-                                  Scaffold.of(context).showSnackBar(s);
-                                },
-                        )
-                      : Container(),
-                ),
-                bottomNavigationBar: Builder(
-                  builder: (context) => BottomActionBar(
-                    actionLabel: "Write",
-                    showProfileButton: true,
-                    onActionPressed: () async {
-                      await locator<BluetoothIOService>()
-                          .write(pack(locator<SenseBeRxService>().structure));
-                    },
-                    onClosePressed: () {
-                      closeConnection(context);
-                    },
-                    onProfileButtonPressed: () {
-                      _scrollController.animateTo(
-                        0,
-                        duration: Duration(milliseconds: 200),
-                        curve: ElasticInCurve(),
-                      );
-                      if (_controller.value <= 0) {
-                        _controller.halfExpand();
-                        setState(() {
-                          _hideFAB = true;
-                        });
-                      } else {
-                        _controller.collapse();
-                        setState(() {
-                          _hideFAB = false;
-                        });
-                      }
-                    },
-                  ),
+                animationController: _controller,
+                scrollController: _scrollController,
+              ),
+              floatingActionButton: Builder(
+                builder: (context) => (_activeIndex != 2 && !_hideFAB)
+                    ? FloatingActionButton(
+                        backgroundColor: (_tabController.index == 0 &&
+                                    motionFABDisabledMessage.isEmpty) ||
+                                (_tabController.index == 1 &&
+                                    timerFABDisabledMessage.isEmpty)
+                            ? null
+                            : Colors.grey,
+                        child: Icon(Icons.add),
+                        onPressed: (_tabController.index == 0 &&
+                                    motionFABDisabledMessage.isEmpty) ||
+                                (_tabController.index == 1 &&
+                                    timerFABDisabledMessage.isEmpty)
+                            ? () {
+                                locator<SenseBeRxService>().setActiveIndex(
+                                    tabIndex: _tabController.index);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => SettingTimepickerScreen(),
+                                  ),
+                                );
+                              }
+                            : () {
+                                SnackBar s = SnackBar(
+                                  backgroundColor: Theme.of(context).errorColor,
+                                  duration: Duration(seconds: 3),
+                                  action: SnackBarAction(
+                                    label: "OK",
+                                    textColor: Colors.white,
+                                    onPressed: () => Scaffold.of(context)
+                                        .hideCurrentSnackBar(),
+                                  ),
+                                  content: Text(
+                                    _tabController.index == 0
+                                        ? motionFABDisabledMessage
+                                        : timerFABDisabledMessage,
+                                  ),
+                                );
+                                Scaffold.of(context).showSnackBar(s);
+                              },
+                      )
+                    : Container(),
+              ),
+              bottomNavigationBar: Builder(
+                builder: (context) => BottomActionBar(
+                  actionLabel: "Write",
+                  showProfileButton: true,
+                  onActionPressed: isDisconnected
+                      ? () {
+                          SnackBar s = SnackBar(
+                            backgroundColor: Theme.of(context).errorColor,
+                            duration: Duration(seconds: 3),
+                            action: SnackBarAction(
+                                label: "SAVE",
+                                textColor: Colors.white,
+                                onPressed: () {
+                                  Scaffold.of(context).hideCurrentSnackBar();
+                                  saveAsProfile(
+                                      context, profileFile, Device.SENSE_BE_RX);
+                                }),
+                            content:
+                                Text("Device disconnected, save as profile?"),
+                          );
+                          Scaffold.of(context).showSnackBar(s);
+                        }
+                      : () async {
+                          await locator<BluetoothIOService>().write(
+                              pack(locator<SenseBeRxService>().structure));
+                        },
+                  onClosePressed: () {
+                    closeConnection(context, isDisconnected);
+                  },
+                  onProfileButtonPressed: () {
+                    _scrollController.animateTo(
+                      0,
+                      duration: Duration(milliseconds: 200),
+                      curve: ElasticInCurve(),
+                    );
+                    if (_controller.value <= 0) {
+                      _controller.halfExpand();
+                      setState(() {
+                        _hideFAB = true;
+                      });
+                    } else {
+                      _controller.collapse();
+                      setState(() {
+                        _hideFAB = false;
+                      });
+                    }
+                  },
                 ),
               ),
-              onWillPop: () async {
-                await closeConnection(context);
-                return false;
-              },
-            );
-    }
-    return Container();
+            ),
+            onWillPop: () async {
+              await closeConnection(context, isDisconnected);
+              return false;
+            },
+          );
   }
 
-  closeConnection(BuildContext context) {
+  closeConnection(BuildContext context, bool isDisconnected) {
     print("Called close connection");
-    if (locator<SenseBeRxService>().shouldSave) {
+    if (locator<SenseBeRxService>().shouldSave && !isDisconnected) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -452,8 +443,41 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
           ],
         ),
       );
+    } else if (locator<SenseBeRxService>().shouldSave && isDisconnected) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text("Discard changes?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "CANCEL",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+                child: Text(
+                  "DISCARD",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () async {
+                  Navigator.popUntil(context, ModalRoute.withName('/'));
+                }),
+          ],
+        ),
+      );
     } else {
-      Provider.of<BluetoothConnectionService>(context).disconnect();
+      if (!isDisconnected) {
+        Provider.of<BluetoothConnectionService>(context).disconnect();
+      }
+      Navigator.popUntil(context, ModalRoute.withName('/'));
     }
   }
 

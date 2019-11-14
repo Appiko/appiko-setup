@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:setup/core/services/device.dart';
 import 'package:setup/core/services/profiles.dart';
+import 'package:setup/core/services/sense_be_rx_service.dart';
+import 'package:setup/core/services/sense_be_tx_service.dart';
+import 'package:setup/core/services/sense_pi_service.dart';
 import 'package:setup/locators.dart';
 import 'package:setup/ui/widgets/single_text_field.dart';
 
@@ -10,13 +13,30 @@ class ProfileNameDialog extends StatelessWidget {
 
   /// using this only if the profile file is `null`
   final Device deviceType;
+  final BuildContext scaffoldContext;
 
   ProfileNameDialog({
     Key key,
     @required this.fileNameController,
     @required this.profileFile,
+    @required this.scaffoldContext,
     this.deviceType,
   }) : super(key: key);
+  unsetShouldSave(Device device) {
+    switch (device) {
+      case Device.SENSE_BE_TX:
+        locator<SenseBeTxService>().shouldSave = false;
+        break;
+      case Device.SENSE_BE_RX:
+        locator<SenseBeRxService>().shouldSave = false;
+
+        break;
+      case Device.SENSE_PI:
+        locator<SensePiService>().shouldSave = false;
+
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +44,29 @@ class ProfileNameDialog extends StatelessWidget {
         textEditingController: fileNameController,
         onActionPressed: () async {
           if (deviceType != null) {
-            locator<ProfilesService>().addProfile(
+            await locator<ProfilesService>().addProfile(
               profileName: fileNameController.text,
               deviceType: deviceType,
               referActiveStructure: true,
             );
+            unsetShouldSave(deviceType);
+            SnackBar s = SnackBar(
+              backgroundColor: Theme.of(context).accentColor,
+              duration: Duration(seconds: 3),
+              content: Text("Saved successfully 🎉 "),
+            );
+
+            Scaffold.of(scaffoldContext).showSnackBar(s);
           } else {
             profileFile?.fileName = fileNameController.text;
-            locator<ProfilesService>().renameProfile(profileFile);
+            await locator<ProfilesService>().renameProfile(profileFile);
+            SnackBar s = SnackBar(
+              backgroundColor: Theme.of(context).accentColor,
+              duration: Duration(seconds: 3),
+              content: Text("Renamed successfully 🎉 "),
+            );
+
+            Scaffold.of(scaffoldContext).showSnackBar(s);
           }
           Navigator.pop(context);
         },

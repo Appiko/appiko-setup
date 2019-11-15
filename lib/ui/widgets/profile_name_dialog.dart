@@ -13,6 +13,7 @@ class ProfileNameDialog extends StatelessWidget {
 
   /// using this only if the profile file is `null`
   final Device deviceType;
+  final String description;
   final BuildContext scaffoldContext;
 
   ProfileNameDialog({
@@ -21,6 +22,7 @@ class ProfileNameDialog extends StatelessWidget {
     @required this.profileFile,
     @required this.scaffoldContext,
     this.deviceType,
+    this.description,
   }) : super(key: key);
   unsetShouldSave(Device device) {
     switch (device) {
@@ -41,36 +43,38 @@ class ProfileNameDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new SingleFieldDialogBox(
-        textEditingController: fileNameController,
-        onActionPressed: () async {
-          if (deviceType != null) {
-            await locator<ProfilesService>().addProfile(
-              profileName: fileNameController.text,
-              deviceType: deviceType,
-              referActiveStructure: true,
-            );
-            unsetShouldSave(deviceType);
-            SnackBar s = SnackBar(
-              backgroundColor: Theme.of(context).accentColor,
-              duration: Duration(seconds: 3),
-              content: Text("Saved successfully 🎉 "),
-            );
+      textEditingController: fileNameController,
+      description: description,
+      onActionPressed: () async {
+        if (deviceType != null) {
+          await locator<ProfilesService>().addProfile(
+            profileName: fileNameController.text,
+            deviceType: deviceType,
+            referActiveStructure: true,
+          );
+          unsetShouldSave(deviceType);
+          SnackBar s = SnackBar(
+            backgroundColor: Theme.of(context).accentColor,
+            duration: Duration(seconds: 3),
+            content: Text("Saved successfully 🎉 "),
+          );
 
-            Scaffold.of(scaffoldContext).showSnackBar(s);
-          } else {
-            profileFile?.fileName = fileNameController.text;
-            await locator<ProfilesService>().renameProfile(profileFile);
-            SnackBar s = SnackBar(
-              backgroundColor: Theme.of(context).accentColor,
-              duration: Duration(seconds: 3),
-              content: Text("Renamed successfully 🎉 "),
-            );
+          Scaffold.of(scaffoldContext).showSnackBar(s);
+        } else {
+          profileFile?.fileName = fileNameController.text;
+          await locator<ProfilesService>().renameProfile(profileFile);
+          SnackBar s = SnackBar(
+            backgroundColor: Theme.of(context).accentColor,
+            duration: Duration(seconds: 3),
+            content: Text("Renamed successfully 🎉 "),
+          );
 
-            Scaffold.of(scaffoldContext).showSnackBar(s);
-          }
-          Navigator.pop(context);
-        },
-        actionLabel: deviceType != null ? "SAVE" : "RENAME");
+          Scaffold.of(scaffoldContext).showSnackBar(s);
+        }
+        Navigator.pop(context);
+      },
+      actionLabel: deviceType != null ? "SAVE" : "RENAME",
+    );
   }
 }
 
@@ -82,6 +86,7 @@ class SingleFieldDialogBox extends StatelessWidget {
     this.title,
     this.onCancelPressed,
     this.actionLabel,
+    this.description,
   }) : super(key: key);
 
   final TextEditingController textEditingController;
@@ -89,6 +94,7 @@ class SingleFieldDialogBox extends StatelessWidget {
   final VoidCallback onActionPressed;
   final String actionLabel;
   final String title;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +109,7 @@ class SingleFieldDialogBox extends StatelessWidget {
             children: <Widget>[
               SingleTextField(
                 title: title ?? "Profile Name",
+                description: "\n$description",
                 textField: TextFormField(
                   controller: textEditingController,
                   autofocus: true,

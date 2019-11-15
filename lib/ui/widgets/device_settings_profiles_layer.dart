@@ -13,6 +13,7 @@ class DeviceSettingProfilesLayer extends StatefulWidget {
     @required this.profileFile,
     @required this.deviceType,
     @required ScrollController scrollController,
+    @required this.shouldSave,
   })  : _controller = controller,
         _scrollController = scrollController,
         super(key: key);
@@ -23,6 +24,7 @@ class DeviceSettingProfilesLayer extends StatefulWidget {
   final Device deviceType;
   final ScrollController _scrollController;
 
+  final bool shouldSave;
   @override
   _DeviceSettingProfilesLayerState createState() =>
       _DeviceSettingProfilesLayerState();
@@ -41,6 +43,7 @@ class _DeviceSettingProfilesLayerState
   @override
   Widget build(BuildContext context) {
     ProfileFile activeProfile = locator<ProfilesService>().activeProfile;
+
     return Container(
       color: Colors.white,
       height: double.infinity,
@@ -49,87 +52,51 @@ class _DeviceSettingProfilesLayerState
           children: [
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+              padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
               child: activeProfile != null
-                  ? Text(
-                      "SELECTED PROFILE: ${activeProfile.fileName}",
-                      style: Theme.of(context).textTheme.title,
-                      textAlign: TextAlign.left,
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          flex: 8,
+                          child: Text(
+                            "SELECTED PROFILE: ${activeProfile.fileName}",
+                            style: Theme.of(context).textTheme.body1,
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        Flexible(
+                          flex: 2,
+                          child: IconButton(
+                            icon: Icon(Icons.save),
+                            onPressed: () {
+                              widget._controller.collapse();
+                              locator<ProfilesService>()
+                                  .updateProfile(widget.profileFile.filePath);
+                              SnackBar s = SnackBar(
+                                backgroundColor: Theme.of(context).accentColor,
+                                duration: Duration(seconds: 3),
+                                content: Text(
+                                    "${widget.profileFile.fileName} updated 🎉 "),
+                              );
+                              Scaffold.of(context).showSnackBar(s);
+                            },
+                          ),
+                        )
+                      ],
                     )
-                  : Container(),
+                  : Container(height: 0),
             ),
-            activeProfile != null ? CustomDivider() : Container(),
+            activeProfile != null ? CustomDivider() : Container(height: 0),
             Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                  child: Column(
-                    children: <Widget>[
-                      Builder(
-                        builder: (context) => OutlineButton(
-                          child: Text(
-                            "SAVE AS NEW PROFILE",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          ),
-                          highlightedBorderColor: Colors.black,
-                          onPressed: () async {
-                            widget._controller.collapse();
-                            saveAsProfile(context, widget.profileFile,
-                                Device.SENSE_BE_RX);
-                          },
-                        ),
-                      ),
-                      Builder(
-                        builder: (context) => (widget.profileFile != null)
-                            ? OutlineButton(
-                                child: Text(
-                                  "UPDATE SELECTED PROFILE",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                ),
-                                highlightedBorderColor: Colors.black,
-                                onPressed: () {
-                                  widget._controller.collapse();
-                                  locator<ProfilesService>().updateProfile(
-                                      widget.profileFile.filePath);
-                                  SnackBar s = SnackBar(
-                                    backgroundColor:
-                                        Theme.of(context).accentColor,
-                                    duration: Duration(seconds: 3),
-                                    content: Text(
-                                        "${widget.profileFile.fileName} updated 🎉 "),
-                                  );
-                                  Scaffold.of(context).showSnackBar(s);
-                                },
-                              )
-                            : Container(width: 0),
-                      ),
-                    ],
-                  ),
-                ),
-                activeProfile != null ? CustomDivider() : Container(),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16, left: 8, right: 8),
-                    child: Container(
-                      width: double.infinity,
-                      child: Text(
-                        "Load from saved profiles".toUpperCase(),
-                        style: Theme.of(context).textTheme.title,
-                        textAlign: TextAlign.center,
-                      ),
+                  padding: const EdgeInsets.only(left: 8, right: 8, top: 16),
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Load from saved profiles".toUpperCase(),
+                      style: Theme.of(context).textTheme.title,
                     ),
                   ),
                 ),
@@ -150,32 +117,69 @@ class _DeviceSettingProfilesLayerState
                           );
                         }
                         return ListView.separated(
+                          padding: EdgeInsets.all(0),
                           separatorBuilder: (_, __) => CustomDivider(),
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (context, i) => ListTile(
                             title: Text(_profiles[i].fileName),
                             onTap: () {
-                              widget._controller.collapse();
-                              locator<ProfilesService>().createStructure(
-                                _profiles[i].filePath,
-                                _profiles[i].deviceType,
-                              );
-                              locator<ProfilesService>()
-                                  .setActiveProfile(_profiles[i]);
-                              final SnackBar profileSelectedSnackBar = SnackBar(
-                                content: Text(
-                                  "Selected ${_profiles[i].fileName}",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                elevation: 5,
-                                backgroundColor: Theme.of(context).accentColor,
-                                duration: Duration(seconds: 1),
-                                behavior: SnackBarBehavior.fixed,
-                              );
-                              Scaffold.of(context)
-                                  .showSnackBar(profileSelectedSnackBar);
-                              setState(() {});
+                              if (widget.shouldSave) {
+                                showDiscardDialog(
+                                    context: context,
+                                    //TODO:
+                                    onDiscardPressed: () {
+                                      Navigator.pop(context);
+                                      widget._controller.collapse();
+                                      locator<ProfilesService>()
+                                          .createStructure(
+                                        _profiles[i].filePath,
+                                        _profiles[i].deviceType,
+                                      );
+                                      locator<ProfilesService>()
+                                          .setActiveProfile(_profiles[i]);
+                                      final SnackBar profileSelectedSnackBar =
+                                          SnackBar(
+                                        content: Text(
+                                          "Selected ${_profiles[i].fileName}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        elevation: 5,
+                                        backgroundColor:
+                                            Theme.of(context).accentColor,
+                                        duration: Duration(seconds: 1),
+                                        behavior: SnackBarBehavior.fixed,
+                                      );
+                                      Scaffold.of(context).showSnackBar(
+                                          profileSelectedSnackBar);
+                                      setState(() {});
+                                    });
+                              } else {
+                                widget._controller.collapse();
+                                locator<ProfilesService>().createStructure(
+                                  _profiles[i].filePath,
+                                  _profiles[i].deviceType,
+                                );
+                                locator<ProfilesService>()
+                                    .setActiveProfile(_profiles[i]);
+                                final SnackBar profileSelectedSnackBar =
+                                    SnackBar(
+                                  content: Text(
+                                    "Selected ${_profiles[i].fileName}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  elevation: 5,
+                                  backgroundColor:
+                                      Theme.of(context).accentColor,
+                                  duration: Duration(seconds: 1),
+                                  behavior: SnackBarBehavior.fixed,
+                                );
+                                Scaffold.of(context)
+                                    .showSnackBar(profileSelectedSnackBar);
+                                setState(() {});
+                              }
                             },
                           ),
                           itemCount: _profiles.length,
@@ -188,7 +192,7 @@ class _DeviceSettingProfilesLayerState
                           ),
                         );
                       }
-                      return Container();
+                      return Container(height: 0);
                     }),
               ],
             ),

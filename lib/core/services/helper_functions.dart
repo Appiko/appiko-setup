@@ -123,11 +123,15 @@ showDisconnectedDialog(BuildContext context) {
 saveAsProfile(
   BuildContext sContext,
   ProfileFile profileFile,
-  Device deviceType,
-) async {
+  Device deviceType, {
+  bool showDescription,
+}) async {
   await showDialog(
       context: sContext,
       builder: (context) => ProfileNameDialog(
+            description: showDescription
+                ? "The current configuration will be saved as a new profile"
+                : null,
             fileNameController: TextEditingController(
               text: "",
             ),
@@ -135,6 +139,37 @@ saveAsProfile(
             deviceType: deviceType,
             scaffoldContext: sContext,
           ));
+}
+
+void showDiscardDialog({BuildContext context, Function() onDiscardPressed}) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      content: Text("Discard changes?"),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(
+            "CANCEL",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        FlatButton(
+          child: Text(
+            "DISCARD",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onPressed: onDiscardPressed,
+        ),
+      ],
+    ),
+  );
 }
 
 createStructureFromData({Uint8List data, bool forProfile = false}) {

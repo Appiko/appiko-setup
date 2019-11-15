@@ -16,11 +16,14 @@ class BottomActionBar extends StatelessWidget {
   final VoidCallback onClosePressed;
   final VoidCallback onProfileButtonPressed;
 
+  final Icon actionIcon;
+
   const BottomActionBar({
     Key key,
     @required this.actionLabel,
     this.showProfileButton,
     this.onActionPressed,
+    this.actionIcon,
     this.onClosePressed,
     this.onProfileButtonPressed,
   }) : super(key: key);
@@ -29,7 +32,7 @@ class BottomActionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -55,9 +58,12 @@ class BottomActionBar extends StatelessWidget {
               children: <Widget>[
                 FloatingActionButton.extended(
                   heroTag: null,
-                  label: Text(
-                    "${actionLabel.toUpperCase().padLeft((4 + (actionLabel.length / 2)).floor()).padRight(8)}",
-                  ),
+                  icon: actionIcon,
+                  label: actionLabel.length < 4
+                      ? Text(
+                          "${actionLabel.toUpperCase().padLeft((4 + (actionLabel.length / 2)).floor()).padRight(8)}",
+                        )
+                      : Text(actionLabel.toUpperCase()),
                   onPressed: onActionPressed,
                 ),
                 FlatButton(

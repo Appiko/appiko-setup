@@ -52,7 +52,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
     _controller = RubberAnimationController(
       vsync: this,
       lowerBoundValue: AnimationControllerValue(pixel: 0),
-      halfBoundValue: AnimationControllerValue(pixel: 200),
+      halfBoundValue: AnimationControllerValue(percentage: 0.5),
       upperBoundValue: AnimationControllerValue(percentage: 0.96),
       duration: Duration(milliseconds: 200),
 
@@ -173,6 +173,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                   timerSettingCards: timerSettingCards,
                 ),
                 upperLayer: DeviceSettingProfilesLayer(
+                  shouldSave: locator<SenseBeRxService>().shouldSave,
                   controller: _controller,
                   profileFile: profileFile,
                   deviceType: Device.SENSE_BE_RX,
@@ -228,40 +229,60 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
               ),
               bottomNavigationBar: Builder(
                 builder: (context) => BottomActionBar(
-                  actionLabel: "Write",
+                  actionLabel: _hideFAB ? "Profile" : "Write",
+                  actionIcon: _hideFAB ? Icon(Icons.add) : null,
                   showProfileButton: true,
-                  onActionPressed: isDisconnected
+                  onActionPressed: _hideFAB
                       ? () {
-                          SnackBar s = SnackBar(
-                            backgroundColor: Theme.of(context).errorColor,
-                            duration: Duration(seconds: 3),
-                            action: SnackBarAction(
-                                label: "SAVE",
-                                textColor: Colors.white,
-                                onPressed: () {
-                                  Scaffold.of(context).hideCurrentSnackBar();
-                                  saveAsProfile(
-                                      context, profileFile, Device.SENSE_BE_RX);
-                                }),
-                            content:
-                                Text("Device disconnected, save as profile?"),
+                          _controller.collapse();
+                          saveAsProfile(
+                            context,
+                            profileFile,
+                            Device.SENSE_BE_RX,
+                            showDescription: true,
                           );
-                          Scaffold.of(context).showSnackBar(s);
                         }
-                      : () async {
-                          await locator<BluetoothIOService>().write(
-                              pack(locator<SenseBeRxService>().structure));
-                          locator<SenseBeRxService>().shouldSave = false;
-                          showWriteSuccessfulSnackbar(context);
+                      : isDisconnected
+                          ? () {
+                              SnackBar s = SnackBar(
+                                backgroundColor: Theme.of(context).errorColor,
+                                duration: Duration(seconds: 3),
+                                action: SnackBarAction(
+                                    label: "SAVE",
+                                    textColor: Colors.white,
+                                    onPressed: () {
+                                      Scaffold.of(context)
+                                          .hideCurrentSnackBar();
+                                      saveAsProfile(
+                                        context,
+                                        profileFile,
+                                        Device.SENSE_BE_RX,
+                                        showDescription: true,
+                                      );
+                                    }),
+                                content: Text(
+                                    "Device disconnected, save as profile?"),
+                              );
+                              Scaffold.of(context).showSnackBar(s);
+                            }
+                          : () async {
+                              await locator<BluetoothIOService>().write(
+                                  pack(locator<SenseBeRxService>().structure));
+                              locator<SenseBeRxService>().shouldSave = false;
+                              showWriteSuccessfulSnackbar(context);
+                            },
+                  onClosePressed: _hideFAB
+                      ? () {
+                          _controller.collapse();
+                        }
+                      : () {
+                          closeConnection(context, isDisconnected);
                         },
-                  onClosePressed: () {
-                    closeConnection(context, isDisconnected);
-                  },
                   onProfileButtonPressed: () {
                     _scrollController.animateTo(
                       0,
-                      duration: Duration(milliseconds: 200),
-                      curve: ElasticInCurve(),
+                      duration: Duration(milliseconds: 400),
+                      curve: Curves.decelerate,
                     );
                     if (_controller.value <= 0) {
                       _controller.halfExpand();
@@ -329,36 +350,12 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
         ),
       );
     } else if (locator<SenseBeRxService>().shouldSave && isDisconnected) {
-      showDialog(
+      showDiscardDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          content: Text("Discard changes?"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                "CANCEL",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-                child: Text(
-                  "DISCARD",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () async {
-                  Navigator.popUntil(context, ModalRoute.withName('/'));
-                  workingOnDevice = false;
-                  showedDissconnectDialog = true;
-                }),
-          ],
-        ),
+        onDiscardPressed: () => () async {
+          Navigator.popUntil(context, ModalRoute.withName('/'));
+          workingOnDevice = false;
+        },
       );
     } else {
       if (!isDisconnected) {
@@ -378,7 +375,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
 
   void profilesBottomSheetListener(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
-      if (_controller.value <= 0.1) {
+      if (_controller.value <= 0.2) {
         setState(() {
           _hideFAB = false;
         });

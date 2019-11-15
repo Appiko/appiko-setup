@@ -173,6 +173,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                   timerSettingCards: timerSettingCards,
                 ),
                 upperLayer: DeviceSettingProfilesLayer(
+                  shouldSave: locator<SensePiService>().shouldSave,
                   controller: _controller,
                   profileFile: profileFile,
                   deviceType: Device.SENSE_PI,
@@ -228,35 +229,55 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
               ),
               bottomNavigationBar: Builder(
                 builder: (context) => BottomActionBar(
-                  actionLabel: "Write",
+                  actionLabel: _hideFAB ? "Profile" : "Write",
+                  actionIcon: _hideFAB ? Icon(Icons.add) : null,
                   showProfileButton: true,
-                  onActionPressed: isDisconnected
+                  onActionPressed: _hideFAB
                       ? () {
-                          SnackBar s = SnackBar(
-                            backgroundColor: Theme.of(context).errorColor,
-                            duration: Duration(seconds: 3),
-                            action: SnackBarAction(
-                                label: "SAVE",
-                                textColor: Colors.white,
-                                onPressed: () {
-                                  Scaffold.of(context).hideCurrentSnackBar();
-                                  saveAsProfile(
-                                      context, profileFile, Device.SENSE_PI);
-                                }),
-                            content:
-                                Text("Device disconnected, save as profile?"),
+                          _controller.collapse();
+                          saveAsProfile(
+                            context,
+                            profileFile,
+                            Device.SENSE_PI,
+                            showDescription: true,
                           );
-                          Scaffold.of(context).showSnackBar(s);
                         }
-                      : () async {
-                          await locator<BluetoothIOService>()
-                              .write(pack(locator<SensePiService>().structure));
-                          locator<SensePiService>().shouldSave = false;
-                          showWriteSuccessfulSnackbar(context);
+                      : isDisconnected
+                          ? () {
+                              SnackBar s = SnackBar(
+                                backgroundColor: Theme.of(context).errorColor,
+                                duration: Duration(seconds: 3),
+                                action: SnackBarAction(
+                                    label: "SAVE",
+                                    textColor: Colors.white,
+                                    onPressed: () {
+                                      Scaffold.of(context)
+                                          .hideCurrentSnackBar();
+                                      saveAsProfile(
+                                        context,
+                                        profileFile,
+                                        Device.SENSE_PI,
+                                        showDescription: true,
+                                      );
+                                    }),
+                                content: Text(
+                                    "Device disconnected, save as profile?"),
+                              );
+                              Scaffold.of(context).showSnackBar(s);
+                            }
+                          : () async {
+                              await locator<BluetoothIOService>().write(
+                                  pack(locator<SensePiService>().structure));
+                              locator<SensePiService>().shouldSave = false;
+                              showWriteSuccessfulSnackbar(context);
+                            },
+                  onClosePressed: _hideFAB
+                      ? () {
+                          _controller.collapse();
+                        }
+                      : () {
+                          closeConnection(context, isDisconnected);
                         },
-                  onClosePressed: () {
-                    closeConnection(context, isDisconnected);
-                  },
                   onProfileButtonPressed: () {
                     _scrollController.animateTo(
                       0,
@@ -328,36 +349,12 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
         ),
       );
     } else if (locator<SensePiService>().shouldSave && isDisconnected) {
-      showDialog(
+      showDiscardDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          content: Text("Discard changes?"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                "CANCEL",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-                child: Text(
-                  "DISCARD",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () async {
-                  workingOnDevice = false;
-                  showedDissconnectDialog = true;
-                  Navigator.popUntil(context, ModalRoute.withName('/'));
-                }),
-          ],
-        ),
+        onDiscardPressed: () => () async {
+          Navigator.popUntil(context, ModalRoute.withName('/'));
+          workingOnDevice = false;
+        },
       );
     } else {
       if (!isDisconnected) {
@@ -377,7 +374,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
 
   void profilesBottomSheetListener(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
-      if (_controller.value <= 0.1) {
+      if (_controller.value <= 0.2) {
         setState(() {
           _hideFAB = false;
         });

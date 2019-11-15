@@ -106,14 +106,9 @@ String _getRoute() {
   switch (activeDevice) {
     case Device.SENSE_PI:
       return "/devices/sp";
-      break;
     case Device.SENSE_BE_RX:
       return "/devices/br";
-      break;
     case Device.SENSE_BE_TX:
       return "/devices/bt";
-    default:
-      return "/";
   }
-  // return "/devices/br";
 }

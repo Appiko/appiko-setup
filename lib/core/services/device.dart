@@ -12,10 +12,10 @@ class DeviceHelper {
         break;
       case Device.SENSE_BE_RX:
         return "SenseBe Rx";
+        break;
       case Device.SENSE_BE_TX:
         return "SenseBe Tx";
-      default:
-        return "hmm, Not a sense device.";
+        break;
     }
   }
 }

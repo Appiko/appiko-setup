@@ -352,7 +352,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
     } else if (locator<SenseBeRxService>().shouldSave && isDisconnected) {
       showDiscardDialog(
         context: context,
-        onDiscardPressed: () => () async {
+        onDiscardPressed: () {
           Navigator.popUntil(context, ModalRoute.withName('/'));
           workingOnDevice = false;
         },

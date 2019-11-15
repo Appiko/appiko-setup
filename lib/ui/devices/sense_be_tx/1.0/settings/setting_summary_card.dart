@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:setup/core/models/generic/camera.dart';
 import 'package:setup/core/models/devices/sense_be_tx/1.0/sense_be_tx.dart';
@@ -14,6 +13,7 @@ import 'package:setup/locators.dart';
 import 'package:setup/ui/devices/sense_be_tx/1.0/profiles/profile_summary_view.dart';
 import 'package:setup/ui/devices/sense_be_tx/1.0/settings/setting_summary_page.dart';
 import 'package:setup/ui/widgets/ambient_fields.dart';
+import 'package:setup/ui/widgets/camera_headline_with_delete_Icon.dart';
 import 'package:setup/ui/widgets/custom_divider.dart';
 
 /// {@category Compound Widget}
@@ -37,7 +37,7 @@ class SettingSummaryCard extends StatelessWidget {
         cameraRow = ListTile(
           title: Padding(
             padding: const EdgeInsets.only(top: 12, bottom: 12),
-            child: TriggerInfoText(
+            child: CameraHeadlineWithDeleteIcon(
               value: "Single Picture",
               onDeletePressed: onDeletePressed,
             ),
@@ -84,7 +84,7 @@ class SettingSummaryCard extends StatelessWidget {
         cameraRow = ListTile(
           title: Padding(
             padding: const EdgeInsets.only(top: 12, bottom: 12),
-            child: TriggerInfoText(
+            child: CameraHeadlineWithDeleteIcon(
               value: "Half Press",
               onDeletePressed: onDeletePressed,
             ),
@@ -102,7 +102,7 @@ class SettingSummaryCard extends StatelessWidget {
         cameraRow = ListTile(
           title: Padding(
             padding: const EdgeInsets.only(top: 12, bottom: 12),
-            child: TriggerInfoText(
+            child: CameraHeadlineWithDeleteIcon(
               value: "No Action",
               onDeletePressed: onDeletePressed,
             ),
@@ -562,44 +562,6 @@ class TimerRow extends StatelessWidget {
   }
 }
 
-/// {@category Widget}
-/// {@category Design}
-/// {@category SenseBeTx}
-///
-/// Trigger text on [SettingSummaryCard] like `Multiple Pictures` with a delete Icon to the right.
-/// TODO: Change class name to what makes sense.
-class TriggerInfoText extends StatelessWidget {
-  final String value;
-
-  final VoidCallback onDeletePressed;
-
-  const TriggerInfoText({Key key, @required this.value, this.onDeletePressed})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Expanded(
-          flex: 18,
-          child: Text(
-            value,
-            style: Theme.of(context).textTheme.title.copyWith(fontSize: 20),
-          ),
-        ),
-        Flexible(
-          flex: 1,
-          child: IconButton(
-            icon: Icon(OMIcons.delete),
-            onPressed: onDeletePressed,
-            padding: EdgeInsets.all(0),
-          ),
-        )
-      ],
-    );
-  }
-}
-
 /// {@category Compound Widget}
 /// {@category Design}
 /// {@category SenseBeTx}
@@ -620,7 +582,7 @@ class MultiplePicturesRow extends StatelessWidget {
         ListTile(
           title: Padding(
             padding: const EdgeInsets.only(top: 12, bottom: 12),
-            child: TriggerInfoText(
+            child: CameraHeadlineWithDeleteIcon(
               value: "Multiple Pictures",
               onDeletePressed: onDeletePressed,
             ),
@@ -684,7 +646,7 @@ class VideoRow extends StatelessWidget {
         ListTile(
           title: Padding(
             padding: const EdgeInsets.only(top: 12, bottom: 12),
-            child: TriggerInfoText(
+            child: CameraHeadlineWithDeleteIcon(
               value: "Video",
               onDeletePressed: onDeletePressed,
             ),
@@ -768,7 +730,7 @@ class LongPressRow extends StatelessWidget {
         ListTile(
           title: Padding(
               padding: const EdgeInsets.only(top: 12, bottom: 12),
-              child: TriggerInfoText(
+              child: CameraHeadlineWithDeleteIcon(
                 value: "Long Press",
                 onDeletePressed: onDeletePressed,
               )),

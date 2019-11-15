@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 import 'package:setup/core/models/devices/sense_be_tx/1.0/sense_be_tx.dart';
 import 'package:setup/core/models/generic/battery.dart';
 import 'package:setup/core/models/generic/camera.dart';
@@ -11,7 +10,6 @@ import 'package:setup/core/models/generic/radio_setting.dart';
 import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/models/generic/time.dart' as time;
 import 'package:setup/core/services/bluetooth_IO.dart';
-import 'package:setup/core/services/bluetooth_connection.dart';
 import 'package:setup/core/services/helper_functions.dart';
 import 'package:setup/core/view_models/ambient_fields_model.dart';
 import 'package:setup/core/view_models/camera_trigger_radio_options_model.dart';

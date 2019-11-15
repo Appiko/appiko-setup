@@ -23,7 +23,6 @@ import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_summary_card.d
 import 'package:setup/ui/devices/sense_be_rx/1.0/settings/setting_timepicker_screen.dart';
 import 'package:setup/ui/devices/sense_be_rx/1.0/settings/timer_tab_contents.dart';
 import 'package:setup/ui/widgets/bottom_action_bar.dart';
-import 'package:setup/ui/widgets/custom_divider.dart';
 import 'package:setup/ui/widgets/device_info_dialog.dart';
 import 'package:setup/ui/widgets/device_settings_profiles_layer.dart';
 

@@ -127,7 +127,8 @@ class _DeviceSettingProfilesLayerState
                               if (widget.shouldSave) {
                                 showDiscardDialog(
                                     context: context,
-                                    //TODO:
+                                    content: Text(
+                                        "Selecting this profile will discard the current configuration"),
                                     onDiscardPressed: () {
                                       Navigator.pop(context);
                                       widget._controller.collapse();

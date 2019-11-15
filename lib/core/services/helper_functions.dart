@@ -141,11 +141,16 @@ saveAsProfile(
           ));
 }
 
-void showDiscardDialog({BuildContext context, Function() onDiscardPressed}) {
+void showDiscardDialog({
+  BuildContext context,
+  Function() onDiscardPressed,
+  Widget content,
+}) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      content: Text("Discard changes?"),
+      title: Text("Discard changes?"),
+      content: content,
       actions: <Widget>[
         FlatButton(
           child: Text(

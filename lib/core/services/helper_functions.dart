@@ -6,6 +6,7 @@ import 'package:setup/core/models/devices/sense_be_rx/1.0/sense_be_rx.dart'
 import 'package:setup/core/models/devices/sense_be_tx/1.0/sense_be_tx.dart'
     as bt;
 import 'package:setup/core/models/devices/sense_pi/1.0/sense_pi.dart' as sp;
+import 'package:setup/core/models/generic/battery.dart';
 import 'package:setup/core/models/generic/meta.dart';
 import 'package:setup/core/services/device.dart';
 import 'package:setup/core/services/profiles.dart';
@@ -136,23 +137,54 @@ saveAsProfile(
           ));
 }
 
-createStructureFromData({Uint8List data}) {
+createStructureFromData({Uint8List data, bool forProfile = false}) {
+  bool shouldSaveInfo = (workingOnDevice && forProfile);
+  String deviceName;
+  BatteryType batteryType;
+
   switch (activeDevice) {
     case Device.SENSE_PI:
-      Map unpackedData = sp.unpack(data);
+      Map unpackedData = sp.unpack(data, forProfile: forProfile);
+      if (shouldSaveInfo) {
+        deviceName = locator<SensePiService>().structure.deviceName;
+        batteryType = locator<SensePiService>().structure.batteryType;
+      }
       locator<SensePiService>().structure = unpackedData['structure'];
       locator<SensePiService>().metaStructure = unpackedData['meta'];
+      if (shouldSaveInfo) {
+        locator<SensePiService>().structure.deviceName = deviceName;
+        batteryType =
+            locator<SensePiService>().structure.batteryType = batteryType;
+      }
 
       break;
     case Device.SENSE_BE_RX:
-      Map unpackedData = br.unpack(data);
+      Map unpackedData = br.unpack(data, forProfile: forProfile);
+      if (shouldSaveInfo) {
+        deviceName = locator<SenseBeRxService>().structure.deviceName;
+        batteryType = locator<SenseBeRxService>().structure.batteryType;
+      }
       locator<SenseBeRxService>().structure = unpackedData['structure'];
       locator<SenseBeRxService>().metaStructure = unpackedData['meta'];
+      if (shouldSaveInfo) {
+        locator<SenseBeRxService>().structure.deviceName = deviceName;
+        batteryType =
+            locator<SenseBeRxService>().structure.batteryType = batteryType;
+      }
       break;
     case Device.SENSE_BE_TX:
-      Map unpackedData = bt.unpack(data);
+      Map unpackedData = bt.unpack(data, forProfile: forProfile);
+      if (shouldSaveInfo) {
+        deviceName = locator<SenseBeTxService>().structure.deviceName;
+        batteryType = locator<SenseBeTxService>().structure.batteryType;
+      }
       locator<SenseBeTxService>().structure = unpackedData['structure'];
       locator<SenseBeTxService>().metaStructure = unpackedData['meta'];
+      if (shouldSaveInfo) {
+        locator<SenseBeTxService>().structure.deviceName = deviceName;
+        batteryType =
+            locator<SenseBeTxService>().structure.batteryType = batteryType;
+      }
       break;
   }
 }

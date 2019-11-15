@@ -11,6 +11,7 @@ import 'package:setup/core/models/generic/sensor_setting.dart';
 import 'package:setup/core/models/generic/setting.dart';
 import 'package:setup/core/models/generic/time.dart';
 import 'package:setup/core/models/generic/tirgger.dart';
+import 'package:setup/core/services/helper_functions.dart';
 
 /// {@category Model}
 /// {@subCategory Sensor}
@@ -322,7 +323,7 @@ Uint8List pack(SensePi structure) {
   return packedData.buffer.asUint8List();
 }
 
-Map unpack(List<int> intData) {
+Map unpack(List<int> intData, {bool forProfile = false}) {
   ByteBuffer buffer = Uint8List.fromList(intData).buffer;
   ByteData data = ByteData.view(buffer, 0, 202);
   SensePi structure = SensePi();
@@ -471,17 +472,21 @@ Map unpack(List<int> intData) {
 
     // Ignore common data 4 Bytes for Pi
     offset += 4;
-
-    structure.batteryType = BatteryType.values[data.getUint8(offset += 1)];
-    structure.deviceName = '';
-    for (int i = 0; i < 16; i++) {
-      structure.deviceName += AsciiCodec().decode([data.getUint8(offset += 1)]);
+    if ((workingOnDevice && !forProfile) || (forProfile && !workingOnDevice)) {
+      structure.batteryType = BatteryType.values[data.getUint8(offset += 1)];
+      structure.deviceName = '';
+      for (int i = 0; i < 16; i++) {
+        structure.deviceName +=
+            AsciiCodec().decode([data.getUint8(offset += 1)]);
+      }
+      print("Length ${structure.deviceName.length}");
+      structure.deviceName
+          .replaceAll(RegExp('  '), '')
+          .replaceFirst(RegExp(' \$'), '');
+      print("Length ${structure.deviceName.length}");
+    } else {
+      offset += 17;
     }
-    print("Length ${structure.deviceName.length}");
-    structure.deviceName
-        .replaceAll(RegExp('  '), '')
-        .replaceFirst(RegExp(' \$'), '');
-    print("Length ${structure.deviceName.length}");
     assert(offset == 201);
 
     return {

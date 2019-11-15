@@ -133,7 +133,7 @@ class ProfilesService with ChangeNotifier {
     File profileFile = File(filePath);
 
     Uint8List data = profileFile.readAsBytesSync();
-    createStructureFromData(data: data);
+    createStructureFromData(data: data, forProfile: true);
 
     List<int> metaData = profileFile.readAsBytesSync();
     String metaString = Utf8Codec(allowMalformed: true).decode(metaData);

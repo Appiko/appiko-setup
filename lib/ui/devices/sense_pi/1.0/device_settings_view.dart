@@ -303,6 +303,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
               ),
               onPressed: () {
                 workingOnDevice = false;
+                showedDissconnectDialog = true;
                 Navigator.popUntil(context, ModalRoute.withName('/'));
                 Provider.of<BluetoothConnectionService>(context).disconnect();
               },
@@ -319,6 +320,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                   await locator<BluetoothIOService>()
                       .write(pack(locator<SensePiService>().structure));
                   workingOnDevice = false;
+                  showedDissconnectDialog = true;
                   Navigator.popUntil(context, ModalRoute.withName('/'));
                   Provider.of<BluetoothConnectionService>(context).disconnect();
                 }),
@@ -351,6 +353,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                 ),
                 onPressed: () async {
                   workingOnDevice = false;
+                  showedDissconnectDialog = true;
                   Navigator.popUntil(context, ModalRoute.withName('/'));
                 }),
           ],
@@ -361,6 +364,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
         Provider.of<BluetoothConnectionService>(context).disconnect();
       }
       workingOnDevice = false;
+      showedDissconnectDialog = true;
       Navigator.popUntil(context, ModalRoute.withName('/'));
     }
   }

@@ -308,6 +308,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                 Navigator.popUntil(context, ModalRoute.withName('/'));
                 Provider.of<BluetoothConnectionService>(context).disconnect();
                 workingOnDevice = false;
+                showedDissconnectDialog = true;
               },
             ),
             FlatButton(
@@ -324,6 +325,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                   Navigator.popUntil(context, ModalRoute.withName('/'));
                   Provider.of<BluetoothConnectionService>(context).disconnect();
                   workingOnDevice = false;
+                  showedDissconnectDialog = true;
                 }),
           ],
         ),
@@ -355,6 +357,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
                 onPressed: () async {
                   Navigator.popUntil(context, ModalRoute.withName('/'));
                   workingOnDevice = false;
+                  showedDissconnectDialog = true;
                 }),
           ],
         ),
@@ -362,6 +365,7 @@ class _DeviceSettingsViewState extends State<DeviceSettingsView>
     } else {
       Navigator.popUntil(context, ModalRoute.withName('/'));
       workingOnDevice = false;
+      showedDissconnectDialog = true;
       if (!isDisconnected) {
         Provider.of<BluetoothConnectionService>(context).disconnect();
       }
